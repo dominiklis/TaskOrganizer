@@ -15,6 +15,10 @@ const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
   },
+  appBar: {
+    zIndex: theme.zIndex.drawer + 1,
+    background: 'linear-gradient(45deg, #0d7377 30%, #32e0c4 90%)',
+  },
   alarmIcon: {
     marginRight: theme.spacing(1),
   },
@@ -26,9 +30,9 @@ const useStyles = makeStyles((theme) => ({
     // marginRight: theme.spacing(2),
   },
   titleButton: {
-    marginRight: theme.spacing(2),
-    marginLeft: theme.spacing(2),
-    color: "white"
+    marginRight: theme.spacing(1),
+    marginLeft: theme.spacing(1),
+    color: "white",
   },
   searchBar: {
     flexGrow: 1,
@@ -40,7 +44,7 @@ function AppNavbar() {
 
   return (
     <div className={classes.root}>
-      <AppBar>
+      <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
           <Button className={classes.titleButton}>
             <AlarmOnIcon className={classes.alarmIcon} />
