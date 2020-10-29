@@ -1,7 +1,7 @@
 import React from "react";
 import TaskCard from "./TaskCard";
 import { makeStyles } from "@material-ui/core";
-import { NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   link: {
@@ -19,13 +19,13 @@ function TaskList({ tasks }) {
     <div>
       {tasks.map((task, index) => {
         return (
-          <NavLink 
+          <Link 
             to={`/task/${task.TaskId}`}
             key={task.TaskId}
             className={classes.link}
           >
             <TaskCard task={task} />
-          </NavLink>
+          </Link>
         );
       })}
     </div>
