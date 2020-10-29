@@ -1,6 +1,8 @@
 import { Typography } from "@material-ui/core";
 import React, { useState, useEffect } from "react";
 import Page from "./Page";
+import TaskList from "./TaskList";
+import { getTasks } from "../data/tasks";
 
 function MainPage() {
   const [date, setDate] = useState(new Date());
@@ -16,6 +18,7 @@ function MainPage() {
         {date.toLocaleDateString()} - {date.toLocaleTimeString()}
       </Typography>
       <Typography variant="h6">recently added tasks: </Typography>
+      <TaskList tasks={getTasks()}></TaskList>
     </Page>
   );
 }

@@ -18,9 +18,9 @@ const useStyles = makeStyles((theme) => ({
     width: "240px",
   },
   addItemButton: {
-    background: "#32e0c4",
+    background: "#21d8ba",
     "&:hover": {
-      background: "#98efcb",
+      background: "#43e3c9",
     },
     color: "white",
   },

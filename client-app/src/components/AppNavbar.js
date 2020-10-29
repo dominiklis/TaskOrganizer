@@ -17,10 +17,14 @@ const useStyles = makeStyles((theme) => ({
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
-    background: 'linear-gradient(45deg, #0d7377 30%, #32e0c4 90%)',
+    background: "linear-gradient(45deg, #0d7377 30%, #32e0c4 90%)",
   },
   alarmIcon: {
     marginRight: theme.spacing(1),
+  },
+  searchBar: {
+    color: "white",
+    flexGrow: 1,
   },
   searchIcon: {
     color: "white",
@@ -33,9 +37,6 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(1),
     marginLeft: theme.spacing(1),
     color: "white",
-  },
-  searchBar: {
-    flexGrow: 1,
   },
 }));
 
