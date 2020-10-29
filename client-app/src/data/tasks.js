@@ -85,11 +85,17 @@ const tasks = [
   },
 ];
 
-export const getTasks = () => {
+const wait = (ms) => {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+};
+
+export const getTasks = async () => {
+  await wait(500);
   return tasks;
 };
 
-export const getTasksOrderByAdded = () => {
+export const getTasksOrderByAdded = async () => {
+  await wait(500);
   return tasks.sort((a, b) => {
     return a.Added - b.Added;
   });

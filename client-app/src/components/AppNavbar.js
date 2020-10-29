@@ -7,7 +7,7 @@ import {
   Toolbar,
   Typography,
 } from "@material-ui/core";
-import React from "react";
+import React, { useState } from "react";
 import AlarmOnIcon from "@material-ui/icons/AlarmOn";
 import SearchIcon from "@material-ui/icons/Search";
 
@@ -21,6 +21,10 @@ const useStyles = makeStyles((theme) => ({
   },
   alarmIcon: {
     marginRight: theme.spacing(1),
+  },
+  searchForm: {
+    flexGrow: 1,
+    display: "flex",
   },
   searchBar: {
     color: "white",
@@ -43,6 +47,18 @@ const useStyles = makeStyles((theme) => ({
 function AppNavbar() {
   const classes = useStyles();
 
+  const [searchString, setSearchString] = useState('');
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    console.log(searchString);
+  };
+
+  const handleSearchInputChange = (e) => {
+    let newSearchString = e.target.value;
+    setSearchString(newSearchString);
+  }
+
   return (
     <div className={classes.root}>
       <AppBar position="fixed" className={classes.appBar}>
@@ -53,10 +69,16 @@ function AppNavbar() {
               Task Organizer
             </Typography>
           </Button>
-          <InputBase placeholder="search..." className={classes.searchBar} />
-          <IconButton aria-label="search" className={classes.searchIcon}>
-            <SearchIcon />
-          </IconButton>
+          <form className={classes.searchForm} onSubmit={handleSearchSubmit}>
+            <InputBase placeholder="search..." onChange={handleSearchInputChange} className={classes.searchBar} />
+            <IconButton
+              type="submit"
+              aria-label="search"
+              className={classes.searchIcon}
+            >
+              <SearchIcon />
+            </IconButton>
+          </form>
           <Button variant="contained">Sign Out</Button>
         </Toolbar>
       </AppBar>

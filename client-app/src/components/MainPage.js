@@ -6,11 +6,23 @@ import { getTasks } from "../data/tasks";
 
 function MainPage() {
   const [date, setDate] = useState(new Date());
+  const [tasks, setTasks] = useState([]);
+  const [tasksLoaded, setTasksLoaded] = useState(false);
 
   useEffect(() => {
     var timer = setInterval(() => setDate(new Date()), 1000);
     return () => clearInterval(timer);
   }, [date]);
+
+  useEffect(() => {
+    const f = async () => {
+      const tasks = await getTasks();
+      console.log(tasks);
+      setTasks(tasks);
+      setTasksLoaded(true);
+    };
+    f();
+  }, []);
 
   return (
     <Page>
@@ -18,7 +30,7 @@ function MainPage() {
         {date.toLocaleDateString()} - {date.toLocaleTimeString()}
       </Typography>
       <Typography variant="h6">recently added tasks: </Typography>
-      <TaskList tasks={getTasks()}></TaskList>
+      {tasksLoaded ? <TaskList tasks={tasks}></TaskList> : "loading..."}
     </Page>
   );
 }

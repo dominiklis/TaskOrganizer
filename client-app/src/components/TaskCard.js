@@ -39,7 +39,7 @@ function TaskCard({ task }) {
                 </Box>
               </Box>
             </Typography>
-            <Typography variant="p" /*className={classes.flexClass}*/>
+            <Typography variant="subtitle2" /*className={classes.flexClass}*/>
               added: {task.Added.toLocaleDateString()}  {task.Added.toLocaleTimeString()}
             </Typography>
           </Box>
