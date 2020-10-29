@@ -10,6 +10,7 @@ import {
 import React, { useState } from "react";
 import AlarmOnIcon from "@material-ui/icons/AlarmOn";
 import SearchIcon from "@material-ui/icons/Search";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -42,6 +43,12 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: theme.spacing(1),
     color: "white",
   },
+  link: {
+    textDecoration: "none",
+    "&:hover": {
+      textDecoration: "none",
+    },
+  },
 }));
 
 function AppNavbar() {
@@ -63,12 +70,14 @@ function AppNavbar() {
     <div className={classes.root}>
       <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
-          <Button className={classes.titleButton} disableRipple>
-            <AlarmOnIcon className={classes.alarmIcon} />
-            <Typography variant="h6" className={classes.title}>
-              Task Organizer
-            </Typography>
-          </Button>
+          <Link to="/" className={classes.link}>
+            <Button className={classes.titleButton} disableRipple>
+              <AlarmOnIcon className={classes.alarmIcon} />
+              <Typography variant="h6" className={classes.title}>
+                Task Organizer
+              </Typography>
+            </Button>
+          </Link>
           <form className={classes.searchForm} onSubmit={handleSearchSubmit}>
             <InputBase
               placeholder="search..."
