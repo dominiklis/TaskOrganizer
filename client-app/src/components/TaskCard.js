@@ -29,10 +29,10 @@ function TaskCard({ task }) {
             <CheckBoxOutlineBlankIcon />
           </Box>
           <Box flexGrow={25}>
-            <Typography component="div">
+            <Typography variant="subtitle1" component="div">
               <Box display="flex">
                 <Box textAlign="left" flexGrow={1}>
-                  {task.Title}
+                  {task.Title.length > 60 ? `${task.Title.substring(0, 60)}...` : task.Title}
                 </Box>
                 <Box textAlign="right">
                   {task.Deadline.toLocaleDateString()}
