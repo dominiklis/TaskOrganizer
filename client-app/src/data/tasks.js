@@ -94,6 +94,11 @@ export const getTasks = async () => {
   return tasks;
 };
 
+export const getTaskById = async (id) => {
+  await wait(500);
+  return tasks.filter(task => task.TaskId === parseInt(id))[0];
+};
+
 export const getTasksOrderByAdded = async () => {
   await wait(500);
   return tasks.sort((a, b) => {

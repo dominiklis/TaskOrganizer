@@ -17,7 +17,6 @@ function MainPage() {
   useEffect(() => {
     const f = async () => {
       const tasks = await getTasks();
-      console.log(tasks);
       setTasks(tasks);
       setTasksLoaded(true);
     };

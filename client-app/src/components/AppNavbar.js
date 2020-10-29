@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
 function AppNavbar() {
   const classes = useStyles();
 
-  const [searchString, setSearchString] = useState('');
+  const [searchString, setSearchString] = useState("");
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
@@ -57,20 +57,24 @@ function AppNavbar() {
   const handleSearchInputChange = (e) => {
     let newSearchString = e.target.value;
     setSearchString(newSearchString);
-  }
+  };
 
   return (
     <div className={classes.root}>
       <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
-          <Button className={classes.titleButton}>
+          <Button className={classes.titleButton} disableRipple>
             <AlarmOnIcon className={classes.alarmIcon} />
             <Typography variant="h6" className={classes.title}>
               Task Organizer
             </Typography>
           </Button>
           <form className={classes.searchForm} onSubmit={handleSearchSubmit}>
-            <InputBase placeholder="search..." onChange={handleSearchInputChange} className={classes.searchBar} />
+            <InputBase
+              placeholder="search..."
+              onChange={handleSearchInputChange}
+              className={classes.searchBar}
+            />
             <IconButton
               type="submit"
               aria-label="search"

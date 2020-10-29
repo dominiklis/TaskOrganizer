@@ -32,7 +32,9 @@ function TaskCard({ task }) {
             <Typography variant="subtitle1" component="div">
               <Box display="flex">
                 <Box textAlign="left" flexGrow={1}>
-                  {task.Title.length > 60 ? `${task.Title.substring(0, 60)}...` : task.Title}
+                  {task.Title.length > 60
+                    ? `${task.Title.substring(0, 60)}...`
+                    : task.Title}
                 </Box>
                 <Box textAlign="right">
                   {task.Deadline.toLocaleDateString()}
@@ -40,7 +42,8 @@ function TaskCard({ task }) {
               </Box>
             </Typography>
             <Typography variant="subtitle2" /*className={classes.flexClass}*/>
-              added: {task.Added.toLocaleDateString()}  {task.Added.toLocaleTimeString()}
+              added: {task.Added.toLocaleDateString()}{" "}
+              {task.Added.toLocaleTimeString()}
             </Typography>
           </Box>
         </Box>
