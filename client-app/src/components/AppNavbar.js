@@ -58,7 +58,9 @@ function AppNavbar() {
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
-    console.log("SRCH: " + searchString);
+    if (searchString !== "") {
+      console.log("SRCH: " + searchString);
+    }
   };
 
   const handleSearchInputChange = (e) => {

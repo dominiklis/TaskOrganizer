@@ -12,6 +12,9 @@ import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
 import AddIcon from "@material-ui/icons/Add";
 import ImportContactsIcon from "@material-ui/icons/ImportContacts";
 import TodayIcon from "@material-ui/icons/Today";
+import FolderOpenIcon from "@material-ui/icons/FolderOpen";
+import PeopleIcon from '@material-ui/icons/People';
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   drawer: {
@@ -34,6 +37,12 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(3),
     overflow: "auto",
   },
+  link: {
+    textDecoration: "none",
+    "&:hover": {
+      textDecoration: "none",
+    },
+  },
 }));
 
 function SideMenu() {
@@ -50,12 +59,14 @@ function SideMenu() {
       <Toolbar />
       <div className={classes.drawerContainer}>
         <List>
-          <ListItem button className={classes.addItemButton}>
-            <ListItemIcon>
-              <AddIcon className={classes.addIcon} />
-            </ListItemIcon>
-            <ListItemText>Add Task</ListItemText>
-          </ListItem>
+          <Link to="/addtask" className={classes.link}>
+            <ListItem button className={classes.addItemButton}>
+              <ListItemIcon>
+                <AddIcon className={classes.addIcon} />
+              </ListItemIcon>
+              <ListItemText>Add Task</ListItemText>
+            </ListItem>
+          </Link>
 
           <ListItem button>
             <ListItemIcon>
@@ -69,6 +80,20 @@ function SideMenu() {
               <TodayIcon />
             </ListItemIcon>
             <ListItemText>Today</ListItemText>
+          </ListItem>
+
+          <ListItem button>
+            <ListItemIcon>
+              <FolderOpenIcon />
+            </ListItemIcon>
+            <ListItemText>Groups</ListItemText>
+          </ListItem>
+
+          <ListItem button>
+            <ListItemIcon>
+              <PeopleIcon />
+            </ListItemIcon>
+            <ListItemText>Shared</ListItemText>
           </ListItem>
 
           <ListItem button>
