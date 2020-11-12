@@ -21,7 +21,8 @@ function MainPage() {
 
   useEffect(() => {
     const f = async () => {
-      const tasks = await getTasks();
+      let tasks = await getTasks();
+      tasks = tasks.sort((a, b) => b.Added - a.Added);
       setTasks(tasks);
       setTasksLoaded(true);
     };
@@ -33,7 +34,9 @@ function MainPage() {
       {tasksLoaded ? (
         <Fragment>
           <Clock />
-          <Typography variant="h6">{constStrings.recentlyAddedTasks}</Typography>
+          <Typography variant="h6">
+            {constStrings.recentlyAddedTasks}
+          </Typography>
           <TaskList tasks={tasks}></TaskList>
         </Fragment>
       ) : (

@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
   },
   link: {
     textDecoration: "none",
-    color: "grey",
+    color: "#666666",
     "&:hover": {
       textDecoration: "none",
     },

@@ -117,6 +117,32 @@ const tasks = [
       },
     ],
   },
+
+  {
+    TaskId: 5,
+    AuthorId: 1,
+    Title: "task 05",
+    Added: new Date(),
+    StartDate: new Date(new Date().getTime() + (1*60*60*1000)),
+    Deadline: new Date(new Date().getTime() + (2*60*60*1000)),
+    Description:
+      "Maecenas at cursus felis. Duis mollis imperdiet tortor nec ornare. In tempus quam ut tortor vulputate facilisis. Nullam diam magna, efficitur sit amet consequat nec, molestie ut tellus. Donec nec lectus pharetra, malesuada massa vel, dignissim arcu. Suspendisse potenti. Aliquam erat volutpat. Aliquam vestibulum magna quis molestie viverra. Sed nec libero ac nulla facilisis dictum at eget odio.",
+    Steps: [
+      {
+        Id: 15,
+        Text: "step 01",
+        Description: "step description 1",
+        Completed: false,
+      },
+      {
+        Id: 16,
+        Text: "step 02",
+        Description: "step description 2",
+        Completed: false,
+      },
+    ],
+    Notes: [],
+  },
 ];
 
 const wait = (ms) => {
