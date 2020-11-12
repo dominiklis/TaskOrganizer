@@ -6,6 +6,7 @@ import { getTasks } from "../data/tasks";
 import { makeStyles } from "@material-ui/core";
 import { CircularProgress } from "@material-ui/core";
 import Clock from "./Clock";
+import { constStrings } from "../data/constants";
 
 const useStyles = makeStyles((theme) => ({
   circularProgress: {
@@ -32,7 +33,7 @@ function MainPage() {
       {tasksLoaded ? (
         <Fragment>
           <Clock />
-          <Typography variant="h6">recently added tasks: </Typography>
+          <Typography variant="h6">{constStrings.recentlyAddedTasks}</Typography>
           <TaskList tasks={tasks}></TaskList>
         </Fragment>
       ) : (
