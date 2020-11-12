@@ -13,21 +13,21 @@ import AddIcon from "@material-ui/icons/Add";
 import ImportContactsIcon from "@material-ui/icons/ImportContacts";
 import TodayIcon from "@material-ui/icons/Today";
 import FolderOpenIcon from "@material-ui/icons/FolderOpen";
-import PeopleIcon from '@material-ui/icons/People';
+import PeopleIcon from "@material-ui/icons/People";
 import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   drawer: {
     width: "240px",
   },
-  addItemButton: {
+  styledButton: {
     background: "#21d8ba",
     "&:hover": {
       background: "#43e3c9",
     },
     color: "white",
   },
-  addIcon: {
+  styledIcon: {
     color: "white",
   },
   drawerPaper: {
@@ -39,11 +39,52 @@ const useStyles = makeStyles((theme) => ({
   },
   link: {
     textDecoration: "none",
+    color: "grey",
     "&:hover": {
       textDecoration: "none",
     },
   },
 }));
+
+const menuItems = [
+  {
+    name: "addTaskButton",
+    label: "Add Tasks",
+    icon: <AddIcon />,
+    linkTo: "/addtask",
+    styled: true,
+  },
+  {
+    name: "myTaskButton",
+    label: "My Tasks",
+    icon: <ImportContactsIcon />,
+    linkTo: "/mytask",
+  },
+  {
+    name: "todayButton",
+    label: "Today",
+    icon: <TodayIcon />,
+    linkTo: "/todaystask",
+  },
+  {
+    name: "groupsButton",
+    label: "Groups",
+    icon: <FolderOpenIcon />,
+    linkTo: "/groups",
+  },
+  {
+    name: "sharedButton",
+    label: "Shared",
+    icon: <PeopleIcon />,
+    linkTo: "/shared",
+  },
+  {
+    name: "calendarButton",
+    label: "Calendar",
+    icon: <CalendarTodayIcon />,
+    linkTo: "/clanedar",
+  },
+];
 
 function SideMenu() {
   const classes = useStyles();
@@ -59,49 +100,23 @@ function SideMenu() {
       <Toolbar />
       <div className={classes.drawerContainer}>
         <List>
-          <Link to="/addtask" className={classes.link}>
-            <ListItem button className={classes.addItemButton}>
-              <ListItemIcon>
-                <AddIcon className={classes.addIcon} />
-              </ListItemIcon>
-              <ListItemText>Add Task</ListItemText>
-            </ListItem>
-          </Link>
-
-          <ListItem button>
-            <ListItemIcon>
-              <ImportContactsIcon />
-            </ListItemIcon>
-            <ListItemText>My Tasks</ListItemText>
-          </ListItem>
-
-          <ListItem button>
-            <ListItemIcon>
-              <TodayIcon />
-            </ListItemIcon>
-            <ListItemText>Today</ListItemText>
-          </ListItem>
-
-          <ListItem button>
-            <ListItemIcon>
-              <FolderOpenIcon />
-            </ListItemIcon>
-            <ListItemText>Groups</ListItemText>
-          </ListItem>
-
-          <ListItem button>
-            <ListItemIcon>
-              <PeopleIcon />
-            </ListItemIcon>
-            <ListItemText>Shared</ListItemText>
-          </ListItem>
-
-          <ListItem button>
-            <ListItemIcon>
-              <CalendarTodayIcon />
-            </ListItemIcon>
-            <ListItemText>Calendar</ListItemText>
-          </ListItem>
+          {menuItems.map((el) => {
+            return (
+              <Link to={el.linkTo} className={classes.link} key={el.name}>
+                {el.styled ? (
+                  <ListItem button className={classes.styledButton}>
+                    <ListItemIcon className={classes.styledIcon}>{el.icon}</ListItemIcon>
+                    <ListItemText>{el.label}</ListItemText>
+                  </ListItem>
+                ) : (
+                  <ListItem button>
+                    <ListItemIcon>{el.icon}</ListItemIcon>
+                    <ListItemText>{el.label}</ListItemText>
+                  </ListItem>
+                )}
+              </Link>
+            );
+          })}
         </List>
       </div>
     </Drawer>
