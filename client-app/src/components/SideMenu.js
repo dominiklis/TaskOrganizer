@@ -64,7 +64,7 @@ const menuItems = [
     name: "todayButton",
     label: "Today",
     icon: <TodayIcon />,
-    linkTo: "/todaystask",
+    linkTo: "/today",
   },
   {
     name: "groupsButton",
@@ -82,7 +82,7 @@ const menuItems = [
     name: "calendarButton",
     label: "Calendar",
     icon: <CalendarTodayIcon />,
-    linkTo: "/clanedar",
+    linkTo: "/calendar",
   },
 ];
 
