@@ -49,9 +49,9 @@ const useStyles = makeStyles((theme) => ({
 const menuItems = [
   {
     name: "addTaskButton",
-    label: "Add Tasks",
+    label: "Add Task",
     icon: <AddIcon />,
-    linkTo: "/addtask",
+    linkTo: "/add",
     styled: true,
   },
   {
