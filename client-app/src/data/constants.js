@@ -1,3 +1,4 @@
 export const constStrings = {
-  recentlyAddedTasks: "recently added tasks"
+  recentlyAddedTasks: "recently added tasks",
+  todaysTasks: "today's tasks",
 }

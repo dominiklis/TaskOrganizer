@@ -154,6 +154,12 @@ export const getTasks = async () => {
   return tasks;
 };
 
+export const getTodaysTasks = async () => {
+  await wait(500);
+  let today = new Date();
+  return tasks.filter((task) => task.Deadline.toLocaleDateString() === today.toLocaleDateString());
+};
+
 export const getTaskById = async (id) => {
   await wait(500);
   return tasks.filter((task) => task.TaskId === parseInt(id))[0];

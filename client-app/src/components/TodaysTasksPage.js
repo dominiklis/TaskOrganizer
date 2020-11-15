@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Fragment } from "react";
 import Page from "./Page";
-import { getTasks } from "../data/tasks";
+import { getTodaysTasks } from "../data/tasks";
 import { makeStyles } from "@material-ui/core";
 import { CircularProgress } from "@material-ui/core";
 import { constStrings } from "../data/constants";
@@ -12,14 +12,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function MainPage() {
+function TodaysTasksPage() {
   const classes = useStyles();
   const [tasks, setTasks] = useState([]);
   const [tasksLoaded, setTasksLoaded] = useState(false);
 
   useEffect(() => {
     const f = async () => {
-      let tasks = await getTasks();
+      let tasks = await getTodaysTasks();
       tasks = tasks.sort((a, b) => b.Added - a.Added);
       setTasks(tasks);
       setTasksLoaded(true);
@@ -30,10 +30,7 @@ function MainPage() {
   return (
     <Fragment>
       {tasksLoaded ? (
-        <TaskPage
-          tasks={tasks}
-          title={constStrings.recentlyAddedTasks}
-        ></TaskPage>
+        <TaskPage tasks={tasks} title={constStrings.todaysTasks}></TaskPage>
       ) : (
         <Page>
           <CircularProgress className={classes.circularProgress} />
@@ -43,4 +40,4 @@ function MainPage() {
   );
 }
 
-export default MainPage;
+export default TodaysTasksPage;
