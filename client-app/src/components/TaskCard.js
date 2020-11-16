@@ -11,7 +11,7 @@ import {
 import React from "react";
 
 import DateRangeIcon from "@material-ui/icons/DateRange";
-import EditIcon from "@material-ui/icons/Edit";
+import CheckIcon from "@material-ui/icons/Check";
 import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
@@ -73,9 +73,7 @@ function TaskCard({ task }) {
         </CardActionArea>
         <CardActions>
           <IconButton aria-label="edit" className={classes.darkGreen}>
-            <Link className={classes.link} to={`/edit/${task.TaskId}`}>
-              <EditIcon />
-            </Link>
+            <CheckIcon />
           </IconButton>
         </CardActions>
       </Box>

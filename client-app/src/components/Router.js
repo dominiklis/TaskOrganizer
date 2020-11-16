@@ -1,7 +1,6 @@
 import React from 'react'
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import AddTaskPage from './AddTaskPage'
-import EditTaskPage from './EditTaskPage'
 import MainPage from './MainPage'
 import NotFoundPage from './NotFoundPage'
 import TaskDetailsPage from './TaskDetailsPage'
@@ -15,7 +14,6 @@ function Router() {
           <Route path="/today" component={TodaysTasksPage} exact />
           <Route path="/task/:id" component={TaskDetailsPage} exact />
           <Route path="/add" component={AddTaskPage} exact />
-          <Route path="/edit/:id" component={EditTaskPage} exact />
           <Route component={NotFoundPage} />
         </Switch>
       </BrowserRouter>
