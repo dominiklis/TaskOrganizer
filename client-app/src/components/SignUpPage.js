@@ -35,6 +35,9 @@ const useStyles = makeStyles((theme) => ({
     background: "#0d7377",
     color: "#fff",
     marginTop: theme.spacing(2),
+    "&:hover": {
+      background: "#32e0c4",
+    },
   },
 }));
 
