@@ -52,7 +52,8 @@ const validationSchema = yup.object({
     .min(6, "password should be of minimum 6 characters")
     .required("password is required"),
   rePassword: yup
-    .string().oneOf([yup.ref("password")], "password does not match")
+    .string("repeat your password")
+    .oneOf([yup.ref("password")], "password does not match")
     .required("confirm password is required"),
 });
 
@@ -64,12 +65,12 @@ function SignUpPage() {
     initialValues: {
       email: "",
       password: "",
-      rePassword: '',
+      rePassword: "",
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
       console.log(values);
-      history.push('/');
+      history.push("/");
     },
   });
 
@@ -79,7 +80,7 @@ function SignUpPage() {
         Create account and start using Task Orginer!
       </Typography>
       <form className={classes.form} onSubmit={formik.handleSubmit}>
-      <TextField
+        <TextField
           className={classes.inputField}
           fullWidth
           variant="outlined"
@@ -119,7 +120,7 @@ function SignUpPage() {
           error={formik.touched.rePassword && Boolean(formik.errors.rePassword)}
           helperText={formik.touched.rePassword && formik.errors.rePassword}
         />
-        
+
         <Button
           type="submit"
           fullWidth
