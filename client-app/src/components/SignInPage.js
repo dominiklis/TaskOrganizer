@@ -8,6 +8,7 @@ import {
 import { useFormik } from "formik";
 import React from "react";
 import { useHistory } from "react-router-dom";
+import * as yup from "yup";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -41,6 +42,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const validationSchema = yup.object({
+  email: yup
+    .string("enter your email")
+    .email("enter a valid email")
+    .required("email is required"),
+  password: yup
+    .string("enter your password")
+    .min(6, "password should be of minimum 6 characters")
+    .required('password is required')
+});
+
 function SignInPage() {
   const history = useHistory();
   const classes = useStyles();
@@ -50,6 +62,7 @@ function SignInPage() {
       email: "",
       password: "",
     },
+    validationSchema: validationSchema,
     onSubmit: (values) => {
       console.log(values);
       history.push('/');
@@ -62,7 +75,7 @@ function SignInPage() {
         Sign in to Task Organizer
       </Typography>
       <form className={classes.form} onSubmit={formik.handleSubmit}>
-        <TextField
+      <TextField
           className={classes.inputField}
           fullWidth
           variant="outlined"
@@ -71,6 +84,8 @@ function SignInPage() {
           name="email"
           value={formik.values.email}
           onChange={formik.handleChange}
+          error={formik.touched.email && Boolean(formik.errors.email)}
+          helperText={formik.touched.email && formik.errors.email}
         />
 
         <TextField
@@ -83,6 +98,8 @@ function SignInPage() {
           type="password"
           value={formik.values.password}
           onChange={formik.handleChange}
+          error={formik.touched.password && Boolean(formik.errors.password)}
+          helperText={formik.touched.password && formik.errors.password}
         />
 
         <Button
