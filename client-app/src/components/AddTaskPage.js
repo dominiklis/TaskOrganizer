@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   createMuiTheme,
+  Grid,
   makeStyles,
   TextField,
   ThemeProvider,
@@ -28,6 +29,9 @@ const useStyles = makeStyles((theme) => ({
   textField: {
     marginTop: theme.spacing(1),
   },
+  dateTimePickerGridItem: {
+    textAlign: "center"
+  }
 }));
 
 const theme = createMuiTheme({
@@ -113,10 +117,11 @@ function AddTaskPage() {
         )}
 
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
-          <Box display="flex">
-            <Box flexGrow={1} textAlign="center">
+          <Grid container spacing={3}>
+            <Grid item xs={12} sm={6} className={classes.dateTimePickerGridItem}>
               <ThemeProvider theme={theme}>
                 <DateTimePicker
+                fullWidth 
                   id="startDate"
                   name="startDate"
                   label="start date"
@@ -129,11 +134,12 @@ function AddTaskPage() {
                   }
                 />
               </ThemeProvider>
-            </Box>
+            </Grid>
 
-            <Box flexGrow={1} textAlign="center">
+            <Grid item xs={12} sm={6} className={classes.dateTimePickerGridItem}>
               <ThemeProvider theme={theme}>
                 <DateTimePicker
+                fullWidth 
                   id="endDate"
                   name="endDate"
                   label="end date"
@@ -146,8 +152,8 @@ function AddTaskPage() {
                   }
                 />
               </ThemeProvider>
-            </Box>
-          </Box>
+            </Grid>
+          </Grid>
         </MuiPickersUtilsProvider>
 
         <Button type="submit" fullWidth className={classes.submitButton}>
