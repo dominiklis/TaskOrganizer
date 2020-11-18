@@ -14,6 +14,7 @@ import React from "react";
 import { useHistory } from "react-router-dom";
 import { constStrings } from "../data/constants";
 import Page from "./Page";
+import * as yup from "yup";
 
 const useStyles = makeStyles((theme) => ({
   submitButton: {
@@ -39,7 +40,24 @@ const theme = createMuiTheme({
       main: "#32e0c4",
       contrastText: "#fff",
     },
+    dateError: {
+      color: "#32e0c4",
+    },
   },
+});
+
+const validationSchema = yup.object({
+  title: yup.string("enter title").required("title is required"),
+  startDate: yup.date(),
+  endDate: yup
+    .date()
+    .nullable()
+    .default(null)
+    .when(
+      "startDate",
+      (sDate, yup) =>
+        sDate && yup.min(sDate, "end date cannot be before start date")
+    ),
 });
 
 function AddTaskPage() {
@@ -51,11 +69,12 @@ function AddTaskPage() {
       title: "",
       description: "",
       startDate: new Date(),
-      endDate: new Date(),
+      endDate: null,
     },
+    validationSchema: validationSchema,
     onSubmit: (values) => {
       console.log(JSON.stringify(values, null, 2));
-      history.push('/');
+      history.push("/");
     },
   });
 
@@ -71,6 +90,8 @@ function AddTaskPage() {
           className={classes.textField}
           value={formik.values.title}
           onChange={formik.handleChange}
+          error={formik.touched.title && Boolean(formik.errors.title)}
+          helperText={formik.touched.title && formik.errors.title}
         />
 
         <TextField
@@ -85,6 +106,12 @@ function AddTaskPage() {
           onChange={formik.handleChange}
         />
 
+        {formik.touched.endDate && formik.errors.endDate && (
+          <Box textAlign="center">
+            <p style={{ color: "red" }}>end date cannot be before start date</p>
+          </Box>
+        )}
+
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
           <Box display="flex">
             <Box flexGrow={1} textAlign="center">
@@ -96,6 +123,9 @@ function AddTaskPage() {
                   value={formik.values.startDate}
                   onChange={(date) =>
                     formik.setFieldValue("startDate", date, false)
+                  }
+                  error={
+                    formik.touched.startDate && Boolean(formik.errors.startDate)
                   }
                 />
               </ThemeProvider>
@@ -110,6 +140,9 @@ function AddTaskPage() {
                   value={formik.values.endDate}
                   onChange={(date) =>
                     formik.setFieldValue("endDate", date, false)
+                  }
+                  error={
+                    formik.touched.endDate && Boolean(formik.errors.endDate)
                   }
                 />
               </ThemeProvider>
