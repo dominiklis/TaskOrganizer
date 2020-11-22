@@ -1,7 +1,7 @@
 import React from "react";
 import SideMenu from "./SideMenu";
 import AppNavbar from "./AppNavbar";
-import { makeStyles, Toolbar } from "@material-ui/core";
+import { Grid, makeStyles, Toolbar } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -22,7 +22,11 @@ function Page({ children }) {
       <SideMenu />
       <main className={classes.content}>
         <Toolbar />
-        {children}
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={11}>{children}</Grid>
+          <Grid item xs={0} sm={1}></Grid>
+        </Grid>
+        
       </main>
     </div>
   );
