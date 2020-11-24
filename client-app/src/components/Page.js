@@ -22,11 +22,10 @@ function Page({ children }) {
       <SideMenu />
       <main className={classes.content}>
         <Toolbar />
-        <Grid container spacing={2}>
+        <Grid container spacing={1}>
           <Grid item xs={12} sm={11}>{children}</Grid>
-          <Grid item xs={0} sm={1}></Grid>
+          <Grid item xs={false} sm={1}></Grid>
         </Grid>
-        
       </main>
     </div>
   );

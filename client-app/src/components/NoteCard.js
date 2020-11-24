@@ -6,7 +6,7 @@ import {
   makeStyles,
   Typography,
 } from "@material-ui/core";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -16,14 +16,20 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function NoteCard({ note }) {
+  const [added, setAdded] = useState(new Date());
+
+  useEffect(() => {
+    setAdded(new Date(note.added));
+  }, [note.added]);
+
   const classes = useStyles();
   return (
     <Card className={classes.card}>
       <CardContent>
         <Typography variant="subtitle2">
-          {`${note.Added.toLocaleDateString()} ${note.Added.toLocaleTimeString()}`}
+          {`${added.toLocaleDateString()} ${added.toLocaleTimeString()}`}
         </Typography>
-        <Typography variant="body1">{note.Text}</Typography>
+        <Typography variant="body1">{note.text}</Typography>
       </CardContent>
       <CardActions>
         <Button size="small" color="primary">

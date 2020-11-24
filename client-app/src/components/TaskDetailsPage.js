@@ -2,13 +2,14 @@ import { CircularProgress } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core";
 import { Box, Button, Typography } from "@material-ui/core";
 import React, { useEffect, useState, Fragment } from "react";
-import { useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { getTaskById } from "../data/tasks";
 import Page from "./Page";
 import AddStepForm from "./AddStepForm";
 import ListOfSteps from "./ListOfSteps";
 import AddNoteForm from "./AddNoteForm";
 import NoteCard from "./NoteCard";
+import { format } from "date-fns";
 
 const useStyles = makeStyles((theme) => ({
   timeBox: {
@@ -29,17 +30,28 @@ function TaskDetailsPage({ match }) {
   const classes = useStyles();
   const [task, setTask] = useState({});
   const [taskLoaded, setTaskLoaded] = useState(false);
+  const [added, setAdded] = useState(false);
+  const [startDate, setStartDate] = useState(false);
+  const [endDate, setEndDate] = useState(false);
 
   const { id } = useParams();
+  const history = useHistory();
 
   useEffect(() => {
     const f = async () => {
-      const t = await getTaskById(id);
-      setTask(t);
-      setTaskLoaded(true);
+      const t = JSON.parse(await getTaskById(id));
+      if (t) {
+        setTask(t);
+        setAdded(new Date(t.added));
+        setStartDate(new Date(t.startDate));
+        setEndDate(new Date(t.endDate));
+        setTaskLoaded(true);
+      } else {
+        history.push("/NotFound");
+      }
     };
     f();
-  }, [id]);
+  }, [id, history]);
 
   return (
     <Page>
@@ -47,18 +59,20 @@ function TaskDetailsPage({ match }) {
         <Fragment>
           <Box display="flex">
             <Box textAlign="left" flexGrow={1}>
-              <Typography variant="h4">{task.Title}</Typography>
+              <Typography variant="h4">{task.title}</Typography>
             </Box>
           </Box>
 
           <Box display="flex" className={classes.timeBox}>
             <Box textAlign="left">
               <Typography variant="h5">
-                {`${task.Deadline.toLocaleDateString()} ${task.StartDate.toLocaleTimeString()} - ${task.Deadline.toLocaleTimeString()}`}
+                {format(startDate, "dd.MM.yyyy")}
+                {task.hasStartTime && " " + format(startDate, "HH:mm")}
+                {task.endDate && " - " + format(endDate, "HH:mm")}{" "}
               </Typography>
               <Typography variant="subtitle1">
                 added:{" "}
-                {`${task.Added.toLocaleDateString()} ${task.Added.toLocaleTimeString()}`}
+                {`${added.toLocaleDateString()} ${added.toLocaleTimeString()}`}
               </Typography>
             </Box>
             <Box textAlign="right" flexGrow={1}>
@@ -70,15 +84,18 @@ function TaskDetailsPage({ match }) {
 
           <Typography variant="subtitle1">description:</Typography>
           <Typography variant="body1" component="div">
-            {task.Description}
+            {task.description}
           </Typography>
 
           <AddStepForm />
-          {task.Steps.length > 0 && <ListOfSteps steps={task.Steps} />}
+          {task.steps && task.steps.length > 0 && (
+            <ListOfSteps steps={task.steps} />
+          )}
 
           <AddNoteForm />
-          {task.Notes.length > 0 &&
-            task.Notes.map((note) => <NoteCard note={note} key={note.Id} />)}
+          {task.notes &&
+            task.notes.length > 0 &&
+            task.notes.map((note) => <NoteCard note={note} key={note.id} />)}
         </Fragment>
       ) : (
         <CircularProgress className={classes.circularProgress} />

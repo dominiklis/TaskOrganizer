@@ -1,12 +1,16 @@
+import {
+  Box,
+  CircularProgress,
+  makeStyles,
+  Typography,
+} from "@material-ui/core";
 import React, { useState, useEffect, Fragment } from "react";
-import Page from "./Page";
-import { getTasks } from "../data/tasks";
-import { Box, makeStyles, Typography } from "@material-ui/core";
-import { CircularProgress } from "@material-ui/core";
-import { constStrings } from "../data/constants";
-import Clock from "./Clock";
-import TaskList from "./TaskList";
+import Page from "../components/Page";
 import TodayIcon from "@material-ui/icons/Today";
+import TaskList from "../components/TaskList";
+import { getTasks } from "../data/tasks";
+import Clock from "../components/Clock";
+import { constStrings } from "./constants";
 
 const useStyles = makeStyles((theme) => ({
   circularProgress: {
@@ -20,14 +24,26 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function MainPage() {
+function OverdueTasksPage() {
   const classes = useStyles();
   const [groupedTasks, setGroupedTasks] = useState({});
   const [tasksLoaded, setTasksLoaded] = useState(false);
 
   useEffect(() => {
     const f = async () => {
-      let groupedTasks = await getTasks();
+      let today = new Date(Date.now());
+      today = new Date(
+        Date.UTC(
+          today.getUTCFullYear(),
+          today.getUTCMonth(),
+          today.getUTCDate(),
+          0,
+          0,
+          0,
+          0
+        )
+      );
+      let groupedTasks = await getTasks(new Date(-8640000000000000), today);
       setGroupedTasks(JSON.parse(groupedTasks));
       setTasksLoaded(true);
     };
@@ -40,13 +56,12 @@ function MainPage() {
         <Page>
           <Box display="flex" textAlign="right">
             <Box>
-              <Typography variant="h6">{constStrings.activeTasks}</Typography>
+              <Typography variant="h6">{constStrings.overdueTasks}</Typography>
             </Box>
             <Box flexGrow={1}>
               <Clock />
             </Box>
           </Box>
-
           {Object.keys(groupedTasks).map((key) => {
             return (
               <Fragment key={key}>
@@ -76,4 +91,4 @@ function MainPage() {
   );
 }
 
-export default MainPage;
+export default OverdueTasksPage;

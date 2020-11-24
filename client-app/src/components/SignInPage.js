@@ -50,7 +50,7 @@ const validationSchema = yup.object({
   password: yup
     .string("enter your password")
     .min(6, "password should be of minimum 6 characters")
-    .required('password is required')
+    .required("password is required"),
 });
 
 function SignInPage() {
@@ -65,7 +65,7 @@ function SignInPage() {
     validationSchema: validationSchema,
     onSubmit: (values) => {
       console.log(values);
-      history.push('/');
+      history.push("/");
     },
   });
 
@@ -75,7 +75,7 @@ function SignInPage() {
         Sign in to Task Organizer
       </Typography>
       <form className={classes.form} onSubmit={formik.handleSubmit}>
-      <TextField
+        <TextField
           className={classes.inputField}
           fullWidth
           variant="outlined"

@@ -15,12 +15,12 @@ function ListOfStepsItem({ step }) {
       <ListItemIcon>
         <Checkbox
           edge="start"
-          checked={step.Completed}
+          checked={step.completed}
           disableRipple
           style={{ color: "#0d7377" }}
         />
       </ListItemIcon>
-      <ListItemText>{step.Text}</ListItemText>
+      <ListItemText>{step.text}</ListItemText>
       <ListItemSecondaryAction>
         <IconButton edge="end" aria-label="delete">
           <DeleteIcon />

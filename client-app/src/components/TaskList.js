@@ -5,7 +5,7 @@ function TaskList({ tasks }) {
   return (
     <div>
       {tasks.map((task, index) => {
-        return <TaskCard task={task} key={task.TaskId} />;
+        return <TaskCard task={task} key={task.id} />;
       })}
     </div>
   );

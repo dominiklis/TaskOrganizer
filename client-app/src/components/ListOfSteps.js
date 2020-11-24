@@ -6,7 +6,7 @@ function ListOfSteps({ steps }) {
   return (
     <List>
       {steps.map((step) => {
-        return <ListOfStepsItem step={step} key={step.Id} />;
+        return <ListOfStepsItem step={step} key={step.id} />;
       })}
     </List>
   );

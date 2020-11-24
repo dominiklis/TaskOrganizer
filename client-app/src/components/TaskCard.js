@@ -8,11 +8,11 @@ import {
   makeStyles,
   Typography,
 } from "@material-ui/core";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-import DateRangeIcon from "@material-ui/icons/DateRange";
 import CheckIcon from "@material-ui/icons/Check";
 import { Link } from "react-router-dom";
+import { format } from "date-fns";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
     background: "#037c81",
   },
   calendarIcon: {
-    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
   },
   darkGreen: {
     color: "#0d5537",
@@ -41,6 +41,17 @@ const useStyles = makeStyles((theme) => ({
 
 function TaskCard({ task }) {
   const classes = useStyles();
+  // const [added, setAdded] = useState(new Date());
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+
+  useEffect(() => {
+    // setAdded(new Date(task.added));
+    setStartDate(new Date(task.startDate));
+    if (task.endDate) {
+      setEndDate(new Date(task.endDate));
+    }
+  }, [/*task.added, */ task.startDate, task.endDate]);
 
   return (
     <Card className={classes.root}>
@@ -49,24 +60,25 @@ function TaskCard({ task }) {
         <CardActionArea disableRipple className={classes.card}>
           <Box display="flex">
             <Box flexGrow={25}>
-              <Link className={classes.link} to={`/task/${task.TaskId}`}>
-                <Typography variant="subtitle1" component="div">
+              <Link className={classes.link} to={`/task/${task.id}`}>
+                <Typography variant="body1" component="div">
                   <Box display="flex">
                     <Box textAlign="left" flexGrow={1}>
-                      {task.Title.length > 60
-                        ? `${task.Title.substring(0, 60)}...`
-                        : task.Title}
+                      {task.title.length > 60
+                        ? `${task.title.substring(0, 60)}...`
+                        : task.title}
                     </Box>
-                    <Box textAlign="right">
+                    {/* <Box textAlign="right">
                       {task.Deadline.toLocaleDateString()}
-                    </Box>
-                    <DateRangeIcon className={classes.calendarIcon} />
+                    </Box> */}
                   </Box>
                 </Typography>
-                <Typography variant="subtitle2">
-                  added: {task.Added.toLocaleDateString()}{" "}
-                  {task.Added.toLocaleTimeString()}
-                </Typography>
+                <Box display="flex">
+                  <Typography variant="body2">
+                    {task.hasStartTime && " " + format(startDate, "HH:mm")}
+                    {task.endDate && " - " + format(endDate, "HH:mm")}{" "}
+                  </Typography>
+                </Box>
               </Link>
             </Box>
           </Box>
