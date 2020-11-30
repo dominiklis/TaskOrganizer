@@ -1,10 +1,11 @@
 import React from 'react'
+import Page from './Page'
 
 function NotFoundPage() {
   return (
-    <div>
+    <Page>
       NOT FOUND
-    </div>
+    </Page>
   )
 }
 

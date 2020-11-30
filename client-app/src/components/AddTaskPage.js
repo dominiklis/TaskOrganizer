@@ -13,7 +13,7 @@ import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import { useFormik } from "formik";
 import React from "react";
 import { useHistory } from "react-router-dom";
-import { constStrings } from "../data/constants";
+import { constStrings } from "../utils/constants";
 import Page from "./Page";
 import * as yup from "yup";
 

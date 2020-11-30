@@ -8,9 +8,11 @@ import React, { useState, useEffect, Fragment } from "react";
 import Page from "../components/Page";
 import TodayIcon from "@material-ui/icons/Today";
 import TaskList from "../components/TaskList";
-import { getTasks } from "../data/tasks";
+import { TaskRequestParams } from "../utils/params";
 import Clock from "../components/Clock";
-import { constStrings } from "./constants";
+import { constStrings } from "../utils/constants";
+import { useHistory } from "react-router-dom";
+import { Tasks } from "../apicalls/requests";
 
 const useStyles = makeStyles((theme) => ({
   circularProgress: {
@@ -25,30 +27,27 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function OverdueTasksPage() {
+  const history = useHistory();
   const classes = useStyles();
   const [groupedTasks, setGroupedTasks] = useState({});
   const [tasksLoaded, setTasksLoaded] = useState(false);
 
   useEffect(() => {
-    const f = async () => {
-      let today = new Date(Date.now());
-      today = new Date(
-        Date.UTC(
-          today.getUTCFullYear(),
-          today.getUTCMonth(),
-          today.getUTCDate(),
-          0,
-          0,
-          0,
-          0
-        )
-      );
-      let groupedTasks = await getTasks(new Date(-8640000000000000), today);
-      setGroupedTasks(JSON.parse(groupedTasks));
-      setTasksLoaded(true);
+    const params = {
+      startDate: 0,
+      endDate: TaskRequestParams.today(),
+      sortOrder: TaskRequestParams.sortOrderDesc,
     };
-    f();
-  }, []);
+
+    Tasks.list(params).then((response) => {
+      if (response.status === 200) {
+        setGroupedTasks(response.data);
+        setTasksLoaded(true);
+      } else {
+        history.push("/NotFound");
+      }
+    });
+  }, [history]);
 
   return (
     <Fragment>
@@ -62,9 +61,9 @@ function OverdueTasksPage() {
               <Clock />
             </Box>
           </Box>
-          {Object.keys(groupedTasks).map((key) => {
+          {groupedTasks.map((group) => {
             return (
-              <Fragment key={key}>
+              <Fragment key={group.key}>
                 <Box display="flex" className={classes.dayDate}>
                   <Box>
                     <TodayIcon className={classes.todayIcon} />
@@ -72,12 +71,12 @@ function OverdueTasksPage() {
                   <Box>
                     <Typography variant="h5">
                       {" "}
-                      {new Date(key).toLocaleDateString()}{" "}
+                      {new Date(group.key).toLocaleDateString()}{" "}
                     </Typography>
                   </Box>
                 </Box>
 
-                <TaskList tasks={groupedTasks[key]} />
+                <TaskList tasks={group.tasks} />
               </Fragment>
             );
           })}

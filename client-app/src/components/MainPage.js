@@ -1,12 +1,14 @@
 import React, { useState, useEffect, Fragment } from "react";
 import Page from "./Page";
-import { getTasks } from "../data/tasks";
+import { TaskRequestParams } from "../utils/params";
 import { Box, makeStyles, Typography } from "@material-ui/core";
 import { CircularProgress } from "@material-ui/core";
-import { constStrings } from "../data/constants";
+import { constStrings } from "../utils/constants";
 import Clock from "./Clock";
 import TaskList from "./TaskList";
 import TodayIcon from "@material-ui/icons/Today";
+import { Tasks } from "../apicalls/requests";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   circularProgress: {
@@ -21,18 +23,30 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function MainPage() {
+  const history = useHistory();
+
   const classes = useStyles();
   const [groupedTasks, setGroupedTasks] = useState({});
-  const [tasksLoaded, setTasksLoaded] = useState(false);
+  const [tasksLoaded, setTasksLoaded] = useState(false); 
 
   useEffect(() => {
-    const f = async () => {
-      let groupedTasks = await getTasks();
-      setGroupedTasks(JSON.parse(groupedTasks));
-      setTasksLoaded(true);
+    const params = {
+      startDate: TaskRequestParams.today(),
+      endDate: TaskRequestParams.twoDaysAfterTomorrow(),
+      sortOrder: TaskRequestParams.sortOrderAsc,
     };
-    f();
-  }, []);
+
+    Tasks.list(params).then((response) => {
+      // console.log(response);
+      if (response.status === 200) {
+        // console.log(response.data);
+        setGroupedTasks(response.data);
+        setTasksLoaded(true);
+      } else {
+        history.push("/NotFound");
+      }
+    });
+  }, [history]);
 
   return (
     <Fragment>
@@ -47,9 +61,9 @@ function MainPage() {
             </Box>
           </Box>
 
-          {Object.keys(groupedTasks).map((key) => {
+          {groupedTasks.map((group) => {
             return (
-              <Fragment key={key}>
+              <Fragment key={group.key}>
                 <Box display="flex" className={classes.dayDate}>
                   <Box>
                     <TodayIcon className={classes.todayIcon} />
@@ -57,12 +71,12 @@ function MainPage() {
                   <Box>
                     <Typography variant="h5">
                       {" "}
-                      {new Date(key).toLocaleDateString()}{" "}
+                      {new Date(group.key).toLocaleDateString()}{" "}
                     </Typography>
                   </Box>
                 </Box>
 
-                <TaskList tasks={groupedTasks[key]} />
+                <TaskList tasks={group.tasks} />
               </Fragment>
             );
           })}

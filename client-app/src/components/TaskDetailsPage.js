@@ -3,13 +3,13 @@ import { makeStyles } from "@material-ui/core";
 import { Box, Button, Typography } from "@material-ui/core";
 import React, { useEffect, useState, Fragment } from "react";
 import { useHistory, useParams } from "react-router-dom";
-import { getTaskById } from "../data/tasks";
 import Page from "./Page";
 import AddStepForm from "./AddStepForm";
 import ListOfSteps from "./ListOfSteps";
 import AddNoteForm from "./AddNoteForm";
 import NoteCard from "./NoteCard";
 import { format } from "date-fns";
+import { Tasks } from "../apicalls/requests";
 
 const useStyles = makeStyles((theme) => ({
   timeBox: {
@@ -38,19 +38,33 @@ function TaskDetailsPage({ match }) {
   const history = useHistory();
 
   useEffect(() => {
-    const f = async () => {
-      const t = JSON.parse(await getTaskById(id));
-      if (t) {
-        setTask(t);
-        setAdded(new Date(t.added));
-        setStartDate(new Date(t.startDate));
-        setEndDate(new Date(t.endDate));
+    // const f = async () => {
+    //   const t = JSON.parse(await getTaskById(id));
+    //   if (t) {
+    //     setTask(t);
+    //     setAdded(new Date(t.added));
+    //     setStartDate(new Date(t.startDate));
+    //     setEndDate(new Date(t.endDate));
+    //     setTaskLoaded(true);
+    //   } else {
+    //     history.push("/NotFound");
+    //   }
+    // };
+    // f();
+    Tasks.details(id).then((response) => {
+      if (response.status === 200) {
+        setTask(response.data);
+        setAdded(new Date(response.data.added));
+        setStartDate(new Date(response.data.startDate));
+        if (response.data.endDate) {
+          setEndDate(new Date(response.data.endDate));
+        }
         setTaskLoaded(true);
       } else {
-        history.push("/NotFound");
+        history.push('/NotFound')
       }
-    };
-    f();
+      
+    });
   }, [id, history]);
 
   return (

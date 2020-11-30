@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-import OverdueTasksPage from "../data/OverdueTasksPage";
+import OverdueTasksPage from "../components/OverdueTasksPage";
 import AddTaskPage from "./AddTaskPage";
 import MainPage from "./MainPage";
 import NotFoundPage from "./NotFoundPage";
