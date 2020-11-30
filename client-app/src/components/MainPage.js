@@ -9,6 +9,7 @@ import TaskList from "./TaskList";
 import TodayIcon from "@material-ui/icons/Today";
 import { Tasks } from "../apicalls/requests";
 import { useHistory } from "react-router-dom";
+import { format } from "date-fns";
 
 const useStyles = makeStyles((theme) => ({
   circularProgress: {
@@ -70,8 +71,7 @@ function MainPage() {
                   </Box>
                   <Box>
                     <Typography variant="h5">
-                      {" "}
-                      {new Date(group.key).toLocaleDateString()}{" "}
+                      {format(new Date(group.key), "dd.MM.yyyy")}
                     </Typography>
                   </Box>
                 </Box>

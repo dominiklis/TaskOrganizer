@@ -13,6 +13,7 @@ import Clock from "../components/Clock";
 import { constStrings } from "../utils/constants";
 import { useHistory } from "react-router-dom";
 import { Tasks } from "../apicalls/requests";
+import { format } from "date-fns";
 
 const useStyles = makeStyles((theme) => ({
   circularProgress: {
@@ -70,8 +71,7 @@ function OverdueTasksPage() {
                   </Box>
                   <Box>
                     <Typography variant="h5">
-                      {" "}
-                      {new Date(group.key).toLocaleDateString()}{" "}
+                      {format(new Date(group.key), "dd.MM.yyyy")}
                     </Typography>
                   </Box>
                 </Box>

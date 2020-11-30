@@ -1,6 +1,5 @@
 import DateFnsUtils from "@date-io/date-fns";
 import {
-  Box,
   Button,
   createMuiTheme,
   Grid,
@@ -9,13 +8,18 @@ import {
   ThemeProvider,
   Typography,
 } from "@material-ui/core";
-import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
+import {
+  DatePicker,
+  MuiPickersUtilsProvider,
+  TimePicker,
+} from "@material-ui/pickers";
 import { useFormik } from "formik";
 import React from "react";
 import { useHistory } from "react-router-dom";
 import { constStrings } from "../utils/constants";
 import Page from "./Page";
 import * as yup from "yup";
+import { Tasks } from "../apicalls/requests";
 
 const useStyles = makeStyles((theme) => ({
   submitButton: {
@@ -30,8 +34,8 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(1),
   },
   dateTimePickerGridItem: {
-    textAlign: "center"
-  }
+    textAlign: "center",
+  },
 }));
 
 const theme = createMuiTheme({
@@ -53,15 +57,9 @@ const theme = createMuiTheme({
 const validationSchema = yup.object({
   title: yup.string("enter title").required("title is required"),
   startDate: yup.date(),
-  endDate: yup
-    .date()
-    .nullable()
-    .default(null)
-    .when(
-      "startDate",
-      (sDate, yup) =>
-        sDate && yup.min(sDate, "end date cannot be before start date")
-    ),
+  startTime: yup.date().nullable(),
+  hours: yup.number().nullable().min(0).max(12),
+  minutes: yup.number().nullable().min(0).max(59),
 });
 
 function AddTaskPage() {
@@ -73,11 +71,44 @@ function AddTaskPage() {
       title: "",
       description: "",
       startDate: new Date(),
-      endDate: null,
+      startTime: null,
+      hours: "0",
+      minutes: "0",
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      console.log(JSON.stringify(values, null, 2));
+      const newTask = {
+        title: values.title,
+        description: values.description,
+        completed: false,
+        startDate: new Date(values.startDate.setHours(0, 0, 0, 0)),
+        hasStartTime: false,
+        endDate: null,
+      };
+
+      if (values.startTime) {
+        newTask.startDate.setHours(
+          values.startTime.getHours(),
+          values.startTime.getMinutes(),
+          0,
+          0
+        );
+        newTask.hasStartTime = true;
+      }
+
+      if (
+        newTask.hasStartTime &&
+        (values.hours !== "0" || values.minutes !== "0")
+      ) {
+        newTask.endDate = new Date(
+          newTask.startDate.getTime() +
+            parseInt(values.hours) * 60 * 60 * 1000 +
+            parseInt(values.minutes) * 60 * 1000
+        );
+      }
+
+      Tasks.addTask(newTask);
+
       history.push("/");
     },
   });
@@ -110,22 +141,22 @@ function AddTaskPage() {
           onChange={formik.handleChange}
         />
 
-        {formik.touched.endDate && formik.errors.endDate && (
-          <Box textAlign="center">
-            <p style={{ color: "red" }}>end date cannot be before start date</p>
-          </Box>
-        )}
-
-        <MuiPickersUtilsProvider utils={DateFnsUtils}>
-          <Grid container spacing={3}>
-            <Grid item xs={12} sm={6} className={classes.dateTimePickerGridItem}>
+        <Grid container spacing={3}>
+          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <Grid
+              item
+              xs={12}
+              sm={4}
+              className={classes.dateTimePickerGridItem}
+            >
               <ThemeProvider theme={theme}>
-                <DateTimePicker
-                fullWidth 
+                <DatePicker
+                  fullWidth
                   id="startDate"
                   name="startDate"
                   label="start date"
                   value={formik.values.startDate}
+                  minDate={new Date()}
                   onChange={(date) =>
                     formik.setFieldValue("startDate", date, false)
                   }
@@ -136,25 +167,55 @@ function AddTaskPage() {
               </ThemeProvider>
             </Grid>
 
-            <Grid item xs={12} sm={6} className={classes.dateTimePickerGridItem}>
+            <Grid
+              item
+              xs={12}
+              sm={4}
+              className={classes.dateTimePickerGridItem}
+            >
               <ThemeProvider theme={theme}>
-                <DateTimePicker
-                fullWidth 
-                  id="endDate"
-                  name="endDate"
-                  label="end date"
-                  value={formik.values.endDate}
-                  onChange={(date) =>
-                    formik.setFieldValue("endDate", date, false)
+                <TimePicker
+                  fullWidth
+                  id="startTime"
+                  name="startTime"
+                  label="start time"
+                  ampm={false}
+                  value={formik.values.startTime}
+                  onChange={(time) =>
+                    formik.setFieldValue("startTime", time, false)
                   }
                   error={
-                    formik.touched.endDate && Boolean(formik.errors.endDate)
+                    formik.touched.startTime && Boolean(formik.errors.startTime)
                   }
                 />
               </ThemeProvider>
             </Grid>
+          </MuiPickersUtilsProvider>
+
+          <Grid item xs={6} sm={2} className={classes.dateTimePickerGridItem}>
+            <TextField
+              id="hours"
+              name="hours"
+              label="hours"
+              type="number"
+              value={formik.values.hours}
+              onChange={formik.handleChange}
+              error={formik.touched.hours && Boolean(formik.errors.hours)}
+            />
           </Grid>
-        </MuiPickersUtilsProvider>
+
+          <Grid item xs={6} sm={2} className={classes.dateTimePickerGridItem}>
+            <TextField
+              id="minutes"
+              name="minutes"
+              label="minutes"
+              type="minutes"
+              value={formik.values.minutes}
+              onChange={formik.handleChange}
+              error={formik.touched.minutes && Boolean(formik.errors.minutes)}
+            />
+          </Grid>
+        </Grid>
 
         <Button type="submit" fullWidth className={classes.submitButton}>
           submit

@@ -38,19 +38,6 @@ function TaskDetailsPage({ match }) {
   const history = useHistory();
 
   useEffect(() => {
-    // const f = async () => {
-    //   const t = JSON.parse(await getTaskById(id));
-    //   if (t) {
-    //     setTask(t);
-    //     setAdded(new Date(t.added));
-    //     setStartDate(new Date(t.startDate));
-    //     setEndDate(new Date(t.endDate));
-    //     setTaskLoaded(true);
-    //   } else {
-    //     history.push("/NotFound");
-    //   }
-    // };
-    // f();
     Tasks.details(id).then((response) => {
       if (response.status === 200) {
         setTask(response.data);
@@ -61,9 +48,8 @@ function TaskDetailsPage({ match }) {
         }
         setTaskLoaded(true);
       } else {
-        history.push('/NotFound')
+        history.push("/NotFound");
       }
-      
     });
   }, [id, history]);
 
@@ -84,9 +70,9 @@ function TaskDetailsPage({ match }) {
                 {task.hasStartTime && " " + format(startDate, "HH:mm")}
                 {task.endDate && " - " + format(endDate, "HH:mm")}{" "}
               </Typography>
+              
               <Typography variant="subtitle1">
-                added:{" "}
-                {`${added.toLocaleDateString()} ${added.toLocaleTimeString()}`}
+                {`added: ${format(added, "dd.MM.yyyy HH:mm")}`}
               </Typography>
             </Box>
             <Box textAlign="right" flexGrow={1}>

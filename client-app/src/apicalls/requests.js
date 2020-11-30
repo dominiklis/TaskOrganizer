@@ -15,5 +15,6 @@ const requests = {
 export const Tasks = {
   list: (params) => requests.get("/tasks", params),
   details: (id) => requests.get(`/tasks/${id}`),
+  addTask: (task) => requests.post("/tasks", task),
 };
 

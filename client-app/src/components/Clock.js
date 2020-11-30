@@ -1,6 +1,7 @@
 import { Typography } from "@material-ui/core";
 import React, { useState } from "react";
 import { useEffect } from "react";
+import { format } from "date-fns";
 
 function Clock() {
   const [date, setDate] = useState(new Date());
@@ -12,7 +13,7 @@ function Clock() {
 
   return (
     <Typography variant="h5">
-      {date.toLocaleDateString()} - {date.toLocaleTimeString()}
+      {format(date, "dd.MM.yyyy - HH:mm:ss")}
     </Typography>
   );
 }
