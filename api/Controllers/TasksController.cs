@@ -82,6 +82,8 @@ namespace api.Controllers
         [HttpPost]
         public async Task<ActionResult> Post([FromBody] TaskModel task)
         {
+            task.Added = DateTime.Now;
+
             _context.Add(task);
             await _context.SaveChangesAsync();
             return new CreatedAtRouteResult("getTaskById", new { id = task.Id }, task);
