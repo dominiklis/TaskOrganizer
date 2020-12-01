@@ -64,19 +64,19 @@ function OverdueTasksPage() {
           </Box>
           {groupedTasks.map((group) => {
             return (
-              <Fragment key={group.key}>
+              <Fragment key={group.Key}>
                 <Box display="flex" className={classes.dayDate}>
                   <Box>
                     <TodayIcon className={classes.todayIcon} />
                   </Box>
                   <Box>
                     <Typography variant="h5">
-                      {format(new Date(group.key), "dd.MM.yyyy")}
+                      {format(new Date(group.Key), "dd.MM.yyyy")}
                     </Typography>
                   </Box>
                 </Box>
 
-                <TaskList tasks={group.tasks} />
+                <TaskList tasks={group.Tasks} />
               </Fragment>
             );
           })}

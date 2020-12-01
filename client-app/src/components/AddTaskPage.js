@@ -108,6 +108,7 @@ function AddTaskPage() {
       }
 
       Tasks.addTask(newTask);
+      // console.log(JSON.stringify(newTask));
 
       history.push("/");
     },

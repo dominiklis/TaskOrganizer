@@ -47,11 +47,11 @@ function TaskCard({ task }) {
 
   useEffect(() => {
     // setAdded(new Date(task.added));
-    setStartDate(new Date(task.startDate));
-    if (task.endDate) {
-      setEndDate(new Date(task.endDate));
+    setStartDate(new Date(task.StartDate));
+    if (task.EndDate) {
+      setEndDate(new Date(task.EndDate));
     }
-  }, [/*task.added, */ task.startDate, task.endDate]);
+  }, [/*task.added, */ task.StartDate, task.EndDate]);
 
   return (
     <Card className={classes.root}>
@@ -60,13 +60,13 @@ function TaskCard({ task }) {
         <CardActionArea disableRipple className={classes.card}>
           <Box display="flex">
             <Box flexGrow={25}>
-              <Link className={classes.link} to={`/task/${task.id}`}>
+              <Link className={classes.link} to={`/task/${task.Id}`}>
                 <Typography variant="body1" component="div">
                   <Box display="flex">
                     <Box textAlign="left" flexGrow={1}>
-                      {task.title.length > 60
-                        ? `${task.title.substring(0, 60)}...`
-                        : task.title}
+                      {task.Title.length > 60
+                        ? `${task.Title.substring(0, 60)}...`
+                        : task.Title}
                     </Box>
                     {/* <Box textAlign="right">
                       {task.Deadline.toLocaleDateString()}
@@ -75,8 +75,8 @@ function TaskCard({ task }) {
                 </Typography>
                 <Box display="flex">
                   <Typography variant="body2">
-                    {task.hasStartTime && " " + format(startDate, "HH:mm")}
-                    {task.endDate && " - " + format(endDate, "HH:mm")}{" "}
+                    {task.HasStartTime && " " + format(startDate, "HH:mm")}
+                    {task.EndDate && " - " + format(endDate, "HH:mm")}{" "}
                   </Typography>
                 </Box>
               </Link>

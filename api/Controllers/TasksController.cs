@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using api.Data;
+using api.DTOs.Tasks;
 using api.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -36,7 +37,7 @@ namespace api.Controllers
                 bool success = Int32.TryParse(startDate, out startDateTimestamp);
                 if (success && startDateTimestamp >= 0)
                 {
-                    start = DateTimeOffset.FromUnixTimeSeconds(startDateTimestamp).DateTime;
+                    start = DateTimeOffset.FromUnixTimeSeconds(startDateTimestamp).LocalDateTime;
                 }
             }
 
@@ -47,7 +48,7 @@ namespace api.Controllers
                 bool success = Int32.TryParse(endDate, out endDateTimestamp);
                 if (success && endDateTimestamp >= 0)
                 {
-                    end = DateTimeOffset.FromUnixTimeSeconds(endDateTimestamp).DateTime;
+                    end = DateTimeOffset.FromUnixTimeSeconds(endDateTimestamp).LocalDateTime;
                 }
             }
             System.Diagnostics.Debug.WriteLine(startDate + " || " + endDate);
@@ -80,13 +81,26 @@ namespace api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] TaskModel task)
+        public async Task<ActionResult> Post([FromBody] AddTaskDTO task)
         {
-            task.Added = DateTime.Now;
+            TaskModel newTask = new TaskModel()
+            {
+                Title = task.Title,
+                Description = task.Description,
+                Added = DateTime.Now,
+                Completed = false,
+                StartDate = DateTime.Parse(task.StartDate, CultureInfo.InvariantCulture, DateTimeStyles.None),
+                HasStartTime = task.HasStartTime,
+            };
+            
+            if (task.EndDate != null)
+            {
+                newTask.EndDate = DateTime.Parse(task.EndDate, CultureInfo.InvariantCulture, DateTimeStyles.None);
+            }
 
-            _context.Add(task);
+            _context.Add(newTask);
             await _context.SaveChangesAsync();
-            return new CreatedAtRouteResult("getTaskById", new { id = task.Id }, task);
+            return new CreatedAtRouteResult("getTaskById", new { id = newTask.Id }, newTask);
         }
 
         [HttpPut("{id}")]

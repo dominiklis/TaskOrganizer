@@ -28,7 +28,7 @@ function MainPage() {
 
   const classes = useStyles();
   const [groupedTasks, setGroupedTasks] = useState({});
-  const [tasksLoaded, setTasksLoaded] = useState(false); 
+  const [tasksLoaded, setTasksLoaded] = useState(false);
 
   useEffect(() => {
     const params = {
@@ -38,9 +38,7 @@ function MainPage() {
     };
 
     Tasks.list(params).then((response) => {
-      // console.log(response);
       if (response.status === 200) {
-        // console.log(response.data);
         setGroupedTasks(response.data);
         setTasksLoaded(true);
       } else {
@@ -64,19 +62,19 @@ function MainPage() {
 
           {groupedTasks.map((group) => {
             return (
-              <Fragment key={group.key}>
+              <Fragment key={group.Key}>
                 <Box display="flex" className={classes.dayDate}>
                   <Box>
                     <TodayIcon className={classes.todayIcon} />
                   </Box>
                   <Box>
                     <Typography variant="h5">
-                      {format(new Date(group.key), "dd.MM.yyyy")}
+                      {format(new Date(group.Key), "dd.MM.yyyy")}
                     </Typography>
                   </Box>
                 </Box>
 
-                <TaskList tasks={group.tasks} />
+                <TaskList tasks={group.Tasks} />
               </Fragment>
             );
           })}
