@@ -41,10 +41,10 @@ function TaskDetailsPage({ match }) {
     Tasks.details(id).then((response) => {
       if (response.status === 200) {
         setTask(response.data);
-        setAdded(new Date(response.data.Added));
-        setStartDate(new Date(response.data.StartDate));
-        if (response.data.EndDate) {
-          setEndDate(new Date(response.data.EndDate));
+        setAdded(new Date(response.data.added));
+        setStartDate(new Date(response.data.startDate));
+        if (response.data.endDate) {
+          setEndDate(new Date(response.data.endDate));
         }
         setTaskLoaded(true);
       } else {
@@ -53,13 +53,18 @@ function TaskDetailsPage({ match }) {
     });
   }, [id, history]);
 
+  const handleDeleteButtonClick = () => {
+    Tasks.deleteTask(id);
+    history.goBack();
+  }
+
   return (
     <Page>
       {taskLoaded ? (
         <Fragment>
           <Box display="flex">
             <Box textAlign="left" flexGrow={1}>
-              <Typography variant="h4">{task.Title}</Typography>
+              <Typography variant="h4">{task.title}</Typography>
             </Box>
           </Box>
 
@@ -67,8 +72,8 @@ function TaskDetailsPage({ match }) {
             <Box textAlign="left">
               <Typography variant="h5">
                 {format(startDate, "dd.MM.yyyy")}
-                {task.HasStartTime && " " + format(startDate, "HH:mm")}
-                {task.EndDate && " - " + format(endDate, "HH:mm")}{" "}
+                {task.hasStartTime && " " + format(startDate, "HH:mm")}
+                {task.endDate && " - " + format(endDate, "HH:mm")}{" "}
               </Typography>
 
               <Typography variant="subtitle1">
@@ -77,25 +82,25 @@ function TaskDetailsPage({ match }) {
             </Box>
             <Box textAlign="right" flexGrow={1}>
               <Button color="primary">edit</Button>
-              <Button color="secondary">delete</Button>
+              <Button color="secondary" onClick={handleDeleteButtonClick}>delete</Button>
               <Button>share</Button>
             </Box>
           </Box>
 
           <Typography variant="subtitle1">description:</Typography>
           <Typography variant="body1" component="div">
-            {task.Description}
+            {task.description}
           </Typography>
 
           <AddStepForm />
-          {task.Steps && task.Steps.length > 0 && (
-            <ListOfSteps steps={task.Steps} />
+          {task.steps && task.steps.length > 0 && (
+            <ListOfSteps steps={task.steps} />
           )}
 
           <AddNoteForm />
-          {task.Notes &&
-            task.Notes.length > 0 &&
-            task.Notes.map((note) => <NoteCard note={note} key={note.Id} />)}
+          {task.notes &&
+            task.notes.length > 0 &&
+            task.notes.map((note) => <NoteCard note={note} key={note.Id} />)}
         </Fragment>
       ) : (
         <CircularProgress className={classes.circularProgress} />
