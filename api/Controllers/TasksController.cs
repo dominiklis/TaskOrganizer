@@ -93,23 +93,6 @@ namespace api.Controllers
         public async Task<ActionResult> Post([FromBody] AddTaskDTO task)
         {
             TaskModel newTask = _mapper.Map<TaskModel>(task);
-            /*TaskModel newTask = new TaskModel()
-            {
-                Title = task.Title,
-                Description = task.Description,
-                Added = DateTime.Now,
-                Completed = false,
-                StartDate = DateTime.Parse(task.StartDate, CultureInfo.InvariantCulture, DateTimeStyles.None),
-                HasStartTime = task.HasStartTime,
-            };
-
-            if (task.EndDate != null)
-            {
-                newTask.EndDate = DateTime.Parse(task.EndDate, CultureInfo.InvariantCulture, DateTimeStyles.None);
-            }
-
-            newTask.Completed = false;*/
-
             _context.Add(newTask);
             await _context.SaveChangesAsync();
             return new CreatedAtRouteResult("getTaskById", new { id = newTask.Id }, newTask);
