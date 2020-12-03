@@ -39,7 +39,6 @@ function MainPage() {
 
     Tasks.list(params).then((response) => {
       if (response.status === 200) {
-        console.log(response.data);
         setGroupedTasks(response.data);
         setTasksLoaded(true);
       } else {

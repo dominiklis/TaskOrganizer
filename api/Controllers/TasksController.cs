@@ -92,7 +92,8 @@ namespace api.Controllers
         [HttpPost]
         public async Task<ActionResult> Post([FromBody] AddTaskDTO task)
         {
-            TaskModel newTask = new TaskModel()
+            TaskModel newTask = _mapper.Map<TaskModel>(task);
+            /*TaskModel newTask = new TaskModel()
             {
                 Title = task.Title,
                 Description = task.Description,
@@ -101,11 +102,13 @@ namespace api.Controllers
                 StartDate = DateTime.Parse(task.StartDate, CultureInfo.InvariantCulture, DateTimeStyles.None),
                 HasStartTime = task.HasStartTime,
             };
-            
+
             if (task.EndDate != null)
             {
                 newTask.EndDate = DateTime.Parse(task.EndDate, CultureInfo.InvariantCulture, DateTimeStyles.None);
             }
+
+            newTask.Completed = false;*/
 
             _context.Add(newTask);
             await _context.SaveChangesAsync();
