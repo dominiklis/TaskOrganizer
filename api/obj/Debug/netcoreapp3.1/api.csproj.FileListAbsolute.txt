@@ -60,5 +60,7 @@ C:\Users\Dominik\Desktop\VII\i\TaskOrganizer\api\bin\Debug\netcoreapp3.1\Microso
 C:\Users\Dominik\Desktop\VII\i\TaskOrganizer\api\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.JsonPatch.dll
 C:\Users\Dominik\Desktop\VII\i\TaskOrganizer\api\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
 C:\Users\Dominik\Desktop\VII\i\TaskOrganizer\api\bin\Debug\netcoreapp3.1\Newtonsoft.Json.Bson.dll
+C:\Users\Dominik\Desktop\VII\i\TaskOrganizer\api\bin\Debug\netcoreapp3.1\AutoMapper.dll
+C:\Users\Dominik\Desktop\VII\i\TaskOrganizer\api\bin\Debug\netcoreapp3.1\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
 C:\Users\Dominik\Desktop\VII\i\TaskOrganizer\api\obj\Debug\netcoreapp3.1\api.csproj.CoreCompileInputs.cache
 C:\Users\Dominik\Desktop\VII\i\TaskOrganizer\api\obj\Debug\netcoreapp3.1\api.MvcApplicationPartsAssemblyInfo.cache

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using api.Data;
 using api.DTOs.Tasks;
 using api.Models;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -17,15 +18,20 @@ namespace api.Controllers
     public class TasksController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly IMapper _mapper;
 
-        public TasksController(ApplicationDbContext context)
+        public TasksController(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         [HttpGet]
-        //public async Task<ActionResult<List<TaskModel>>> Get()
-        public async Task<ActionResult> Get([FromQuery] string startDate = null, [FromQuery] string endDate = null, [FromQuery] string sortOrder = "asc")
+        public async Task<ActionResult> Get(
+            [FromQuery] string startDate = null, 
+            [FromQuery] string endDate = null, 
+            [FromQuery] string sortOrder = "asc"
+            )
         {
             DateTime start = DateTime.UtcNow.Date;
             DateTime end = start.AddDays(3);
@@ -54,7 +60,9 @@ namespace api.Controllers
             System.Diagnostics.Debug.WriteLine(startDate + " || " + endDate);
             List<TaskModel> tasks = await _context.TaskModels.Where(x => x.StartDate >= start && x.StartDate < end).ToListAsync();
 
-            var groupedTasks = tasks.GroupBy(task => task.StartDate.Date, task => task)
+            List<GetTaskDTO> tasksDTOs = _mapper.Map<List<GetTaskDTO>>(tasks);
+
+            var groupedTasks = tasksDTOs.GroupBy(tasksDTOs => tasksDTOs.StartDate.Date, tasksDTOs => tasksDTOs)
                 .Select(t => new { t.Key, Count = t.Count(), Tasks = t.ToList() });
 
             if (sortOrder == "asc")
@@ -70,14 +78,15 @@ namespace api.Controllers
         }
 
         [HttpGet("{id}", Name = "GetTaskById")]
-        public async Task<ActionResult<TaskModel>> Get(int id)
+        public async Task<ActionResult<GetTaskDTO>> Get(int id)
         {
             var task = await _context.TaskModels.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
             if (task == null)
             {
                 return NotFound();
             }
-            return task;
+
+            return _mapper.Map<GetTaskDTO>(task);
         }
 
         [HttpPost]
