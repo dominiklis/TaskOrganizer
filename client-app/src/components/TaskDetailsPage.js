@@ -62,11 +62,7 @@ function TaskDetailsPage({ match }) {
     <Page>
       {taskLoaded ? (
         <Fragment>
-          <Box display="flex">
-            <Box textAlign="left" flexGrow={1}>
-              <Typography variant="h4">{task.title}</Typography>
-            </Box>
-          </Box>
+          <Typography variant="h4">{task.title}</Typography>
 
           <Box display="flex" className={classes.timeBox}>
             <Box textAlign="left">
@@ -87,7 +83,7 @@ function TaskDetailsPage({ match }) {
             </Box>
           </Box>
 
-          <Typography variant="subtitle1">description:</Typography>
+          <Typography variant="subtitle2">description:</Typography>
           <Typography variant="body1" component="div">
             {task.description}
           </Typography>
