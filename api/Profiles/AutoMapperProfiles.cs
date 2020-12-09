@@ -22,9 +22,19 @@ namespace api.Profiles
                         DateTime.Parse(src.StartDate, CultureInfo.InvariantCulture, DateTimeStyles.None)))
                 .ForMember(dest => dest.EndDate, opt =>
                     opt.MapFrom(src =>
-                        src.EndDate == null ? (DateTime?)null : DateTime.Parse(src.EndDate, CultureInfo.InvariantCulture, DateTimeStyles.None)))
-                //.ForMember(x => x.EndDate, opt => opt.Ignore())
-                ;
+                        src.EndDate == null ? 
+                            (DateTime?)null : 
+                            DateTime.Parse(src.EndDate, CultureInfo.InvariantCulture, DateTimeStyles.None))); 
+            
+            CreateMap<UpdateTaskDTO, TaskModel>()
+                 .ForMember(dest => dest.StartDate, opt =>
+                     opt.MapFrom(src =>
+                         DateTime.Parse(src.StartDate, CultureInfo.InvariantCulture, DateTimeStyles.None)))
+                 .ForMember(dest => dest.EndDate, opt =>
+                     opt.MapFrom(src =>
+                         src.EndDate == null ? 
+                            (DateTime?)null : 
+                            DateTime.Parse(src.EndDate, CultureInfo.InvariantCulture, DateTimeStyles.None)));
         }
     }
 }

@@ -8,6 +8,7 @@ using api.DTOs.Tasks;
 using api.Models;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -99,14 +100,18 @@ namespace api.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> Put(int id, [FromBody] TaskModel taskToUpdate)
+        public async Task<ActionResult> Put(int id, [FromBody] UpdateTaskDTO taskToUpdate)
         {
-            if (id != taskToUpdate.Id)
+            TaskModel task = await _context.TaskModels.FirstOrDefaultAsync(x => x.Id == id);
+            if (task == null)
             {
-                return BadRequest();
+                return NotFound();
             }
 
-            _context.Entry(taskToUpdate).State = EntityState.Modified;
+            task = _mapper.Map(taskToUpdate, task);
+            await _context.SaveChangesAsync();
+
+            /*_context.Entry(taskToUpdate).State = EntityState.Modified;
 
             try
             {
@@ -122,7 +127,32 @@ namespace api.Controllers
                 {
                     throw;
                 }
+            }*/
+
+            return NoContent();
+        }
+
+        [HttpPatch("{id}")]
+        public async Task<ActionResult> Patch(int id, [FromBody] JsonPatchDocument<TaskModel> patchDoc)
+        {
+            TaskModel task = await _context.TaskModels.FirstOrDefaultAsync(x => x.Id == id);
+            if (task == null)
+            {
+                return NotFound();
             }
+
+            if (patchDoc == null)
+            {
+                return BadRequest();
+            }
+
+            patchDoc.ApplyTo(task, ModelState);
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            await _context.SaveChangesAsync();
 
             return NoContent();
         }

@@ -33,11 +33,11 @@ namespace api
             services.AddDbContext<ApplicationDbContext>(options => 
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddControllers()/*.AddNewtonsoftJson(options => 
+            services.AddControllers().AddNewtonsoftJson();/*.AddNewtonsoftJson(options => 
             {
                 options.SerializerSettings.ContractResolver = new DefaultContractResolver();
                 options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
-            })*/;
+            });*/
 
             services.AddAutoMapper(typeof(Startup));
 
