@@ -68,9 +68,6 @@ function TaskCard({ task }) {
                         ? `${task.title.substring(0, 60)}...`
                         : task.title}
                     </Box>
-                    {/* <Box textAlign="right">
-                      {task.Deadline.toLocaleDateString()}
-                    </Box> */}
                   </Box>
                 </Typography>
                 <Box display="flex">
