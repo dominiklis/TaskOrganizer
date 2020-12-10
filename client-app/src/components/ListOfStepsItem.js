@@ -1,30 +1,93 @@
 import {
+  Button,
   Checkbox,
   IconButton,
   ListItem,
   ListItemIcon,
   ListItemSecondaryAction,
   ListItemText,
+  makeStyles,
 } from "@material-ui/core";
-import React from "react";
+import React, { useState } from "react";
 import DeleteIcon from "@material-ui/icons/Delete";
+import { Steps } from "../apicalls/requests";
+import EditStepTextForm from "./EditStepTextForm";
+import CheckBoxIcon from "@material-ui/icons/CheckBox";
+import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 
-function ListOfStepsItem({ step }) {
+const useStyles = makeStyles((theme) => ({
+  cancelCompleted: {
+    color: "red",
+  },
+  setCompleted: {
+    color: "green",
+  },
+}));
+
+function ListOfStepsItem({ step, handleDeleteStep }) {
+  const classes = useStyles();
+
+  const [stepText, setStepText] = useState(step.text);
+  const [stepCompleted, setStepCompleted] = useState(step.completed);
+  const [editText, setEditText] = useState(false);
+
+  const changeTextEditState = () => {
+    const e = !editText;
+    setEditText(e);
+  };
+
+  const handleDeleteFormSubmit = (e) => {
+    e.preventDefault();
+    handleDeleteStep(step.id);
+    Steps.delete(step.id);
+  };
+
+  const handleSaveEditTextButton = (text) => {
+    setStepText(text);
+    changeTextEditState();
+  };
+
+  const handleCompletedFormSubmit = (e) => {
+    e.preventDefault();
+    setStepCompleted(!stepCompleted);
+    Steps.patch(step.id, [
+      {
+        op: "replace",
+        path: "/Completed",
+        value: !step.completed,
+      },
+    ]);
+  };
+
   return (
     <ListItem>
       <ListItemIcon>
-        <Checkbox
-          edge="start"
-          checked={step.completed}
-          disableRipple
-          style={{ color: "#0d7377" }}
-        />
+        <form onSubmit={handleCompletedFormSubmit}>
+          <IconButton edge="end" aria-label="delete" type="submit">
+            {stepCompleted ? (
+              <CheckBoxIcon className={classes.setCompleted} />
+            ) : (
+              <CheckBoxOutlineBlankIcon className={classes.cancelCompleted} />
+            )}
+          </IconButton>
+        </form>
       </ListItemIcon>
-      <ListItemText>{step.text}</ListItemText>
+      {editText ? (
+        <EditStepTextForm
+          id={step.id}
+          text={step.text}
+          afterSubmit={handleSaveEditTextButton}
+          handleCancel={changeTextEditState}
+        />
+      ) : (
+        <ListItemText onClick={changeTextEditState}>{stepText}</ListItemText>
+      )}
       <ListItemSecondaryAction>
-        <IconButton edge="end" aria-label="delete">
-          <DeleteIcon />
-        </IconButton>
+        <form onSubmit={handleDeleteFormSubmit}>
+          <IconButton edge="end" aria-label="delete" type="submit">
+            <DeleteIcon />
+          </IconButton>
+        </form>
       </ListItemSecondaryAction>
     </ListItem>
   );

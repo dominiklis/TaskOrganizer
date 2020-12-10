@@ -6,8 +6,8 @@ import { useHistory, useParams } from "react-router-dom";
 import Page from "./Page";
 import AddStepForm from "./AddStepForm";
 import ListOfSteps from "./ListOfSteps";
-import AddNoteForm from "./AddNoteForm";
-import NoteCard from "./NoteCard";
+// import AddNoteForm from "./AddNoteForm";
+// import NoteCard from "./NoteCard";
 import { format } from "date-fns";
 import { Tasks } from "../apicalls/requests";
 import EditTaskTitleForm from "./EditTaskTitleForm";
@@ -48,6 +48,7 @@ function TaskDetailsPage({ match }) {
     Tasks.details(id).then((response) => {
       if (response.status === 200) {
         setTask(response.data);
+        console.log(response.data);
         if (response.data.description === "") {
           setEditDescription(true);
         }
@@ -110,6 +111,25 @@ function TaskDetailsPage({ match }) {
   const changeEditDatesState = () => {
     const e = !editDates;
     setEditDates(e);
+  };
+
+  const handleAddStep = (step) => {
+    const taskWithNewSteps = {
+      ...task,
+      steps: [...task.steps, step],
+    };
+    setTask(taskWithNewSteps);
+
+    console.log(step);
+  };
+
+  const handleDeleteStep = (id) => {
+    const taskWithNewSteps = {
+      ...task,
+      steps: task.steps.filter((x) => x.id !== id),
+    };
+
+    setTask(taskWithNewSteps);
   };
 
   return (
@@ -178,15 +198,18 @@ function TaskDetailsPage({ match }) {
             )}
           </Fragment>
 
-          <AddStepForm />
+          <AddStepForm taskId={task.id} onAddStep={handleAddStep} />
           {task.steps && task.steps.length > 0 && (
-            <ListOfSteps steps={task.steps} />
+            <ListOfSteps
+              steps={task.steps}
+              handleDeleteStep={handleDeleteStep}
+            />
           )}
 
-          <AddNoteForm />
+          {/* <AddNoteForm />
           {task.notes &&
             task.notes.length > 0 &&
-            task.notes.map((note) => <NoteCard note={note} key={note.Id} />)}
+            task.notes.map((note) => <NoteCard note={note} key={note.Id} />)} */}
         </Fragment>
       ) : (
         <CircularProgress className={classes.circularProgress} />

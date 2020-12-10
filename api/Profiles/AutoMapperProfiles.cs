@@ -1,4 +1,5 @@
-﻿using api.DTOs.Tasks;
+﻿using api.DTOs.Steps;
+using api.DTOs.Tasks;
 using api.Models;
 using AutoMapper;
 using System;
@@ -35,6 +36,8 @@ namespace api.Profiles
                          src.EndDate == null ? 
                             (DateTime?)null : 
                             DateTime.Parse(src.EndDate, CultureInfo.InvariantCulture, DateTimeStyles.None)));
+
+            CreateMap<Step, GetStepDTO>();
         }
     }
 }

@@ -21,3 +21,9 @@ export const Tasks = {
   patch: (id, patchDoc) => requests.patch(`/tasks/${id}`, patchDoc),
   delete: (id) => requests.delete(`/tasks/${id}`),
 };
+
+export const Steps = {
+  add: (step) => requests.post("/steps", step),
+  patch: (id, patchDoc) => requests.patch(`/steps/${id}`, patchDoc),
+  delete: (id) => requests.delete(`/steps/${id}`),
+};

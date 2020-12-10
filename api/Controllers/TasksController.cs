@@ -58,8 +58,11 @@ namespace api.Controllers
                     end = DateTimeOffset.FromUnixTimeSeconds(endDateTimestamp).LocalDateTime;
                 }
             }
-            System.Diagnostics.Debug.WriteLine(startDate + " || " + endDate);
-            List<TaskModel> tasks = await _context.TaskModels.Where(x => x.StartDate >= start && x.StartDate < end).ToListAsync();
+
+            List<TaskModel> tasks = await _context
+                .TaskModels.Where(x => x.StartDate >= start && x.StartDate < end)
+                .Include(x => x.Steps)
+                .ToListAsync();
 
             List<GetTaskDTO> tasksDTOs = _mapper.Map<List<GetTaskDTO>>(tasks);
 
@@ -81,7 +84,12 @@ namespace api.Controllers
         [HttpGet("{id}", Name = "GetTaskById")]
         public async Task<ActionResult<GetTaskDTO>> Get(int id)
         {
-            var task = await _context.TaskModels.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+            var task = await _context
+                .TaskModels
+                .AsNoTracking()
+                .Include(x => x.Steps)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
             if (task == null)
             {
                 return NotFound();
@@ -96,7 +104,7 @@ namespace api.Controllers
             TaskModel newTask = _mapper.Map<TaskModel>(task);
             _context.Add(newTask);
             await _context.SaveChangesAsync();
-            return new CreatedAtRouteResult("getTaskById", new { id = newTask.Id }, newTask);
+            return new CreatedAtRouteResult("GetTaskById", new { id = newTask.Id }, newTask);
         }
 
         [HttpPut("{id}")]
