@@ -15,8 +15,8 @@ import AddIcon from "@material-ui/icons/Add";
 import ImportContactsIcon from "@material-ui/icons/ImportContacts";
 import FolderOpenIcon from "@material-ui/icons/FolderOpen";
 import PeopleIcon from "@material-ui/icons/People";
-import WarningIcon from "@material-ui/icons/Warning";
-import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import WarningIcon from '@material-ui/icons/Warning';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 const useStyles = makeStyles((theme) => ({
   drawer: {
@@ -72,7 +72,7 @@ const menuItems = [
     name: "overdueButton",
     label: "Overdue",
     icon: <WarningIcon />,
-    linkTo: "/overdue",
+    linkTo: "/overdue"
   },
   {
     name: "groupsButton",
@@ -97,7 +97,7 @@ const menuItems = [
     label: "Done",
     icon: <CheckCircleIcon />,
     linkTo: "/done",
-  },
+  }
 ];
 
 function SideMenu() {
@@ -119,9 +119,7 @@ function SideMenu() {
               <Link to={el.linkTo} className={classes.link} key={el.name}>
                 {el.styled ? (
                   <ListItem button className={classes.styledButton}>
-                    <ListItemIcon className={classes.styledIcon}>
-                      {el.icon}
-                    </ListItemIcon>
+                    <ListItemIcon className={classes.styledIcon}>{el.icon}</ListItemIcon>
                     <ListItemText>{el.label}</ListItemText>
                   </ListItem>
                 ) : (

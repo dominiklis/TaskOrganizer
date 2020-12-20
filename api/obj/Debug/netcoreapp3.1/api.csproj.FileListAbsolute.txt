@@ -16,6 +16,8 @@ C:\Users\Dominik\Desktop\VII\i\TaskOrganizer\api\obj\Debug\netcoreapp3.1\staticw
 C:\Users\Dominik\Desktop\VII\i\TaskOrganizer\api\obj\Debug\netcoreapp3.1\api.dll
 C:\Users\Dominik\Desktop\VII\i\TaskOrganizer\api\obj\Debug\netcoreapp3.1\api.pdb
 C:\Users\Dominik\Desktop\VII\i\TaskOrganizer\api\obj\Debug\netcoreapp3.1\api.genruntimeconfig.cache
+C:\Users\Dominik\Desktop\VII\i\TaskOrganizer\api\bin\Debug\netcoreapp3.1\Microsoft.Bcl.AsyncInterfaces.dll
+C:\Users\Dominik\Desktop\VII\i\TaskOrganizer\api\bin\Debug\netcoreapp3.1\Microsoft.Bcl.HashCode.dll
 C:\Users\Dominik\Desktop\VII\i\TaskOrganizer\api\bin\Debug\netcoreapp3.1\Microsoft.Data.SqlClient.dll
 C:\Users\Dominik\Desktop\VII\i\TaskOrganizer\api\bin\Debug\netcoreapp3.1\Microsoft.EntityFrameworkCore.dll
 C:\Users\Dominik\Desktop\VII\i\TaskOrganizer\api\bin\Debug\netcoreapp3.1\Microsoft.EntityFrameworkCore.Abstractions.dll
@@ -23,7 +25,9 @@ C:\Users\Dominik\Desktop\VII\i\TaskOrganizer\api\bin\Debug\netcoreapp3.1\Microso
 C:\Users\Dominik\Desktop\VII\i\TaskOrganizer\api\bin\Debug\netcoreapp3.1\Microsoft.EntityFrameworkCore.SqlServer.dll
 C:\Users\Dominik\Desktop\VII\i\TaskOrganizer\api\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Caching.Abstractions.dll
 C:\Users\Dominik\Desktop\VII\i\TaskOrganizer\api\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Caching.Memory.dll
+C:\Users\Dominik\Desktop\VII\i\TaskOrganizer\api\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Configuration.dll
 C:\Users\Dominik\Desktop\VII\i\TaskOrganizer\api\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Configuration.Abstractions.dll
+C:\Users\Dominik\Desktop\VII\i\TaskOrganizer\api\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Configuration.Binder.dll
 C:\Users\Dominik\Desktop\VII\i\TaskOrganizer\api\bin\Debug\netcoreapp3.1\Microsoft.Extensions.DependencyInjection.dll
 C:\Users\Dominik\Desktop\VII\i\TaskOrganizer\api\bin\Debug\netcoreapp3.1\Microsoft.Extensions.DependencyInjection.Abstractions.dll
 C:\Users\Dominik\Desktop\VII\i\TaskOrganizer\api\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Logging.dll
@@ -58,15 +62,5 @@ C:\Users\Dominik\Desktop\VII\i\TaskOrganizer\api\bin\Debug\netcoreapp3.1\Microso
 C:\Users\Dominik\Desktop\VII\i\TaskOrganizer\api\bin\Debug\netcoreapp3.1\Newtonsoft.Json.Bson.dll
 C:\Users\Dominik\Desktop\VII\i\TaskOrganizer\api\bin\Debug\netcoreapp3.1\AutoMapper.dll
 C:\Users\Dominik\Desktop\VII\i\TaskOrganizer\api\bin\Debug\netcoreapp3.1\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
-C:\Users\Dominik\Desktop\VII\i\TaskOrganizer\api\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Cryptography.Internal.dll
-C:\Users\Dominik\Desktop\VII\i\TaskOrganizer\api\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
-C:\Users\Dominik\Desktop\VII\i\TaskOrganizer\api\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
-C:\Users\Dominik\Desktop\VII\i\TaskOrganizer\api\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Identity.Core.dll
-C:\Users\Dominik\Desktop\VII\i\TaskOrganizer\api\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Identity.Stores.dll
-C:\Users\Dominik\Desktop\VII\i\TaskOrganizer\api\bin\Debug\netcoreapp3.1\Microsoft.Bcl.AsyncInterfaces.dll
-C:\Users\Dominik\Desktop\VII\i\TaskOrganizer\api\bin\Debug\netcoreapp3.1\Microsoft.Bcl.HashCode.dll
-C:\Users\Dominik\Desktop\VII\i\TaskOrganizer\api\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Configuration.dll
-C:\Users\Dominik\Desktop\VII\i\TaskOrganizer\api\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Configuration.Binder.dll
-C:\Users\Dominik\Desktop\VII\i\TaskOrganizer\api\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 C:\Users\Dominik\Desktop\VII\i\TaskOrganizer\api\obj\Debug\netcoreapp3.1\api.csproj.CoreCompileInputs.cache
 C:\Users\Dominik\Desktop\VII\i\TaskOrganizer\api\obj\Debug\netcoreapp3.1\api.MvcApplicationPartsAssemblyInfo.cache

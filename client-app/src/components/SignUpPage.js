@@ -1,5 +1,4 @@
 import {
-  Box,
   Button,
   Container,
   makeStyles,
@@ -7,11 +6,9 @@ import {
   Typography,
 } from "@material-ui/core";
 import { useFormik } from "formik";
-import React, { useState } from "react";
+import React from "react";
 import { useHistory } from "react-router-dom";
 import * as yup from "yup";
-import { Link } from "react-router-dom";
-import { Auth } from "../apicalls/auth";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -43,17 +40,6 @@ const useStyles = makeStyles((theme) => ({
       background: "#32e0c4",
     },
   },
-  link: {
-    marginLeft: theme.spacing(1),
-    color: "#0d7377",
-    textDecoration: "none",
-    "&:hover": {
-      textDecoration: "none",
-    },
-  },
-  errorMsg: {
-    color: "red",
-  },
 }));
 
 const validationSchema = yup.object({
@@ -64,41 +50,27 @@ const validationSchema = yup.object({
   password: yup
     .string("enter your password")
     .min(6, "password should be of minimum 6 characters")
-    .required("password is required")
-    .matches(
-      /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)/,
-      "password must contains minimum one uppercase, minimum one number and minimum one non alphanumeric character"
-    ),
-  repeatPassword: yup
+    .required("password is required"),
+  rePassword: yup
     .string("repeat your password")
     .oneOf([yup.ref("password")], "password does not match")
     .required("confirm password is required"),
 });
 
 function SignUpPage() {
-  const classes = useStyles();
-
   const history = useHistory();
-
-  const [isError, setIsError] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("TEST");
+  const classes = useStyles();
 
   const formik = useFormik({
     initialValues: {
       email: "",
       password: "",
-      repeatPassword: "",
+      rePassword: "",
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      Auth.signup(values).then((response) => {
-        if (response.status === 200) {
-          history.push("/");
-        } else {
-          setIsError(true);
-          setErrorMsg(response.response.data[0].description);
-        }
-      });
+      console.log(values);
+      history.push("/");
     },
   });
 
@@ -107,11 +79,6 @@ function SignUpPage() {
       <Typography variant="h5" className={classes.signInHeader}>
         Create account and start using Task Orginer!
       </Typography>
-      {isError && (
-        <Typography className={classes.errorMsg} variant="h6">
-          {errorMsg}
-        </Typography>
-      )}
       <form className={classes.form} onSubmit={formik.handleSubmit}>
         <TextField
           className={classes.inputField}
@@ -145,18 +112,13 @@ function SignUpPage() {
           fullWidth
           variant="outlined"
           label="repeat password"
-          id="repeatPassword"
-          name="repeatPassword"
+          id="rePassword"
+          name="rePassword"
           type="password"
-          value={formik.values.repeatPassword}
+          value={formik.values.rePassword}
           onChange={formik.handleChange}
-          error={
-            formik.touched.repeatPassword &&
-            Boolean(formik.errors.repeatPassword)
-          }
-          helperText={
-            formik.touched.repeatPassword && formik.errors.repeatPassword
-          }
+          error={formik.touched.rePassword && Boolean(formik.errors.rePassword)}
+          helperText={formik.touched.rePassword && formik.errors.rePassword}
         />
 
         <Button
@@ -168,14 +130,6 @@ function SignUpPage() {
           Sign Up
         </Button>
       </form>
-
-      <Box display="flex">
-        <Typography>Got account?</Typography>
-
-        <Link to="/signin" className={classes.link}>
-          <Typography>Sign In</Typography>
-        </Link>
-      </Box>
     </Container>
   );
 }

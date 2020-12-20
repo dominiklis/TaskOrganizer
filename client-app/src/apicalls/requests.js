@@ -1,105 +1,29 @@
 import axios from "axios";
-import { GetToken } from "./auth";
 axios.defaults.baseURL = "https://localhost:44322/api";
 
 const responseBody = (response) => response;
-const handleError = (err) => {
-  if (err.response) {
-    console.log(err.response.data);
-    console.log(err.response.status);
-    console.log(err.response.headers);
-  } else if (err.request) {
-    console.log(err.request);
-  } else {
-    console.log("Error", err.message);
-  }
-
-  return err;
-};
+const handleError = (err) => err.response;
 
 const requests = {
-  get: (url, config) =>
-    axios.get(url, config).then(responseBody).catch(handleError),
-  post: (url, body, config) =>
-    axios.post(url, body, config).then(responseBody).catch(handleError),
-  put: (url, body, config) =>
-    axios.put(url, body, config).then(responseBody).catch(handleError),
-  patch: (url, patchDoc, config) =>
-    axios.patch(url, patchDoc, config).then(responseBody).catch(handleError),
-  delete: (url, config) =>
-    axios.delete(url, config).then(responseBody).catch(handleError),
+  get: (url, params) =>
+    axios.get(url, { params }).then(responseBody).catch(handleError),
+  post: (url, body) => axios.post(url, body).then(responseBody),
+  put: (url, body) => axios.put(url, body).then(responseBody),
+  patch: (url, patchDoc) => axios.patch(url, patchDoc),
+  delete: (url) => axios.delete(url).then(responseBody),
 };
 
 export const Tasks = {
-  list: (params) => {
-    return requests.get("/tasks", {
-      params: params,
-      headers: {
-        Authorization: `Bearer ${GetToken()}`,
-      },
-    });
-  },
-
-  details: (id) =>
-    requests.get(`/tasks/${id}`, {
-      headers: {
-        Authorization: `Bearer ${GetToken()}`,
-      },
-    }),
-
-  add: (task) =>
-    requests.post("/tasks", task, {
-      headers: {
-        Authorization: `Bearer ${GetToken()}`,
-      },
-    }),
-
-  put: (id, task) =>
-    requests.put(`/tasks/${id}`, task, {
-      headers: {
-        Authorization: `Bearer ${GetToken()}`,
-      },
-    }),
-
-  patch: (id, patchDoc) =>
-    requests.patch(`/tasks/${id}`, patchDoc, {
-      headers: {
-        Authorization: `Bearer ${GetToken()}`,
-      },
-    }),
-
-  delete: (id) =>
-    requests.delete(`/tasks/${id}`, {
-      headers: {
-        Authorization: `Bearer ${GetToken()}`,
-      },
-    }),
+  list: (params) => requests.get("/tasks", params),
+  details: (id) => requests.get(`/tasks/${id}`),
+  add: (task) => requests.post("/tasks", task),
+  put: (id, task) => requests.put(`/tasks/${id}`, task),
+  patch: (id, patchDoc) => requests.patch(`/tasks/${id}`, patchDoc),
+  delete: (id) => requests.delete(`/tasks/${id}`),
 };
 
 export const Steps = {
-  add: (step) =>
-    requests.post("/steps", step, {
-      headers: {
-        Authorization: `Bearer ${GetToken()}`,
-      },
-    }),
-
-  patch: (id, patchDoc) =>
-    requests.patch(`/steps/${id}`, patchDoc, {
-      headers: {
-        Authorization: `Bearer ${GetToken()}`,
-      },
-    }),
-
-  delete: (id) =>
-    requests.delete(`/steps/${id}`, {
-      headers: {
-        Authorization: `Bearer ${GetToken()}`,
-      },
-    }),
-};
-
-export const Users = {
-  signup: (user) => requests.post("/users/signup", user).catch(handleError),
-  signin: (user) => requests.post("/users/signin", user).catch(handleError),
+  add: (step) => requests.post("/steps", step),
+  patch: (id, patchDoc) => requests.patch(`/steps/${id}`, patchDoc),
+  delete: (id) => requests.delete(`/steps/${id}`),
 };

@@ -7,9 +7,6 @@ using api.Data;
 using api.DTOs.Tasks;
 using api.Models;
 using AutoMapper;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -17,8 +14,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace api.Controllers
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    [EnableCors(PolicyName = "CorsPolicy")]
     [Route("api/[controller]")]
     [ApiController]
     public class TasksController : ControllerBase
@@ -36,14 +31,9 @@ namespace api.Controllers
         public async Task<ActionResult> Get(
             [FromQuery] string startDate = null, 
             [FromQuery] string endDate = null, 
-            [FromQuery] string sortOrder = "asc")
+            [FromQuery] string sortOrder = "asc"
+            )
         {
-            ApplicationUser user = await _context.Users.FirstAsync(x => x.UserName == HttpContext.User.Identity.Name);
-            if (user == null)
-            {
-                return Unauthorized();
-            }
-
             DateTime start = DateTime.UtcNow.Date;
             DateTime end = start.AddDays(3);
 
@@ -71,8 +61,6 @@ namespace api.Controllers
 
             List<TaskModel> tasks = await _context
                 .TaskModels.Where(x => x.StartDate >= start && x.StartDate < end)
-                .Include(x => x.User)
-                .Where(x => x.User.UserName == user.UserName)
                 .Include(x => x.Steps)
                 .ToListAsync();
 
@@ -96,15 +84,8 @@ namespace api.Controllers
         [HttpGet("{id}", Name = "GetTaskById")]
         public async Task<ActionResult<GetTaskDTO>> Get(int id)
         {
-            ApplicationUser user = await _context.Users.FirstAsync(x => x.UserName == HttpContext.User.Identity.Name);
-            if (user == null)
-            {
-                return Unauthorized();
-            }
-
             var task = await _context
                 .TaskModels
-                .Include(x => x.User)
                 .AsNoTracking()
                 .Include(x => x.Steps)
                 .FirstOrDefaultAsync(x => x.Id == id);
@@ -114,26 +95,13 @@ namespace api.Controllers
                 return NotFound();
             }
 
-            if (task.User.UserName != user.UserName)
-            {
-                return Unauthorized();
-            }
-
             return _mapper.Map<GetTaskDTO>(task);
         }
 
         [HttpPost]
         public async Task<ActionResult> Post([FromBody] AddTaskDTO task)
         {
-            ApplicationUser user = await _context.Users.FirstAsync(x => x.UserName == HttpContext.User.Identity.Name);
-            if (user == null)
-            {
-                return Unauthorized();
-            }
-
             TaskModel newTask = _mapper.Map<TaskModel>(task);
-            newTask.User = user;
-
             _context.Add(newTask);
             await _context.SaveChangesAsync();
             return new CreatedAtRouteResult("GetTaskById", new { id = newTask.Id }, newTask);
@@ -142,25 +110,10 @@ namespace api.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult> Put(int id, [FromBody] UpdateTaskDTO taskToUpdate)
         {
-            ApplicationUser user = await _context.Users.FirstAsync(x => x.UserName == HttpContext.User.Identity.Name);
-            if (user == null)
-            {
-                return Unauthorized();
-            }
-
-            TaskModel task = await _context
-                .TaskModels
-                .Include(x => x.User)
-                .FirstOrDefaultAsync(x => x.Id == id);
-
+            TaskModel task = await _context.TaskModels.FirstOrDefaultAsync(x => x.Id == id);
             if (task == null)
             {
                 return NotFound();
-            }
-
-            if (task.User.UserName != user.UserName)
-            {
-                return Unauthorized();
             }
 
             task = _mapper.Map(taskToUpdate, task);
@@ -190,22 +143,10 @@ namespace api.Controllers
         [HttpPatch("{id}")]
         public async Task<ActionResult> Patch(int id, [FromBody] JsonPatchDocument<TaskModel> patchDoc)
         {
-            ApplicationUser user = await _context.Users.FirstAsync(x => x.UserName == HttpContext.User.Identity.Name);
-            if (user == null)
-            {
-                return Unauthorized();
-            }
-
-            TaskModel task = await _context.TaskModels.Include(x => x.User).FirstOrDefaultAsync(x => x.Id == id);
-
+            TaskModel task = await _context.TaskModels.FirstOrDefaultAsync(x => x.Id == id);
             if (task == null)
             {
                 return NotFound();
-            }
-
-            if (task.User.UserName != user.UserName)
-            {
-                return Unauthorized();
             }
 
             if (patchDoc == null)
@@ -227,28 +168,13 @@ namespace api.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            ApplicationUser user = await _context.Users.FirstAsync(x => x.UserName == HttpContext.User.Identity.Name);
-            if (user == null)
-            {
-                return Unauthorized();
-            }
-
-            TaskModel task = await _context
-                .TaskModels
-                .Include(x => x.User)
-                .FirstOrDefaultAsync(x => x.Id == id);
-
-            if (task == null)
+            TaskModel taskToDelete = await _context.TaskModels.FindAsync(id);
+            if (taskToDelete == null)
             {
                 return NotFound();
             }
 
-            if (task.User.UserName != user.UserName)
-            {
-                return Unauthorized();
-            }
-
-            _context.TaskModels.Remove(task);
+            _context.TaskModels.Remove(taskToDelete);
             await _context.SaveChangesAsync();
             return NoContent();
         }

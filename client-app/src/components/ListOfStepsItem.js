@@ -1,4 +1,6 @@
 import {
+  Button,
+  Checkbox,
   IconButton,
   ListItem,
   ListItemIcon,
@@ -19,9 +21,6 @@ const useStyles = makeStyles((theme) => ({
   },
   setCompleted: {
     color: "green",
-  },
-  completedStepText: {
-    color: "gray",
   },
 }));
 
@@ -50,8 +49,7 @@ function ListOfStepsItem({ step, handleDeleteStep }) {
 
   const handleCompletedFormSubmit = (e) => {
     e.preventDefault();
-    const c = !stepCompleted;
-    setStepCompleted(c);
+    setStepCompleted(!stepCompleted);
     Steps.patch(step.id, [
       {
         op: "replace",
@@ -82,12 +80,7 @@ function ListOfStepsItem({ step, handleDeleteStep }) {
           handleCancel={changeTextEditState}
         />
       ) : (
-        <ListItemText
-          onClick={changeTextEditState}
-          className={`${stepCompleted ? classes.completedStepText : ""}`}
-        >
-          {stepText}
-        </ListItemText>
+        <ListItemText onClick={changeTextEditState}>{stepText}</ListItemText>
       )}
       <ListItemSecondaryAction>
         <form onSubmit={handleDeleteFormSubmit}>

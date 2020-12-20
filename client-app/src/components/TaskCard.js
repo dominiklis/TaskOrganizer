@@ -11,10 +11,8 @@ import {
 import React, { useEffect, useState } from "react";
 
 import CheckIcon from "@material-ui/icons/Check";
-import ClearIcon from "@material-ui/icons/Clear";
 import { Link } from "react-router-dom";
 import { format } from "date-fns";
-import { Tasks } from "../apicalls/requests";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -39,9 +37,6 @@ const useStyles = makeStyles((theme) => ({
       textDecoration: "none",
     },
   },
-  taskCompleted: {
-    color: "red",
-  },
 }));
 
 function TaskCard({ task }) {
@@ -49,7 +44,6 @@ function TaskCard({ task }) {
   // const [added, setAdded] = useState(new Date());
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
-  const [taskCompleted, setTaskCompleted] = useState(task.completed);
 
   useEffect(() => {
     // setAdded(new Date(task.added));
@@ -59,20 +53,6 @@ function TaskCard({ task }) {
     }
   }, [/*task.added, */ task.startDate, task.endDate]);
 
-  const handleCompletedFormSubmit = (e) => {
-    e.preventDefault();
-    const t = !taskCompleted;
-    setTaskCompleted(t);
-
-    Tasks.patch(task.id, [
-      {
-        op: "replace",
-        path: "/Completed",
-        value: t,
-      },
-    ]);
-  };
-
   return (
     <Card className={classes.root}>
       <Box display="flex">
@@ -81,11 +61,7 @@ function TaskCard({ task }) {
           <Box display="flex">
             <Box flexGrow={25}>
               <Link className={classes.link} to={`/task/${task.id}`}>
-                <Typography
-                  variant="body1"
-                  component="div"
-                  color={`${taskCompleted ? "textSecondary" : "initial"}`}
-                >
+                <Typography variant="body1" component="div">
                   <Box display="flex">
                     <Box textAlign="left" flexGrow={1}>
                       {task.title.length > 60
@@ -95,36 +71,19 @@ function TaskCard({ task }) {
                   </Box>
                 </Typography>
                 <Box display="flex">
-                  <Typography
-                    variant="body2"
-                    color={`${taskCompleted ? "textSecondary" : "initial"}`}
-                  >
+                  <Typography variant="body2">
                     {task.hasStartTime && " " + format(startDate, "HH:mm")}
                     {task.endDate && " - " + format(endDate, "HH:mm")}{" "}
                   </Typography>
-                  <Box textAlign="right" flexGrow={1}>
-                    <Typography
-                      variant="body2"
-                      color={`${taskCompleted ? "initial" : "textSecondary"}`}
-                    >{`${
-                      taskCompleted ? "completed" : "uncompleted"
-                    }`}</Typography>
-                  </Box>
                 </Box>
               </Link>
             </Box>
           </Box>
         </CardActionArea>
         <CardActions>
-          <form onSubmit={handleCompletedFormSubmit}>
-            <IconButton
-              aria-label="edit"
-              className={classes.darkGreen}
-              type="submit"
-            >
-              {taskCompleted ? <ClearIcon /> : <CheckIcon />}
-            </IconButton>
-          </form>
+          <IconButton aria-label="edit" className={classes.darkGreen}>
+            <CheckIcon />
+          </IconButton>
         </CardActions>
       </Box>
     </Card>
