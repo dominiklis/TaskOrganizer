@@ -10,7 +10,8 @@ import {
 import React, { useState } from "react";
 import AlarmOnIcon from "@material-ui/icons/AlarmOn";
 import SearchIcon from "@material-ui/icons/Search";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
+import { Auth } from "../apicalls/auth";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -54,6 +55,8 @@ const useStyles = makeStyles((theme) => ({
 function AppNavbar() {
   const classes = useStyles();
 
+  const history = useHistory();
+
   const [searchString, setSearchString] = useState("");
 
   const handleSearchSubmit = (e) => {
@@ -66,6 +69,11 @@ function AppNavbar() {
   const handleSearchInputChange = (e) => {
     let newSearchString = e.target.value;
     setSearchString(newSearchString);
+  };
+
+  const handleSignOutButton = () => {
+    Auth.signOut();
+    history.push("/signin");
   };
 
   return (
@@ -94,7 +102,9 @@ function AppNavbar() {
               <SearchIcon />
             </IconButton>
           </form>
-          <Button variant="contained">Sign Out</Button>
+          <Button variant="contained" onClick={handleSignOutButton}>
+            Sign Out
+          </Button>
         </Toolbar>
       </AppBar>
     </div>

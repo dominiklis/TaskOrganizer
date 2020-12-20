@@ -6,6 +6,9 @@ using api.Data;
 using api.DTOs.Steps;
 using api.Models;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +16,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace api.Controllers
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [EnableCors(PolicyName = "CorsPolicy")]
     [Route("api/[controller]")]
     [ApiController]
     public class StepsController : ControllerBase
@@ -29,14 +34,36 @@ namespace api.Controllers
         [HttpGet]
         public async Task<ActionResult<List<GetStepDTO>>> Get()
         {
-            var steps = await _context.Steps.ToListAsync();
+            ApplicationUser user = await _context.Users.FirstAsync(x => x.UserName == HttpContext.User.Identity.Name);
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            var steps = await _context
+                .Steps
+                .Include(x => x.User)
+                .Where(x => x.User.UserName == user.UserName)
+                .ToListAsync();
+
             return _mapper.Map<List<GetStepDTO>>(steps);
         }
 
         [HttpGet("{id}", Name = "GetStepById")]
         public async Task<ActionResult<GetStepDTO>> Get(int id)
         {
-            var step = await _context.Steps.FirstOrDefaultAsync(x => x.Id == id);
+            ApplicationUser user = await _context.Users.FirstAsync(x => x.UserName == HttpContext.User.Identity.Name);
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            var step = await _context
+                .Steps
+                .Include(x => x.User)
+                .Where(x => x.User.UserName == user.UserName)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
             if (step == null)
             {
                 return NotFound();
@@ -48,10 +75,17 @@ namespace api.Controllers
         [HttpPost]
         public async Task<ActionResult<List<GetStepDTO>>> Post([FromBody] AddStepDTO step)
         {
+            ApplicationUser user = await _context.Users.FirstAsync(x => x.UserName == HttpContext.User.Identity.Name);
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
             Step newStep = new Step();
             newStep.Text = step.Text;
             newStep.Task = await _context.TaskModels.FirstOrDefaultAsync(x => x.Id == step.Task);
             newStep.Completed = false;
+            newStep.User = user;
 
             _context.Add(newStep);
             await _context.SaveChangesAsync();
@@ -61,6 +95,12 @@ namespace api.Controllers
         [HttpPatch("{id}")]
         public async Task<ActionResult> Patch(int id, [FromBody] JsonPatchDocument<Step> patchDoc)
         {
+            ApplicationUser user = await _context.Users.FirstAsync(x => x.UserName == HttpContext.User.Identity.Name);
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
             Step step = await _context.Steps.FirstOrDefaultAsync(x => x.Id == id);
             if (step == null)
             {
@@ -86,10 +126,22 @@ namespace api.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            Step stepToDelete = await _context.Steps.FindAsync(id);
+            ApplicationUser user = await _context.Users.FirstAsync(x => x.UserName == HttpContext.User.Identity.Name);
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            Step stepToDelete = await _context.Steps.Include(x=> x.User).FirstOrDefaultAsync(x => x.Id == id);
+
             if (stepToDelete == null)
             {
                 return NotFound();
+            }
+
+            if (stepToDelete.User.UserName != user.UserName)
+            {
+                return Unauthorized();
             }
 
             _context.Steps.Remove(stepToDelete);
