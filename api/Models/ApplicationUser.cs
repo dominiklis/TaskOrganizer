@@ -8,7 +8,7 @@ namespace api.Models
 {
     public class ApplicationUser : IdentityUser
     {
-        public List<TaskModel> Tasks { get; set; }
-        public List<Step> Steps { get; set; }
+        public ICollection<TaskModel> Tasks { get; set; }
+        public ICollection<Step> Steps { get; set; }
     }
 }
