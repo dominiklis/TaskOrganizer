@@ -33,6 +33,7 @@ function TaskDetailsPage({ match }) {
   const classes = useStyles();
   const [task, setTask] = useState({});
   const [taskLoaded, setTaskLoaded] = useState(false);
+  const [taskCompleted, setTaskCompleted] = useState(false);
   const [added, setAdded] = useState(false);
   const [startDate, setStartDate] = useState(false);
   const [endDate, setEndDate] = useState(false);
@@ -48,7 +49,6 @@ function TaskDetailsPage({ match }) {
     Tasks.details(id).then((response) => {
       if (response.status === 200) {
         setTask(response.data);
-        console.log(response.data);
         if (response.data.description === "") {
           setEditDescription(true);
         }
@@ -57,6 +57,7 @@ function TaskDetailsPage({ match }) {
         if (response.data.endDate) {
           setEndDate(new Date(response.data.endDate));
         }
+        setTaskCompleted(response.data.completed);
         setTaskLoaded(true);
       } else {
         history.push("/NotFound");
@@ -132,22 +133,47 @@ function TaskDetailsPage({ match }) {
     setTask(taskWithNewSteps);
   };
 
+  const handleCompletedFormSubmit = (e) => {
+    e.preventDefault();
+    const t = !taskCompleted;
+    setTaskCompleted(t);
+
+    Tasks.patch(task.id, [
+      {
+        op: "replace",
+        path: "/Completed",
+        value: t,
+      },
+    ]);
+  };
+
   return (
     <Page>
       {taskLoaded ? (
         <Fragment>
-          {editTitle ? (
-            <EditTaskTitleForm
-              title={task.title}
-              id={task.id}
-              afterSubmit={handleSaveEditTitleButton}
-              handleCancel={changeTitleEditState}
-            />
-          ) : (
-            <Typography variant="h4" onClick={changeTitleEditState}>
-              {task.title}
-            </Typography>
-          )}
+          <Box display="flex">
+            <Box textAlign="left" flexGrow={1}>
+              {editTitle ? (
+                <EditTaskTitleForm
+                  title={task.title}
+                  id={task.id}
+                  afterSubmit={handleSaveEditTitleButton}
+                  handleCancel={changeTitleEditState}
+                />
+              ) : (
+                <Typography variant="h4" onClick={changeTitleEditState}>
+                  {task.title}
+                </Typography>
+              )}
+            </Box>
+            <Box textAlign="right">
+              <form onSubmit={handleCompletedFormSubmit}>
+                <Button color="primary" type="submit">
+                  {taskCompleted ? "undone task" : "task done"}
+                </Button>
+              </form>
+            </Box>
+          </Box>
 
           <Fragment>
             <Box display="flex" className={classes.timeBox}>

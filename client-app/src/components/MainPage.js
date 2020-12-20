@@ -10,6 +10,7 @@ import TodayIcon from "@material-ui/icons/Today";
 import { Tasks } from "../apicalls/requests";
 import { useHistory } from "react-router-dom";
 import { format } from "date-fns";
+import { CheckUser } from "../apicalls/auth";
 
 const useStyles = makeStyles((theme) => ({
   circularProgress: {
@@ -31,20 +32,26 @@ function MainPage() {
   const [tasksLoaded, setTasksLoaded] = useState(false);
 
   useEffect(() => {
-    const params = {
-      startDate: TaskRequestParams.today(),
-      endDate: TaskRequestParams.twoDaysAfterTomorrow(),
-      sortOrder: TaskRequestParams.sortOrderAsc,
-    };
+    const user = CheckUser();
 
-    Tasks.list(params).then((response) => {
-      if (response.status === 200) {
-        setGroupedTasks(response.data);
-        setTasksLoaded(true);
-      } else {
-        history.push("/NotFound");
-      }
-    });
+    if (user) {
+      const params = {
+        startDate: TaskRequestParams.today(),
+        endDate: TaskRequestParams.twoDaysAfterTomorrow(),
+        sortOrder: TaskRequestParams.sortOrderAsc,
+      };
+
+      Tasks.list(params).then((response) => {
+        if (response.status === 200) {
+          setGroupedTasks(response.data);
+          setTasksLoaded(true);
+        } else {
+          console.log("ERROR" + response);
+        }
+      });
+    } else {
+      history.push("/signin");
+    }
   }, [history]);
 
   return (

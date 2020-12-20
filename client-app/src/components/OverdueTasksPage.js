@@ -14,6 +14,7 @@ import { constStrings } from "../utils/constants";
 import { useHistory } from "react-router-dom";
 import { Tasks } from "../apicalls/requests";
 import { format } from "date-fns";
+import { CheckUser } from "../apicalls/auth";
 
 const useStyles = makeStyles((theme) => ({
   circularProgress: {

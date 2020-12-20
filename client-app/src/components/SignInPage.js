@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Container,
   makeStyles,
@@ -6,9 +7,11 @@ import {
   Typography,
 } from "@material-ui/core";
 import { useFormik } from "formik";
-import React from "react";
+import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import * as yup from "yup";
+import { Auth } from "../apicalls/auth";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -40,6 +43,17 @@ const useStyles = makeStyles((theme) => ({
       background: "#32e0c4",
     },
   },
+  link: {
+    marginLeft: theme.spacing(1),
+    color: "#0d7377",
+    textDecoration: "none",
+    "&:hover": {
+      textDecoration: "none",
+    },
+  },
+  errorMsg: {
+    color: "red",
+  },
 }));
 
 const validationSchema = yup.object({
@@ -55,7 +69,11 @@ const validationSchema = yup.object({
 
 function SignInPage() {
   const history = useHistory();
+
   const classes = useStyles();
+
+  const [isError, setIsError] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("TEST");
 
   const formik = useFormik({
     initialValues: {
@@ -64,8 +82,14 @@ function SignInPage() {
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      console.log(values);
-      history.push("/");
+      Auth.signin(values).then((response) => {
+        if (response.status === 200) {
+          history.push("/");
+        } else {
+          setIsError(true);
+          setErrorMsg(response.response.data);
+        }
+      });
     },
   });
 
@@ -74,6 +98,11 @@ function SignInPage() {
       <Typography variant="h5" className={classes.signInHeader}>
         Sign in to Task Organizer
       </Typography>
+      {isError && (
+        <Typography className={classes.errorMsg} variant="h6">
+          {errorMsg}
+        </Typography>
+      )}
       <form className={classes.form} onSubmit={formik.handleSubmit}>
         <TextField
           className={classes.inputField}
@@ -111,6 +140,14 @@ function SignInPage() {
           Sign In
         </Button>
       </form>
+
+      <Box display="flex">
+        <Typography>If you don't have an account yet</Typography>
+
+        <Link to="/signup" className={classes.link}>
+          <Typography>Sign Up</Typography>
+        </Link>
+      </Box>
     </Container>
   );
 }

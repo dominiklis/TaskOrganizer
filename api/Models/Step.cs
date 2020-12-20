@@ -11,5 +11,6 @@ namespace api.Models
         public string Text { get; set; }
         public bool Completed { get; set; }
         public TaskModel Task { get; set; }
+        public ApplicationUser User { get; set; }
     }
 }
