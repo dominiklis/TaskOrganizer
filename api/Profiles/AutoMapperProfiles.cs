@@ -28,17 +28,18 @@ namespace api.Profiles
                     opt.MapFrom(src =>
                         src.EndDate == null ? 
                             (DateTime?)null : 
-                            DateTime.Parse(src.EndDate, CultureInfo.InvariantCulture, DateTimeStyles.None))); 
-            
+                            DateTime.Parse(src.EndDate, CultureInfo.InvariantCulture, DateTimeStyles.None)));
+
             CreateMap<UpdateTaskDTO, TaskModel>()
                  .ForMember(dest => dest.StartDate, opt =>
                      opt.MapFrom(src =>
                          DateTime.Parse(src.StartDate, CultureInfo.InvariantCulture, DateTimeStyles.None)))
                  .ForMember(dest => dest.EndDate, opt =>
                      opt.MapFrom(src =>
-                         src.EndDate == null ? 
-                            (DateTime?)null : 
-                            DateTime.Parse(src.EndDate, CultureInfo.InvariantCulture, DateTimeStyles.None)));
+                         src.EndDate == null ?
+                            (DateTime?)null :
+                            DateTime.Parse(src.EndDate, CultureInfo.InvariantCulture, DateTimeStyles.None)))
+                .ForMember(src => src.TaskTags, opt => opt.Ignore());
 
             CreateMap<Step, GetStepDTO>();
         }

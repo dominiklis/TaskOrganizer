@@ -169,6 +169,7 @@ namespace api.Controllers
             TaskModel task = await _context
                 .TaskModels
                 .Include(x => x.User)
+                .Include(x => x.TaskTags).ThenInclude(t => t.Tag)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             if (task == null)
@@ -184,6 +185,38 @@ namespace api.Controllers
             task = _mapper.Map(taskToUpdate, task);
             await _context.SaveChangesAsync();
 
+            taskToUpdate.Tags = taskToUpdate.Tags.Select(x => x.ToLower()).ToList();
+            List<string> currentTags = task.TaskTags.Select(t => t.Tag.Name).ToList();
+            
+            foreach (string currentTag in currentTags) 
+            {
+                if (!taskToUpdate.Tags.Contains(currentTag))
+                {
+                    Tag tag = await _context.Tags.FirstOrDefaultAsync(x => x.Name == currentTag);
+                    TaskTag taskTagToDelete = await _context.TaskTags.FirstOrDefaultAsync(x => x.Task == task && x.Tag == tag);
+                    _context.Remove(taskTagToDelete);
+                }
+                else
+                {
+                    taskToUpdate.Tags.Remove(currentTag);
+                }
+            }
+
+            foreach (string newTag in taskToUpdate.Tags)
+            {
+                Tag tag = await _context.Tags.FirstOrDefaultAsync(X => X.Name == newTag.ToLower());
+                if (tag == null)
+                {
+                    tag = new Tag() { Name = newTag.ToLower() };
+                    _context.Add(tag);
+                    await _context.SaveChangesAsync();
+                }
+
+                TaskTag taskTag = new TaskTag() { Task = task, TaskId = task.Id, Tag = tag, TagId = tag.Id };
+                _context.Add(taskTag);
+            }
+
+            _context.SaveChanges();
             /*_context.Entry(taskToUpdate).State = EntityState.Modified;
 
             try

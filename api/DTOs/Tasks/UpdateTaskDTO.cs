@@ -13,5 +13,6 @@ namespace api.DTOs.Tasks
         public string StartDate { get; set; }
         public bool HasStartTime { get; set; }
         public string EndDate { get; set; }
+        public List<string> Tags { get; set; }
     }
 }
