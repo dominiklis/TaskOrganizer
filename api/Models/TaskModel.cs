@@ -15,7 +15,8 @@ namespace api.Models
         public DateTime StartDate { get; set; }
         public bool HasStartTime { get; set; }
         public DateTime? EndDate { get; set; }
-        public ICollection<Step> Steps { get; set; }
         public ApplicationUser User { get; set; }
+        public ICollection<Step> Steps { get; set; }
+        public ICollection<TaskTag> TaskTags { get; set; }
     }
 }

@@ -74,6 +74,7 @@ namespace api.Controllers
                 .Include(x => x.User)
                 .Where(x => x.User.UserName == user.UserName)
                 .Include(x => x.Steps)
+                .Include(x => x.TaskTags).ThenInclude(t => t.Tag)
                 .ToListAsync();
 
             List<GetTaskDTO> tasksDTOs = _mapper.Map<List<GetTaskDTO>>(tasks);
@@ -107,7 +108,8 @@ namespace api.Controllers
                 .Include(x => x.User)
                 .AsNoTracking()
                 .Include(x => x.Steps)
-                .FirstOrDefaultAsync(x => x.Id == id);
+                .Include(x => x.TaskTags).ThenInclude(t => t.Tag)
+                .FirstOrDefaultAsync(x =>  x.Id == id);
 
             if (task == null)
             {
@@ -136,6 +138,22 @@ namespace api.Controllers
 
             _context.Add(newTask);
             await _context.SaveChangesAsync();
+
+            foreach (string tagString in task.Tags)
+            {
+                Tag tag = await _context.Tags.FirstOrDefaultAsync(X => X.Name == tagString.ToLower());
+                if (tag == null)
+                {
+                    tag = new Tag() { Name = tagString.ToLower() };
+                    _context.Add(tag);
+                    await _context.SaveChangesAsync();
+                }
+
+                TaskTag taskTag = new TaskTag() { Task = newTask, TaskId = newTask.Id, Tag = tag, TagId = tag.Id };
+                _context.Add(taskTag);
+                _context.SaveChanges();
+            }
+
             return new CreatedAtRouteResult("GetTaskById", new { id = newTask.Id }, newTask);
         }
 

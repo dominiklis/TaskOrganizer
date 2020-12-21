@@ -39,6 +39,15 @@ const useStyles = makeStyles((theme) => ({
       textDecoration: "none",
     },
   },
+  tagLink: {
+    marginRight: theme.spacing(1),
+    color: "#0d5537",
+    textDecoration: "none",
+    "&:hover": {
+      color: "#037c81",
+      textDecoration: "none",
+    },
+  },
   taskCompleted: {
     color: "red",
   },
@@ -112,6 +121,16 @@ function TaskCard({ task }) {
                   </Box>
                 </Box>
               </Link>
+              {task.tags.length > 0 && (
+                <Box display="flex">
+                  {task.tags.slice(0, 3).map((tag) => (
+                    <Link to={`/tag/${tag}`} className={classes.tagLink} key={tag}>
+                      <Typography>{tag}</Typography>
+                    </Link>
+                  ))}
+                  {task.tags.length > 3 && <Typography>{"..."}</Typography>}
+                </Box>
+              )}
             </Box>
           </Box>
         </CardActionArea>

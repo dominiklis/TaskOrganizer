@@ -2,7 +2,7 @@ import { CircularProgress } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core";
 import { Box, Button, Typography } from "@material-ui/core";
 import React, { useEffect, useState, Fragment } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { Link, useHistory, useParams } from "react-router-dom";
 import Page from "./Page";
 import AddStepForm from "./AddStepForm";
 import ListOfSteps from "./ListOfSteps";
@@ -26,6 +26,15 @@ const useStyles = makeStyles((theme) => ({
   },
   button: {
     marginBottom: theme.spacing(1),
+  },
+  tagLink: {
+    marginRight: theme.spacing(1),
+    color: "#0d5537",
+    textDecoration: "none",
+    "&:hover": {
+      color: "#037c81",
+      textDecoration: "none",
+    },
   },
 }));
 
@@ -169,7 +178,7 @@ function TaskDetailsPage({ match }) {
             <Box textAlign="right">
               <form onSubmit={handleCompletedFormSubmit}>
                 <Button color="primary" type="submit">
-                  {taskCompleted ? "undone task" : "task done"}
+                  {taskCompleted ? "undone task" : "done"}
                 </Button>
               </form>
             </Box>
@@ -204,6 +213,17 @@ function TaskDetailsPage({ match }) {
               </Box>
             </Box>
 
+            <Typography variant="subtitle2">tags:</Typography>
+            <Box display="flex" flexWrap="wrap">
+              {task.tags.map((tag) => (
+                <Box key={tag}>
+                  <Link to={`/tag/${tag}`} className={classes.tagLink}>
+                    {tag}
+                  </Link>
+                </Box>
+              ))}
+            </Box>
+
             <Typography variant="subtitle2">description:</Typography>
             {editDescription || task.description === "" ? (
               <EditTaskDescriptionForm
@@ -214,13 +234,15 @@ function TaskDetailsPage({ match }) {
                 hideCancel={task.description === ""}
               />
             ) : (
-              <Typography
-                variant="body1"
-                component="div"
-                onClick={setDescriptionEditStateTrue}
-              >
-                {task.description}
-              </Typography>
+              task.description.split(/\r?\n/).map((line, index) => (
+                <Typography
+                  key={index}
+                  variant="body1"
+                  onClick={setDescriptionEditStateTrue}
+                >
+                  {line}
+                </Typography>
+              ))
             )}
           </Fragment>
 

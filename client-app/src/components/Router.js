@@ -18,6 +18,7 @@ function Router() {
         <Route path="/signin" component={SignInPage} exact />
         <Route path="/signup" component={SignUpPage} exact />
         <Route path="/overdue" component={OverdueTasksPage} exact />
+        <Route path="/tag/:name" component={NotFoundPage} exact />
         <Route component={NotFoundPage} />
       </Switch>
     </BrowserRouter>

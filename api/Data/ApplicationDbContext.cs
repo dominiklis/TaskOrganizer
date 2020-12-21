@@ -16,6 +16,8 @@ namespace api.Data
 
         public DbSet<TaskModel> TaskModels { get; set; }
         public DbSet<Step> Steps { get; set; }
+        public DbSet<Tag> Tags { get; set; }
+        public DbSet<TaskTag> TaskTags { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -44,6 +46,12 @@ namespace api.Data
 
             modelBuilder.Entity<Step>().Property(x => x.Text).IsRequired();
             modelBuilder.Entity<Step>().Property(x => x.Completed).IsRequired();
+
+            modelBuilder.Entity<Tag>().Property(x => x.Name).IsRequired();
+
+            modelBuilder.Entity<TaskTag>().HasKey(x => new { x.TaskId, x.TagId });
+            modelBuilder.Entity<TaskTag>().HasOne(tt => tt.Task).WithMany(t => t.TaskTags).HasForeignKey(tt => tt.TaskId);
+            modelBuilder.Entity<TaskTag>().HasOne(tt => tt.Tag).WithMany(t => t.TaskTags).HasForeignKey(tt => tt.TagId);
 
             base.OnModelCreating(modelBuilder);
         }

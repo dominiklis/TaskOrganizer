@@ -14,7 +14,10 @@ namespace api.Profiles
     {
         public AutoMapperProfiles()
         {
-            CreateMap<TaskModel, GetTaskDTO>();
+            CreateMap<TaskModel, GetTaskDTO>()
+                .ForMember(x => x.Tags, opt => opt.MapFrom(src => src.TaskTags.Select(t => t.Tag).ToList()));
+
+            CreateMap<Tag, string>().ConvertUsing(x => x.Name);
 
             CreateMap<AddTaskDTO, TaskModel>()
                 .BeforeMap((src, dest) => dest.Added = DateTime.Now)

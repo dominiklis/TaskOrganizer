@@ -17,5 +17,6 @@ namespace api.DTOs.Tasks
         public bool HasStartTime { get; set; }
         public DateTime? EndDate { get; set; }
         public List<GetStepDTO> Steps { get; set; }
+        public List<string> Tags { get; set; }
     }
 }
