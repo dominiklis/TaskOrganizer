@@ -6,7 +6,7 @@ import {
 } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import { Fragment } from "react";
-import { useHistory, useLocation, useParams, useRouteMatch } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import Page from "./Page";
 import TaskList from "./TaskList";
 import TodayIcon from "@material-ui/icons/Today";

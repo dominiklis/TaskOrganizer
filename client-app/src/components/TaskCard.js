@@ -26,6 +26,9 @@ const useStyles = makeStyles((theme) => ({
   cardHeader: {
     background: "#037c81",
   },
+  cardHeaderDone: {
+    background: "#21d8ba",
+  },
   calendarIcon: {
     marginRight: theme.spacing(1),
   },
@@ -85,7 +88,7 @@ function TaskCard({ task }) {
   return (
     <Card className={classes.root}>
       <Box display="flex">
-        <CardHeader className={classes.cardHeader}></CardHeader>
+        <CardHeader className={`${taskCompleted ? classes.cardHeaderDone : classes.cardHeader}`}></CardHeader>
         <CardActionArea disableRipple className={classes.card}>
           <Box display="flex">
             <Box flexGrow={25}>
@@ -124,7 +127,11 @@ function TaskCard({ task }) {
               {task.tags.length > 0 && (
                 <Box display="flex">
                   {task.tags.slice(0, 3).map((tag) => (
-                    <Link to={`/tag/${tag}`} className={classes.tagLink} key={tag}>
+                    <Link
+                      to={`/tag/${tag}`}
+                      className={classes.tagLink}
+                      key={tag}
+                    >
                       <Typography>{tag}</Typography>
                     </Link>
                   ))}

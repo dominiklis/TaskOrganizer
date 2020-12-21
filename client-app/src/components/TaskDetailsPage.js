@@ -72,7 +72,7 @@ function TaskDetailsPage({ match }) {
           setEndDate(new Date(response.data.endDate));
         }
         setTaskCompleted(response.data.completed);
-        setTags(response.data.tags)
+        setTags(response.data.tags);
         setTaskLoaded(true);
       } else {
         history.push("/NotFound");
@@ -246,7 +246,11 @@ function TaskDetailsPage({ match }) {
               </IconButton>
             </Box>
             {editTags ? (
-              <EditTagsForm task={task} afterSubmit={handleSaveEditTagButton} handleCancel={changeEditTagsState}/>
+              <EditTagsForm
+                task={task}
+                afterSubmit={handleSaveEditTagButton}
+                handleCancel={changeEditTagsState}
+              />
             ) : (
               <Box display="flex" flexWrap="wrap">
                 {tags.map((tag) => (

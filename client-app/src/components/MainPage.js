@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
 function MainPage() {
   const history = useHistory();
   const classes = useStyles();
-  
+
   const [groupedTasks, setGroupedTasks] = useState({});
   const [tasksLoaded, setTasksLoaded] = useState(false);
 

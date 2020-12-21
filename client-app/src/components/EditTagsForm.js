@@ -27,7 +27,7 @@ function EditTagsForm({ task, afterSubmit, handleCancel }) {
 
       let ts = values.tags.split(" ");
       ts.forEach((tag) => {
-        tag = tag.replace(/\W/g, '');
+        tag = tag.replace(/\W/g, "");
         if (tag.length > 0) {
           updatedTask.tags.push(tag);
         }
