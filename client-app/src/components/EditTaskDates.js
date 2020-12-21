@@ -90,6 +90,7 @@ function EditTaskDates({ task, afterSubmit, handleCancel }) {
         hasStartTime: task.hasStartTime,
         startDate: task.startDate,
         endDate: task.endDate,
+        tags: task.tags,
       };
 
       updatedTask.startDate = new Date(values.startDate.setHours(0, 0, 0, 0));

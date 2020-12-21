@@ -1,4 +1,4 @@
-import { CircularProgress } from "@material-ui/core";
+import { CircularProgress, IconButton } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core";
 import { Box, Button, Typography } from "@material-ui/core";
 import React, { useEffect, useState, Fragment } from "react";
@@ -13,6 +13,9 @@ import { Tasks } from "../apicalls/requests";
 import EditTaskTitleForm from "./EditTaskTitleForm";
 import EditTaskDescriptionForm from "./EditTaskDescriptionForm";
 import EditTaskDates from "./EditTaskDates";
+import EditIcon from "@material-ui/icons/Edit";
+import ClearIcon from "@material-ui/icons/Clear";
+import EditTagsForm from "./EditTagsForm";
 
 const useStyles = makeStyles((theme) => ({
   timeBox: {
@@ -46,10 +49,12 @@ function TaskDetailsPage({ match }) {
   const [added, setAdded] = useState(false);
   const [startDate, setStartDate] = useState(false);
   const [endDate, setEndDate] = useState(false);
+  const [tags, setTags] = useState([]);
 
   const [editTitle, setEditTitle] = useState(false);
   const [editDescription, setEditDescription] = useState(false);
   const [editDates, setEditDates] = useState(false);
+  const [editTags, setEditTags] = useState(false);
 
   const { id } = useParams();
   const history = useHistory();
@@ -67,6 +72,7 @@ function TaskDetailsPage({ match }) {
           setEndDate(new Date(response.data.endDate));
         }
         setTaskCompleted(response.data.completed);
+        setTags(response.data.tags)
         setTaskLoaded(true);
       } else {
         history.push("/NotFound");
@@ -156,6 +162,22 @@ function TaskDetailsPage({ match }) {
     ]);
   };
 
+  const changeEditTagsState = () => {
+    const edit = !editTags;
+    setEditTags(edit);
+  };
+
+  const handleSaveEditTagButton = (newTags) => {
+    console.log(newTags);
+    // const editedTask = {
+    //   ...task,
+    //   title: newTitle,
+    // };
+
+    setTags(newTags);
+    changeEditTagsState();
+  };
+
   return (
     <Page>
       {taskLoaded ? (
@@ -213,16 +235,29 @@ function TaskDetailsPage({ match }) {
               </Box>
             </Box>
 
-            <Typography variant="subtitle2">tags:</Typography>
-            <Box display="flex" flexWrap="wrap">
-              {task.tags.map((tag) => (
-                <Box key={tag}>
-                  <Link to={`/tag/${tag}`} className={classes.tagLink}>
-                    {tag}
-                  </Link>
-                </Box>
-              ))}
+            <Box display="flex">
+              <Typography variant="subtitle1">tags:</Typography>
+              <IconButton
+                aria-label="edit tags"
+                size="small"
+                onClick={changeEditTagsState}
+              >
+                {editTags ? <ClearIcon /> : <EditIcon />}
+              </IconButton>
             </Box>
+            {editTags ? (
+              <EditTagsForm task={task} afterSubmit={handleSaveEditTagButton} handleCancel={changeEditTagsState}/>
+            ) : (
+              <Box display="flex" flexWrap="wrap">
+                {tags.map((tag) => (
+                  <Box key={tag}>
+                    <Link to={`/tag/${tag}`} className={classes.tagLink}>
+                      {tag}
+                    </Link>
+                  </Box>
+                ))}
+              </Box>
+            )}
 
             <Typography variant="subtitle2">description:</Typography>
             {editDescription || task.description === "" ? (

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using api.Data;
 using api.DTOs.Tasks;
@@ -25,6 +26,7 @@ namespace api.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
+        private readonly Regex rgx = new Regex("[^a-zA-Z0-9 -]");
 
         public TasksController(ApplicationDbContext context, IMapper mapper)
         {
@@ -79,7 +81,8 @@ namespace api.Controllers
 
             List<GetTaskDTO> tasksDTOs = _mapper.Map<List<GetTaskDTO>>(tasks);
 
-            var groupedTasks = tasksDTOs.GroupBy(tasksDTOs => tasksDTOs.StartDate.Date, tasksDTOs => tasksDTOs)
+            var groupedTasks = tasksDTOs
+                .GroupBy(tasksDTOs => tasksDTOs.StartDate.Date, tasksDTOs => tasksDTOs)
                 .Select(t => new { t.Key, Count = t.Count(), Tasks = t.ToList() });
 
             if (sortOrder == "asc")
@@ -139,20 +142,30 @@ namespace api.Controllers
             _context.Add(newTask);
             await _context.SaveChangesAsync();
 
-            foreach (string tagString in task.Tags)
+            if (task.Tags != null)
             {
-                Tag tag = await _context.Tags.FirstOrDefaultAsync(X => X.Name == tagString.ToLower());
-                if (tag == null)
+                foreach (string newTag in task.Tags)
                 {
-                    tag = new Tag() { Name = tagString.ToLower() };
-                    _context.Add(tag);
-                    await _context.SaveChangesAsync();
-                }
+                    string newTagToAdd = rgx.Replace(newTag, "");
+                    if (newTagToAdd.Length == 0)
+                    {
+                        continue;
+                    }
 
-                TaskTag taskTag = new TaskTag() { Task = newTask, TaskId = newTask.Id, Tag = tag, TagId = tag.Id };
-                _context.Add(taskTag);
-                _context.SaveChanges();
+                    Tag tag = await _context.Tags.FirstOrDefaultAsync(X => X.Name == newTagToAdd.ToLower());
+                    if (tag == null)
+                    {
+                        tag = new Tag() { Name = newTagToAdd.ToLower() };
+                        _context.Add(tag);
+                        await _context.SaveChangesAsync();
+                    }
+
+                    TaskTag taskTag = new TaskTag() { Task = newTask, TaskId = newTask.Id, Tag = tag, TagId = tag.Id };
+                    _context.Add(taskTag);
+                }
             }
+
+            await _context.SaveChangesAsync();
 
             return new CreatedAtRouteResult("GetTaskById", new { id = newTask.Id }, newTask);
         }
@@ -204,10 +217,16 @@ namespace api.Controllers
 
             foreach (string newTag in taskToUpdate.Tags)
             {
-                Tag tag = await _context.Tags.FirstOrDefaultAsync(X => X.Name == newTag.ToLower());
+                string newTagToAdd = rgx.Replace(newTag, "");
+                if (newTagToAdd.Length == 0)
+                {
+                    continue;
+                }
+
+                Tag tag = await _context.Tags.FirstOrDefaultAsync(X => X.Name == newTagToAdd);
                 if (tag == null)
                 {
-                    tag = new Tag() { Name = newTag.ToLower() };
+                    tag = new Tag() { Name = newTagToAdd };
                     _context.Add(tag);
                     await _context.SaveChangesAsync();
                 }
@@ -216,7 +235,7 @@ namespace api.Controllers
                 _context.Add(taskTag);
             }
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             /*_context.Entry(taskToUpdate).State = EntityState.Modified;
 
             try

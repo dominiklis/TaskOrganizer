@@ -103,3 +103,13 @@ export const Users = {
   signup: (user) => requests.post("/users/signup", user).catch(handleError),
   signin: (user) => requests.post("/users/signin", user).catch(handleError),
 };
+
+export const Tags = {
+  list: (tagName) => {
+    return requests.get(`/tags/${tagName}`, {
+      headers: {
+        Authorization: `Bearer ${GetToken()}`,
+      },
+    });
+  },
+}

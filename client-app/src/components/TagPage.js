@@ -1,15 +1,17 @@
-import React, { useState, useEffect, Fragment } from "react";
+import {
+  Box,
+  CircularProgress,
+  makeStyles,
+  Typography,
+} from "@material-ui/core";
+import React, { useEffect, useState } from "react";
+import { Fragment } from "react";
+import { useHistory, useLocation, useParams, useRouteMatch } from "react-router-dom";
 import Page from "./Page";
-import { TaskRequestParams } from "../utils/params";
-import { Box, makeStyles, Typography } from "@material-ui/core";
-import { CircularProgress } from "@material-ui/core";
-import { constStrings } from "../utils/constants";
-import Clock from "./Clock";
 import TaskList from "./TaskList";
 import TodayIcon from "@material-ui/icons/Today";
-import { Tasks } from "../apicalls/requests";
-import { useHistory } from "react-router-dom";
 import { format } from "date-fns";
+import { Tags } from "../apicalls/requests";
 import { CheckUser } from "../apicalls/auth";
 
 const useStyles = makeStyles((theme) => ({
@@ -24,10 +26,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function MainPage() {
+function TagPage() {
   const history = useHistory();
   const classes = useStyles();
-  
+  const { tagName } = useParams();
+
   const [groupedTasks, setGroupedTasks] = useState({});
   const [tasksLoaded, setTasksLoaded] = useState(false);
 
@@ -35,13 +38,7 @@ function MainPage() {
     const user = CheckUser();
 
     if (user) {
-      const params = {
-        startDate: TaskRequestParams.today(),
-        endDate: TaskRequestParams.twoDaysAfterTomorrow(),
-        sortOrder: TaskRequestParams.sortOrderAsc,
-      };
-
-      Tasks.list(params).then((response) => {
+      Tags.list(tagName).then((response) => {
         if (response.status === 200) {
           setGroupedTasks(response.data);
           setTasksLoaded(true);
@@ -52,19 +49,14 @@ function MainPage() {
     } else {
       history.push("/signin");
     }
-  }, [history]);
+  }, [history, tagName]);
 
   return (
     <Fragment>
       {tasksLoaded ? (
         <Page>
-          <Box display="flex" textAlign="right">
-            <Box>
-              <Typography variant="h6">{constStrings.activeTasks}</Typography>
-            </Box>
-            <Box flexGrow={1}>
-              <Clock />
-            </Box>
+          <Box>
+            <Typography variant="h6">{`tasks tagged with ${tagName}`}</Typography>
           </Box>
 
           {groupedTasks.map((group) => {
@@ -95,4 +87,4 @@ function MainPage() {
   );
 }
 
-export default MainPage;
+export default TagPage;

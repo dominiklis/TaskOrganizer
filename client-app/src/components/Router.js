@@ -6,6 +6,7 @@ import MainPage from "./MainPage";
 import NotFoundPage from "./NotFoundPage";
 import SignInPage from "./SignInPage";
 import SignUpPage from "./SignUpPage";
+import TagPage from "./TagPage";
 import TaskDetailsPage from "./TaskDetailsPage";
 
 function Router() {
@@ -18,7 +19,7 @@ function Router() {
         <Route path="/signin" component={SignInPage} exact />
         <Route path="/signup" component={SignUpPage} exact />
         <Route path="/overdue" component={OverdueTasksPage} exact />
-        <Route path="/tag/:name" component={NotFoundPage} exact />
+        <Route path="/tag/:tagName" component={TagPage} exact />
         <Route component={NotFoundPage} />
       </Switch>
     </BrowserRouter>
