@@ -4,6 +4,7 @@ import {
   CardActionArea,
   CardActions,
   CardHeader,
+  Chip,
   IconButton,
   makeStyles,
   Typography,
@@ -15,6 +16,7 @@ import ClearIcon from "@material-ui/icons/Clear";
 import { Link } from "react-router-dom";
 import { format } from "date-fns";
 import { Tasks } from "../apicalls/requests";
+import TagChip from "./TagChip";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -88,7 +90,11 @@ function TaskCard({ task }) {
   return (
     <Card className={classes.root}>
       <Box display="flex">
-        <CardHeader className={`${taskCompleted ? classes.cardHeaderDone : classes.cardHeader}`}></CardHeader>
+        <CardHeader
+          className={`${
+            taskCompleted ? classes.cardHeaderDone : classes.cardHeader
+          }`}
+        ></CardHeader>
         <CardActionArea disableRipple className={classes.card}>
           <Box display="flex">
             <Box flexGrow={25}>
@@ -127,13 +133,7 @@ function TaskCard({ task }) {
               {task.tags.length > 0 && (
                 <Box display="flex">
                   {task.tags.slice(0, 3).map((tag) => (
-                    <Link
-                      to={`/tag/${tag}`}
-                      className={classes.tagLink}
-                      key={tag}
-                    >
-                      <Typography>{tag}</Typography>
-                    </Link>
+                    <TagChip key={tag} tag={tag} />
                   ))}
                   {task.tags.length > 3 && <Typography>{"..."}</Typography>}
                 </Box>

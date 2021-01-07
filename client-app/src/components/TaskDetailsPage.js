@@ -16,6 +16,7 @@ import EditTaskDates from "./EditTaskDates";
 import EditIcon from "@material-ui/icons/Edit";
 import ClearIcon from "@material-ui/icons/Clear";
 import EditTagsForm from "./EditTagsForm";
+import TagChip from "./TagChip";
 
 const useStyles = makeStyles((theme) => ({
   timeBox: {
@@ -252,9 +253,7 @@ function TaskDetailsPage({ match }) {
               <Box display="flex" flexWrap="wrap">
                 {tags.map((tag) => (
                   <Box key={tag}>
-                    <Link to={`/tag/${tag}`} className={classes.tagLink}>
-                      {tag}
-                    </Link>
+                    <TagChip key={tag} tag={tag} />
                   </Box>
                 ))}
               </Box>
