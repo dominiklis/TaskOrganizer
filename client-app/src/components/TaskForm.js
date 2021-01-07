@@ -116,13 +116,9 @@ function TaskForm({ task }) {
         );
       }
 
-      if (task) {
-        console.log("TASK UPDATED");
-      } else {
-        Tasks.add(newTask);
-        console.log(JSON.stringify(newTask));
-        history.push("/");
-      }
+      Tasks.add(newTask);
+      history.push("/");
+      history.go();
     },
   });
 

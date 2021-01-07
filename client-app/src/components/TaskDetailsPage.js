@@ -135,8 +135,6 @@ function TaskDetailsPage({ match }) {
       steps: [...task.steps, step],
     };
     setTask(taskWithNewSteps);
-
-    console.log(step);
   };
 
   const handleDeleteStep = (id) => {
@@ -168,7 +166,6 @@ function TaskDetailsPage({ match }) {
   };
 
   const handleSaveEditTagButton = (newTags) => {
-    console.log(newTags);
     // const editedTask = {
     //   ...task,
     //   title: newTitle,
