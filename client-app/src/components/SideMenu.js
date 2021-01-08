@@ -13,7 +13,7 @@ import { Link } from "react-router-dom";
 import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
 import AddIcon from "@material-ui/icons/Add";
 import ImportContactsIcon from "@material-ui/icons/ImportContacts";
-import FolderOpenIcon from "@material-ui/icons/FolderOpen";
+// import FolderOpenIcon from "@material-ui/icons/FolderOpen";
 import PeopleIcon from "@material-ui/icons/People";
 import WarningIcon from "@material-ui/icons/Warning";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
@@ -74,12 +74,12 @@ const menuItems = [
     icon: <WarningIcon />,
     linkTo: "/overdue",
   },
-  {
-    name: "groupsButton",
-    label: "Groups",
-    icon: <FolderOpenIcon />,
-    linkTo: "/groups",
-  },
+  // {
+  //   name: "groupsButton",
+  //   label: "Groups",
+  //   icon: <FolderOpenIcon />,
+  //   linkTo: "/groups",
+  // },
   {
     name: "sharedButton",
     label: "Shared",

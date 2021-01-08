@@ -11,10 +11,10 @@ import { useHistory } from "react-router-dom";
 import { CheckUser } from "../apicalls/auth";
 import { Tasks } from "../apicalls/requests";
 import { TaskRequestParams } from "../utils/params";
-import TaskList from "./TaskList";
 import EventBusyIcon from "@material-ui/icons/EventBusy";
 import DetailsIcon from "@material-ui/icons/Details";
 import ChangeHistoryIcon from "@material-ui/icons/ChangeHistory";
+import TaskGroupsList from "./TaskGroupsList";
 
 const useStyles = makeStyles((theme) => ({
   circularProgress: {
@@ -102,26 +102,12 @@ function OverdueTasks() {
               </Box>
 
               <Collapse in={show}>
-                {groupedTasks.map((group) => {
-                  return (
-                    <Fragment key={group.key}>
-                      <TaskList tasks={group.tasks} />
-                    </Fragment>
-                  );
-                })}
+                <TaskGroupsList tasks={groupedTasks} showGroupNames={false} />
               </Collapse>
             </Fragment>
           ) : (
             <Typography variant="h5">{"no overdue tasks"}</Typography>
           )}
-
-          {/* {groupedTasks.map((group) => {
-            return (
-              <Fragment key={group.key}>
-                <TaskList tasks={group.tasks} />
-              </Fragment>
-            );
-          })} */}
         </Fragment>
       ) : (
         <CircularProgress className={classes.circularProgress} />

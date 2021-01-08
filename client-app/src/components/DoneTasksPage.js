@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function OverdueTasksPage() {
+function DoneTasksPage() {
   const history = useHistory();
   const classes = useStyles();
   const [groupedTasks, setGroupedTasks] = useState({});
@@ -36,7 +36,7 @@ function OverdueTasksPage() {
       startDate: 0,
       endDate: TaskRequestParams.today(),
       sortOrder: TaskRequestParams.sortOrderDesc,
-      completed: false,
+      inCompleted: false,
     };
 
     Tasks.list(params).then((response) => {
@@ -55,7 +55,9 @@ function OverdueTasksPage() {
         <Fragment>
           <Box display="flex" textAlign="right">
             <Box>
-              <Typography variant="h6">{constStrings.overdueTasks}</Typography>
+              <Typography variant="h6">
+                {constStrings.completedTasks}
+              </Typography>
             </Box>
             <Box flexGrow={1}>
               <Clock />
@@ -71,4 +73,4 @@ function OverdueTasksPage() {
   );
 }
 
-export default OverdueTasksPage;
+export default DoneTasksPage;

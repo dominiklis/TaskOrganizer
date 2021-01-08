@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import OverdueTasksPage from "../components/OverdueTasksPage";
 import AddTaskPage from "./AddTaskPage";
+import DoneTasksPage from "./DoneTasksPage";
 import MainPage from "./MainPage";
 import NotFoundPage from "./NotFoundPage";
 import SignInPage from "./SignInPage";
@@ -19,6 +20,7 @@ function Router() {
         <Route path="/signin" component={SignInPage} exact />
         <Route path="/signup" component={SignUpPage} exact />
         <Route path="/overdue" component={OverdueTasksPage} exact />
+        <Route path="/done" component={DoneTasksPage} exact />
         <Route path="/tag/:tagName" component={TagPage} exact />
         <Route component={NotFoundPage} />
       </Switch>
