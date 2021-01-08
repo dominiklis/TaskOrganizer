@@ -48,25 +48,24 @@ function OverdueTasks() {
 
   useEffect(() => {
     const user = CheckUser();
-
-    if (user) {
-      const params = {
-        startDate: 0,
-        endDate: TaskRequestParams.today(),
-        sortOrder: TaskRequestParams.sortOrderAsc,
-      };
-
-      Tasks.list(params).then((response) => {
-        if (response.status === 200) {
-          setGroupedTasks(response.data);
-          setTasksLoaded(true);
-        } else {
-          console.log("ERROR" + response);
-        }
-      });
-    } else {
+    if (!user) {
       history.push("/signin");
     }
+
+    const params = {
+      startDate: 0,
+      endDate: TaskRequestParams.today(),
+      sortOrder: TaskRequestParams.sortOrderAsc,
+    };
+
+    Tasks.list(params).then((response) => {
+      if (response.status === 200) {
+        setGroupedTasks(response.data);
+        setTasksLoaded(true);
+      } else {
+        console.log("ERROR" + response);
+      }
+    });
   }, [history]);
 
   return (

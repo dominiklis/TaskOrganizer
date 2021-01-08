@@ -4,7 +4,6 @@ import {
   CardActionArea,
   CardActions,
   CardHeader,
-  Chip,
   IconButton,
   makeStyles,
   Typography,

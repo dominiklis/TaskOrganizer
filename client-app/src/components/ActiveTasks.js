@@ -36,25 +36,24 @@ function ActiveTasks() {
 
   useEffect(() => {
     const user = CheckUser();
-
-    if (user) {
-      const params = {
-        startDate: TaskRequestParams.today(),
-        endDate: TaskRequestParams.twoDaysAfterTomorrow(),
-        sortOrder: TaskRequestParams.sortOrderAsc,
-      };
-
-      Tasks.list(params).then((response) => {
-        if (response.status === 200) {
-          setGroupedTasks(response.data);
-          setTasksLoaded(true);
-        } else {
-          console.log("ERROR" + response);
-        }
-      });
-    } else {
+    if (!user) {
       history.push("/signin");
     }
+
+    const params = {
+      startDate: TaskRequestParams.today(),
+      endDate: TaskRequestParams.twoDaysAfterTomorrow(),
+      sortOrder: TaskRequestParams.sortOrderAsc,
+    };
+
+    Tasks.list(params).then((response) => {
+      if (response.status === 200) {
+        setGroupedTasks(response.data);
+        setTasksLoaded(true);
+      } else {
+        console.log("ERROR" + response);
+      }
+    });
   }, [history]);
 
   return (

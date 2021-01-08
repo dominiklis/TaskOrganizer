@@ -35,6 +35,11 @@ function OverdueTasksPage() {
   const [tasksLoaded, setTasksLoaded] = useState(false);
 
   useEffect(() => {
+    const user = CheckUser();
+    if (!user) {
+      history.push("/signin");
+    }
+
     const params = {
       startDate: 0,
       endDate: TaskRequestParams.today(),

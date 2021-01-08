@@ -2,12 +2,10 @@ import { CircularProgress, IconButton } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core";
 import { Box, Button, Typography } from "@material-ui/core";
 import React, { useEffect, useState, Fragment } from "react";
-import { Link, useHistory, useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import Page from "./Page";
 import AddStepForm from "./AddStepForm";
 import ListOfSteps from "./ListOfSteps";
-// import AddNoteForm from "./AddNoteForm";
-// import NoteCard from "./NoteCard";
 import { format } from "date-fns";
 import { Tasks } from "../apicalls/requests";
 import EditTaskTitleForm from "./EditTaskTitleForm";
@@ -17,6 +15,7 @@ import EditIcon from "@material-ui/icons/Edit";
 import ClearIcon from "@material-ui/icons/Clear";
 import EditTagsForm from "./EditTagsForm";
 import TagChip from "./TagChip";
+import { CheckUser } from "../apicalls/auth";
 
 const useStyles = makeStyles((theme) => ({
   timeBox: {
@@ -61,6 +60,11 @@ function TaskDetailsPage({ match }) {
   const history = useHistory();
 
   useEffect(() => {
+    const user = CheckUser();
+    if (!user) {
+      history.push("/signin");
+    }
+
     Tasks.details(id).then((response) => {
       if (response.status === 200) {
         setTask(response.data);
