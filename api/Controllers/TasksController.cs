@@ -173,7 +173,7 @@ namespace api.Controllers
 
             await _context.SaveChangesAsync();
 
-            return new CreatedAtRouteResult("GetTaskById", new { id = newTask.Id }, newTask);
+            return new CreatedAtRouteResult("GetTaskById", new { id = newTask.Id }, _mapper.Map<GetTaskDTO>(newTask));
         }
 
         [HttpPut("{id}")]
