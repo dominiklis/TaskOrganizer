@@ -56,6 +56,7 @@ function OverdueTasks() {
       startDate: 0,
       endDate: TaskRequestParams.today(),
       sortOrder: TaskRequestParams.sortOrderAsc,
+      completed: false,
     };
 
     Tasks.list(params).then((response) => {
@@ -72,11 +73,6 @@ function OverdueTasks() {
     <Fragment>
       {tasksLoaded ? (
         <Fragment>
-          {/* <FormControlLabel
-            control={<Switch checked={checked} onChange={handleChange} />}
-            label="Show"
-          /> */}
-
           {groupedTasks.length ? (
             <Fragment>
               <Box display="flex">

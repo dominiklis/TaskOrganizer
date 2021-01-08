@@ -43,7 +43,7 @@ function OverdueTasksPage() {
     const params = {
       startDate: 0,
       endDate: TaskRequestParams.today(),
-      sortOrder: TaskRequestParams.sortOrderDesc,
+      sortOrder: TaskRequestParams.sortOrderDesc
     };
 
     Tasks.list(params).then((response) => {

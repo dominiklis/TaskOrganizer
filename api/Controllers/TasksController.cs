@@ -38,7 +38,9 @@ namespace api.Controllers
         public async Task<ActionResult> Get(
             [FromQuery] string startDate = null, 
             [FromQuery] string endDate = null, 
-            [FromQuery] string sortOrder = "asc")
+            [FromQuery] string sortOrder = "asc",
+            [FromQuery] string completed = "true",
+            [FromQuery] string inCompleted = "true")
         {
             ApplicationUser user = await _context.Users.FirstAsync(x => x.UserName == HttpContext.User.Identity.Name);
             if (user == null)
@@ -71,10 +73,14 @@ namespace api.Controllers
                 }
             }
 
+            bool cmp = Boolean.Parse(completed);
+            bool inCmp = Boolean.Parse(inCompleted);
+
             List<TaskModel> tasks = await _context
-                .TaskModels.Where(x => x.StartDate >= start && x.StartDate < end)
-                .Include(x => x.User)
+                .TaskModels.Include(x => x.User)
                 .Where(x => x.User.UserName == user.UserName)
+                .Where(x => x.StartDate >= start && x.StartDate < end)
+                .Where(x => x.Completed == cmp || x.Completed == !inCmp)
                 .Include(x => x.Steps)
                 .Include(x => x.TaskTags).ThenInclude(t => t.Tag)
                 .ToListAsync();
@@ -174,6 +180,7 @@ namespace api.Controllers
         public async Task<ActionResult> Put(int id, [FromBody] UpdateTaskDTO taskToUpdate)
         {
             ApplicationUser user = await _context.Users.FirstAsync(x => x.UserName == HttpContext.User.Identity.Name);
+
             if (user == null)
             {
                 return Unauthorized();
