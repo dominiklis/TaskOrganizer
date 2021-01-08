@@ -55,8 +55,8 @@ const validationSchema = yup.object({
   title: yup.string("enter title").required("title is required"),
   startDate: yup.date(),
   startTime: yup.date().nullable(),
-  hours: yup.number().nullable().min(0).max(12),
-  minutes: yup.number().nullable().min(0).max(59),
+  hours: yup.number().min(0).max(12),
+  minutes: yup.number().min(0).max(59),
 });
 
 function TaskForm({ task }) {
@@ -109,6 +109,14 @@ function TaskForm({ task }) {
         newTask.hasStartTime &&
         (values.hours !== "0" || values.minutes !== "0")
       ) {
+        if (!values.hours) {
+          values.hours = 0;
+        }
+
+        if (!values.minutes) {
+          values.minutes = 0;
+        }
+
         newTask.endDate = new Date(
           newTask.startDate.getTime() +
             parseInt(values.hours) * 60 * 60 * 1000 +
