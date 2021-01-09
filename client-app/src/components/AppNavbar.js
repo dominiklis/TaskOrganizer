@@ -51,11 +51,9 @@ const useStyles = makeStyles((theme) => ({
 
 function AppNavbar() {
   const classes = useStyles();
-
   const history = useHistory();
 
   const [searchString, setSearchString] = useState("");
-  const [focusSearchBar, setFocusSearchBar] = useState(true);
 
   const handleSearchButton = () => {
     if (searchString !== "") {

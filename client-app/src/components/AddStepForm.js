@@ -51,7 +51,7 @@ function AddStepForm({ taskId, onAddStep }) {
           fullWidth
           id="text"
           name="text"
-          label="text"
+          label="add new step"
           className={classes.input}
           value={formik.values.text}
           onChange={formik.handleChange}
