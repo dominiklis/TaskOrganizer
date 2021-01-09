@@ -81,7 +81,7 @@ function SignUpPage() {
   const history = useHistory();
 
   const [isError, setIsError] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("TEST");
+  const [errorMsg, setErrorMsg] = useState("");
 
   const formik = useFormik({
     initialValues: {

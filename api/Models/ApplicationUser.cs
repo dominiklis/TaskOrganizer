@@ -10,5 +10,6 @@ namespace api.Models
     {
         public ICollection<TaskModel> Tasks { get; set; }
         public ICollection<Step> Steps { get; set; }
+        public ICollection<UserTask> UserTasks { get; set; }
     }
 }

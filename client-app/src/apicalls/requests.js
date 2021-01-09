@@ -113,3 +113,12 @@ export const Tags = {
     });
   },
 };
+
+export const UserTasks = {
+  share: (userTask) =>
+    requests.post("/usertasks", userTask, {
+      headers: {
+        Authorization: `Bearer ${GetToken()}`,
+      },
+    }),
+};

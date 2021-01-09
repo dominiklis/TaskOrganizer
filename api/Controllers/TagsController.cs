@@ -34,15 +34,11 @@ namespace api.Controllers
         public async Task<ActionResult> Get(string tagName)
         {
             ApplicationUser user = await _context.Users.FirstAsync(x => x.UserName == HttpContext.User.Identity.Name);
-            if (user == null)
-            {
-                return Unauthorized();
-            }
 
-            List<TaskModel> tasks = await _context
-                .TaskModels
+            List<TaskModel> tasks = await _context.TaskModels
+                .Include(x => x.UserTasks)
+                .Where(x => x.UserTasks.Any(y => y.UserId == user.Id))
                 .Include(x => x.User)
-                .Where(x => x.User.UserName == user.UserName)
                 .Include(x => x.Steps)
                 .Include(x => x.TaskTags).ThenInclude(t => t.Tag)
                 .Where(r => r.TaskTags.Any(rt => rt.Tag.Name == tagName))

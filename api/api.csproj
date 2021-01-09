@@ -9,6 +9,8 @@
     <Compile Remove="Migrations\20201219234024_StepAuthor.Designer.cs" />
     <Compile Remove="Migrations\20201220204120_ChangeListsToICollections.cs" />
     <Compile Remove="Migrations\20201220204120_ChangeListsToICollections.Designer.cs" />
+    <Compile Remove="Migrations\20210109020042_AddUserTaskTable.cs" />
+    <Compile Remove="Migrations\20210109020042_AddUserTaskTable.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

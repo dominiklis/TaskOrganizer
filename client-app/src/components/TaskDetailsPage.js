@@ -1,4 +1,13 @@
-import { CircularProgress, IconButton } from "@material-ui/core";
+import {
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  IconButton,
+  TextField,
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core";
 import { Box, Button, Typography } from "@material-ui/core";
 import React, { useEffect, useState, Fragment } from "react";
@@ -7,7 +16,7 @@ import Page from "./Page";
 import AddStepForm from "./AddStepForm";
 import ListOfSteps from "./ListOfSteps";
 import { format } from "date-fns";
-import { Tasks } from "../apicalls/requests";
+import { Tasks, UserTasks } from "../apicalls/requests";
 import EditTaskTitleForm from "./EditTaskTitleForm";
 import EditTaskDescriptionForm from "./EditTaskDescriptionForm";
 import EditTaskDates from "./EditTaskDates";
@@ -39,10 +48,14 @@ const useStyles = makeStyles((theme) => ({
       textDecoration: "none",
     },
   },
+  errorMsg: {
+    color: "red",
+  },
 }));
 
 function TaskDetailsPage({ match }) {
   const classes = useStyles();
+
   const [task, setTask] = useState({});
   const [taskLoaded, setTaskLoaded] = useState(false);
   const [taskCompleted, setTaskCompleted] = useState(false);
@@ -55,6 +68,11 @@ function TaskDetailsPage({ match }) {
   const [editDescription, setEditDescription] = useState(false);
   const [editDates, setEditDates] = useState(false);
   const [editTags, setEditTags] = useState(false);
+
+  const [open, setOpen] = useState(false);
+  const [shareInput, SetShareInput] = useState("");
+  const [isError, setIsError] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
   const { id } = useParams();
   const history = useHistory();
@@ -171,13 +189,36 @@ function TaskDetailsPage({ match }) {
   };
 
   const handleSaveEditTagButton = (newTags) => {
-    // const editedTask = {
-    //   ...task,
-    //   title: newTitle,
-    // };
-
     setTags(newTags);
     changeEditTagsState();
+  };
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setIsError(false);
+    setErrorMsg("");
+    setOpen(false);
+  };
+
+  const handleShareFormSubmit = (e) => {
+    e.preventDefault();
+    UserTasks.share({ email: shareInput, id: id }).then((response) => {
+      if (response.status === 200) {
+        SetShareInput("");
+        handleClose();
+      } else {
+        setIsError(true);
+        setErrorMsg("user not found or you are not the author of the task");
+      }
+    });
+  };
+
+  const changeShareInput = (e) => {
+    let input = e.target.value;
+    SetShareInput(input);
   };
 
   return (
@@ -233,7 +274,7 @@ function TaskDetailsPage({ match }) {
                 <Button color="secondary" onClick={handleDeleteButtonClick}>
                   delete
                 </Button>
-                <Button>share</Button>
+                <Button onClick={handleClickOpen}>share</Button>
               </Box>
             </Box>
 
@@ -283,6 +324,42 @@ function TaskDetailsPage({ match }) {
                 </Typography>
               ))
             )}
+
+            <Dialog
+              open={open}
+              onClose={handleClose}
+              aria-labelledby="form-dialog-title"
+            >
+              <form onSubmit={handleShareFormSubmit}>
+                <DialogTitle id="form-dialog-title">Share</DialogTitle>
+                <DialogContent>
+                  {isError && (
+                    <Typography className={classes.errorMsg} variant="h6">
+                      {errorMsg}
+                    </Typography>
+                  )}
+                  <DialogContentText>
+                    Share this task with other users.
+                  </DialogContentText>
+                  <TextField
+                    autoFocus
+                    margin="dense"
+                    id="name"
+                    label="Email Address"
+                    type="email"
+                    fullWidth
+                    value={shareInput}
+                    onChange={changeShareInput}
+                  />
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={handleClose} color="secondary">
+                    Cancel
+                  </Button>
+                  <Button type="submit">Share</Button>
+                </DialogActions>
+              </form>
+            </Dialog>
           </Fragment>
 
           <AddStepForm taskId={task.id} onAddStep={handleAddStep} />
@@ -292,11 +369,6 @@ function TaskDetailsPage({ match }) {
               handleDeleteStep={handleDeleteStep}
             />
           )}
-
-          {/* <AddNoteForm />
-          {task.notes &&
-            task.notes.length > 0 &&
-            task.notes.map((note) => <NoteCard note={note} key={note.Id} />)} */}
         </Fragment>
       ) : (
         <CircularProgress className={classes.circularProgress} />

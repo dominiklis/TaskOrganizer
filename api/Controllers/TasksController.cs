@@ -44,10 +44,6 @@ namespace api.Controllers
             [FromQuery] string search = "")
         {
             ApplicationUser user = await _context.Users.FirstAsync(x => x.UserName == HttpContext.User.Identity.Name);
-            if (user == null)
-            {
-                return Unauthorized();
-            }
 
             DateTime start = DateTime.UtcNow.Date;
             DateTime end = start.AddDays(3);
@@ -77,12 +73,13 @@ namespace api.Controllers
             bool cmp = Boolean.Parse(completed);
             bool inCmp = Boolean.Parse(inCompleted);
 
-            List<TaskModel> tasks = await _context
-                .TaskModels.Include(x => x.User)
-                .Where(x => x.User.UserName == user.UserName)
+            List<TaskModel> tasks = await _context.TaskModels
+                .Include(x => x.UserTasks)
+                .Where(x => x.UserTasks.Any(y => y.UserId == user.Id))
                 .Where(x => x.StartDate >= start && x.StartDate < end)
                 .Where(x => x.Completed == cmp || x.Completed == !inCmp)
                 .Where(x => x.Title.Contains(search))
+                .Include(x => x.User)
                 .Include(x => x.Steps)
                 .Include(x => x.TaskTags).ThenInclude(t => t.Tag)
                 .ToListAsync();
@@ -109,13 +106,10 @@ namespace api.Controllers
         public async Task<ActionResult<GetTaskDTO>> Get(int id)
         {
             ApplicationUser user = await _context.Users.FirstAsync(x => x.UserName == HttpContext.User.Identity.Name);
-            if (user == null)
-            {
-                return Unauthorized();
-            }
 
-            var task = await _context
-                .TaskModels
+            var task = await _context.TaskModels
+                .Include(x => x.UserTasks)
+                .Where(x => x.UserTasks.Any(y => y.UserId == user.Id))
                 .Include(x => x.User)
                 .AsNoTracking()
                 .Include(x => x.Steps)
@@ -124,12 +118,12 @@ namespace api.Controllers
 
             if (task == null)
             {
-                return NotFound();
+                return Unauthorized();
             }
 
-            if (task.User.UserName != user.UserName)
+            if (task == null)
             {
-                return Unauthorized();
+                return NotFound();
             }
 
             return _mapper.Map<GetTaskDTO>(task);
@@ -148,6 +142,10 @@ namespace api.Controllers
             newTask.User = user;
 
             _context.Add(newTask);
+
+            UserTask userTask = new UserTask() { User = user, UserId = user.Id, Task = newTask, TaskId = newTask.Id };
+            _context.Add(userTask);
+
             await _context.SaveChangesAsync();
 
             if (task.Tags != null)
