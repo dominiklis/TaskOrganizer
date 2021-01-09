@@ -1,13 +1,14 @@
 import { CircularProgress, makeStyles } from "@material-ui/core";
-import React, { useState, useEffect, Fragment } from "react";
-import Page from "../components/Page";
-import { TaskRequestParams } from "../utils/params";
-import { constStrings } from "../utils/constants";
-import { useHistory } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Fragment } from "react";
+import { useHistory, useParams } from "react-router-dom";
 import { Tasks } from "../apicalls/requests";
-import { CheckUser } from "../apicalls/auth";
-import TaskGroupsList from "./TaskGroupsList";
+import Page from "./Page";
 import PageTitle from "./PageTitle";
+import TaskGroupsList from "./TaskGroupsList";
+import { constStrings } from "../utils/constants";
+import { CheckUser } from "../apicalls/auth";
+import { TaskRequestParams } from "../utils/params";
 
 const useStyles = makeStyles((theme) => ({
   circularProgress: {
@@ -15,11 +16,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function OverdueTasksPage() {
+function SearchPage() {
   const history = useHistory();
   const classes = useStyles();
   const [groupedTasks, setGroupedTasks] = useState({});
   const [tasksLoaded, setTasksLoaded] = useState(false);
+  const { searchString } = useParams();
 
   useEffect(() => {
     const user = CheckUser();
@@ -29,9 +31,9 @@ function OverdueTasksPage() {
 
     const params = {
       startDate: 0,
-      endDate: TaskRequestParams.today(),
+      endDate: TaskRequestParams.nextYear(),
       sortOrder: TaskRequestParams.sortOrderDesc,
-      completed: false,
+      search: searchString,
     };
 
     Tasks.list(params).then((response) => {
@@ -42,13 +44,15 @@ function OverdueTasksPage() {
         history.push("/NotFound");
       }
     });
-  }, [history]);
+  }, [history, searchString]);
 
   return (
     <Page>
       {tasksLoaded ? (
         <Fragment>
-          <PageTitle title={constStrings.overdueTasks} />
+          <PageTitle
+            title={`${constStrings.searchResults} for "${searchString}"`}
+          />
           <TaskGroupsList tasks={groupedTasks} showGroupNames={true} />
         </Fragment>
       ) : (
@@ -58,4 +62,4 @@ function OverdueTasksPage() {
   );
 }
 
-export default OverdueTasksPage;
+export default SearchPage;

@@ -52,9 +52,9 @@ function TagPage() {
   }, [history, tagName]);
 
   return (
-    <Fragment>
+    <Page>
       {tasksLoaded ? (
-        <Page>
+        <Fragment>
           <Box>
             <Typography variant="h6">{`tasks tagged with ${tagName}`}</Typography>
           </Box>
@@ -77,13 +77,11 @@ function TagPage() {
               </Fragment>
             );
           })}
-        </Page>
+        </Fragment>
       ) : (
-        <Page>
-          <CircularProgress className={classes.circularProgress} />
-        </Page>
+        <CircularProgress className={classes.circularProgress} />
       )}
-    </Fragment>
+    </Page>
   );
 }
 

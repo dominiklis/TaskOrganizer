@@ -36,9 +36,6 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
     marginRight: theme.spacing(1),
   },
-  title: {
-    // marginRight: theme.spacing(2),
-  },
   titleButton: {
     marginRight: theme.spacing(1),
     marginLeft: theme.spacing(1),
@@ -58,11 +55,11 @@ function AppNavbar() {
   const history = useHistory();
 
   const [searchString, setSearchString] = useState("");
+  const [focusSearchBar, setFocusSearchBar] = useState(true);
 
-  const handleSearchSubmit = (e) => {
-    e.preventDefault();
+  const handleSearchButton = () => {
     if (searchString !== "") {
-      console.log("SRCH: " + searchString);
+      history.push(`/search/${searchString}`);
     }
   };
 
@@ -76,6 +73,12 @@ function AppNavbar() {
     history.push("/signin");
   };
 
+  const handleSearchEnter = (e) => {
+    if (e.key === "Enter") {
+      handleSearchButton();
+    }
+  };
+
   return (
     <div className={classes.root}>
       <AppBar position="fixed" className={classes.appBar}>
@@ -83,25 +86,22 @@ function AppNavbar() {
           <Link to="/" className={classes.link}>
             <Button className={classes.titleButton} disableRipple>
               <AlarmOnIcon className={classes.alarmIcon} />
-              <Typography variant="h6" className={classes.title}>
-                Task Organizer
-              </Typography>
+              <Typography variant="h6">Task Organizer</Typography>
             </Button>
           </Link>
-          <form className={classes.searchForm} onSubmit={handleSearchSubmit}>
-            <InputBase
-              placeholder="search..."
-              onChange={handleSearchInputChange}
-              className={classes.searchBar}
-            />
-            <IconButton
-              type="submit"
-              aria-label="search"
-              className={classes.searchIcon}
-            >
-              <SearchIcon />
-            </IconButton>
-          </form>
+          <InputBase
+            placeholder="search..."
+            onChange={handleSearchInputChange}
+            className={classes.searchBar}
+            onKeyDown={handleSearchEnter}
+          />
+          <IconButton
+            onClick={handleSearchButton}
+            aria-label="search"
+            className={classes.searchIcon}
+          >
+            <SearchIcon />
+          </IconButton>
           <Button variant="contained" onClick={handleSignOutButton}>
             Sign Out
           </Button>

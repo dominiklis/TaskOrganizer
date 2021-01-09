@@ -3,4 +3,5 @@ export const constStrings = {
   overdueTasks: "overdue tasks",
   addNewTask: "add new task",
   completedTasks: "completed tasks",
+  searchResults: "search results"
 };

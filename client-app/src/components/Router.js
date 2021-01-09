@@ -5,6 +5,7 @@ import AddTaskPage from "./AddTaskPage";
 import DoneTasksPage from "./DoneTasksPage";
 import MainPage from "./MainPage";
 import NotFoundPage from "./NotFoundPage";
+import SearchPage from "./SearchPage";
 import SignInPage from "./SignInPage";
 import SignUpPage from "./SignUpPage";
 import TagPage from "./TagPage";
@@ -22,6 +23,7 @@ function Router() {
         <Route path="/overdue" component={OverdueTasksPage} exact />
         <Route path="/done" component={DoneTasksPage} exact />
         <Route path="/tag/:tagName" component={TagPage} exact />
+        <Route path="/search/:searchString" component={SearchPage} exact />
         <Route component={NotFoundPage} />
       </Switch>
     </BrowserRouter>

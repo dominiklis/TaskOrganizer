@@ -44,6 +44,12 @@ export const TaskRequestParams = {
     return td;
   },
 
+  nextYear() {
+    let td = this.today();
+    td += 365 * 24 * 60 * 60;
+    return td;
+  },
+
   sortOrderAsc: "asc",
   sortOrderDesc: "desc",
 };
