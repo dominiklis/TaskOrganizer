@@ -101,7 +101,15 @@ export const Steps = {
 
 export const Users = {
   signup: (user) => requests.post("/users/signup", user).catch(handleError),
+
   signin: (user) => requests.post("/users/signin", user).catch(handleError),
+
+  listUsersWithTask: (taskId) =>
+    requests.get(`/users/task/${taskId}`, {
+      headers: {
+        Authorization: `Bearer ${GetToken()}`,
+      },
+    }),
 };
 
 export const Tags = {
@@ -119,6 +127,17 @@ export const UserTasks = {
     requests.post("/usertasks", userTask, {
       headers: {
         Authorization: `Bearer ${GetToken()}`,
+      },
+    }),
+
+  unshare: (userTask) =>
+    requests.delete("/usertasks/", {
+      headers: {
+        Authorization: `Bearer ${GetToken()}`,
+      },
+      data: {
+        email: userTask.email,
+        taskId: userTask.taskId,
       },
     }),
 };

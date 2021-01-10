@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace api.DTOs.UserTasks
 {
-    public class AddUserTaskDTO
+    public class UserTaskDTO
     {
         public string Email { get; set; }
-        public int Id { get; set; }
+        public int TaskId { get; set; }
     }
 }

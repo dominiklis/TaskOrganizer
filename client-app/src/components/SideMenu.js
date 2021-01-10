@@ -21,9 +21,9 @@ import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 
 const useStyles = makeStyles((theme) => ({
   drawer: {
-    width: "240px",
+    width: "220px",
     [theme.breakpoints.down("lg")]: {
-      width: "80px",
+      width: "75px",
     },
   },
   styledButton: {
@@ -37,9 +37,9 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
   },
   drawerPaper: {
-    width: "240px",
+    width: "220px",
     [theme.breakpoints.down("sm")]: {
-      width: "80px",
+      width: "75px",
     },
   },
   drawerContainer: {

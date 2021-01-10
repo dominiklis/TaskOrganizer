@@ -5,13 +5,17 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using api.Data;
 using api.DTOs.Users;
 using api.Models;
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
@@ -24,15 +28,21 @@ namespace api.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IConfiguration _configuration;
+        private readonly ApplicationDbContext _context;
+        private readonly IMapper _mapper;
 
         public UsersController(
             UserManager<ApplicationUser> userManager, 
             SignInManager<ApplicationUser> signInManager, 
-            IConfiguration configuration)
+            IConfiguration configuration,
+            ApplicationDbContext context,
+            IMapper mapper)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _configuration = configuration;
+            _context = context;
+            _mapper = mapper;
         }
 
         [HttpPost("SignUp")]
@@ -109,6 +119,30 @@ namespace api.Controllers
             };
 
             return BuildToken(userInfo);
+        }
+
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [EnableCors(PolicyName = "CorsPolicy")]
+        [HttpGet("task/{taskId}")]
+        public async Task<ActionResult> GetUsersWithTask(int taskId)
+        {
+            var task = await _context.TaskModels
+                .Include(x => x.User)
+                .FirstOrDefaultAsync(x => x.Id == taskId);
+
+            if (task == null)
+            {
+                return NotFound();
+            }
+
+            var users = await _context.Users
+                .Include(x => x.UserTasks)
+                .Where(x => x.UserTasks.Any(t => t.TaskId == taskId) && x.UserName != task.User.UserName)
+                .ToListAsync();
+
+            var usersDto = _mapper.Map<List<GetUserDTO>>(users);
+
+            return Ok(usersDto);
         }
     }
 }

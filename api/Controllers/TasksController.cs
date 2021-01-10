@@ -103,7 +103,7 @@ namespace api.Controllers
                 }
             }
 
-            List<TaskModel> tasksList = await tasksQueryable.ToListAsync();
+            List<TaskModel> tasksList = await tasksQueryable.Include(x => x.TaskTags).ThenInclude(t => t.Tag).ToListAsync();
             List<GetTaskDTO> tasksDTOs = _mapper.Map<List<GetTaskDTO>>(tasksList);
 
             var groupedTasks = tasksDTOs

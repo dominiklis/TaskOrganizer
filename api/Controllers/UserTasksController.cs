@@ -31,7 +31,7 @@ namespace api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] AddUserTaskDTO userTask)
+        public async Task<ActionResult> Post([FromBody] UserTaskDTO userTask)
         {
             ApplicationUser userToAdd = await _context.Users.FirstOrDefaultAsync(x => x.UserName == userTask.Email);
             if (userToAdd == null)
@@ -39,7 +39,7 @@ namespace api.Controllers
                 return NotFound($"user {userTask.Email} not found");
             }
 
-            TaskModel task = await _context.TaskModels.Include(x => x.User).FirstOrDefaultAsync(x => x.Id == userTask.Id);
+            TaskModel task = await _context.TaskModels.Include(x => x.User).FirstOrDefaultAsync(x => x.Id == userTask.TaskId);
             if (task == null)
             {
                 return NotFound("task not found");
@@ -51,11 +51,51 @@ namespace api.Controllers
                 return Unauthorized();
             }
 
+            bool isAlreadyCreated = await _context.UserTasks.AnyAsync(x => x.TaskId == task.Id && x.UserId == userToAdd.Id);
+            if (isAlreadyCreated)
+            {
+                return NoContent();
+            }
+
             UserTask newUserTask = new UserTask() { User = userToAdd, UserId = userToAdd.Id, Task = task, TaskId = task.Id };
             _context.Add(newUserTask);
             await _context.SaveChangesAsync();
 
             return Ok();
         }
+
+        [HttpDelete]
+        public async Task<ActionResult> Delete([FromBody] UserTaskDTO userTask)
+        {
+            if (string.IsNullOrWhiteSpace(userTask.Email))
+            {
+                return NotFound("user not found");
+            }
+
+            TaskModel task = await _context.TaskModels.Include(x => x.User).FirstOrDefaultAsync(x => x.Id == userTask.TaskId);
+            if (task == null)
+            {
+                return NotFound("task not found");
+            }
+
+            if (task.User.UserName != HttpContext.User.Identity.Name)
+            {
+                return Unauthorized("you are not the author");
+            }
+
+            ApplicationUser userWithAccess = await _context.Users.FirstOrDefaultAsync(x => x.UserName == userTask.Email);
+            if (userWithAccess == null)
+            {
+                return NotFound("user not found");
+            }
+            
+            UserTask utToDelete = await _context.UserTasks.FirstOrDefaultAsync(x => x.UserId == userWithAccess.Id && x.TaskId == task.Id);
+            
+            _context.Remove(utToDelete);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
     }
 }

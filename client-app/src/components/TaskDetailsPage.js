@@ -18,7 +18,7 @@ import Page from "./Page";
 import AddStepForm from "./AddStepForm";
 import ListOfStepsItem from "./ListOfStepsItem";
 import { format } from "date-fns";
-import { Tasks, UserTasks } from "../apicalls/requests";
+import { Tasks, Users, UserTasks } from "../apicalls/requests";
 import EditTaskTitleForm from "./EditTaskTitleForm";
 import EditTaskDescriptionForm from "./EditTaskDescriptionForm";
 import EditTaskDates from "./EditTaskDates";
@@ -31,6 +31,7 @@ import CheckIcon from "@material-ui/icons/Check";
 import ClearIcon from "@material-ui/icons/Clear";
 import ShareIcon from "@material-ui/icons/Share";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
+import UsersWithTask from "./UsersWithTask";
 
 const useStyles = makeStyles((theme) => ({
   timeBox: {
@@ -126,7 +127,7 @@ function TaskDetailsPage({ match }) {
   const [editDates, setEditDates] = useState(false);
 
   const changeEditDatesState = () => {
-    if (IsAuthor(task.title)) {
+    if (IsAuthor(task.authorName)) {
       const e = !editDates;
       setEditDates(e);
     }
@@ -182,7 +183,7 @@ function TaskDetailsPage({ match }) {
   const [editTags, setEditTags] = useState(false);
 
   const changeEditTagsState = () => {
-    if (IsAuthor(task.title)) {
+    if (IsAuthor(task.authorName)) {
       const edit = !editTags;
       setEditTags(edit);
     }
@@ -216,10 +217,15 @@ function TaskDetailsPage({ match }) {
 
   const handleShareFormSubmit = (e) => {
     e.preventDefault();
-    UserTasks.share({ email: shareInput, id: id }).then((response) => {
+    UserTasks.share({ email: shareInput, taskId: id }).then((response) => {
       if (response.status === 200) {
-        SetShareInput("");
+        const utl = [...usersToList, { userName: shareInput }];
+        setUsersToList(utl);
         handleCloseShareModal();
+        SetShareInput("");
+      } else if (response.status === 204) {
+        setIsError(true);
+        setErrorMsg("user already has access to this task");
       } else {
         setIsError(true);
         setErrorMsg("user not found or you are not the author of the task");
@@ -231,6 +237,13 @@ function TaskDetailsPage({ match }) {
     Tasks.delete(id);
     history.goBack();
   };
+
+  // users with access to this task
+  const [usersToList, setUsersToList] = useState([]);
+
+  const handleUnshare = (users) => {
+    setUsersToList(users);
+  }
 
   useEffect(() => {
     const user = CheckUser();
@@ -254,6 +267,12 @@ function TaskDetailsPage({ match }) {
         setTaskLoaded(true);
       } else {
         history.push("/NotFound");
+      }
+    });
+
+    Users.listUsersWithTask(id).then((response) => {
+      if (response.status === 200) {
+        setUsersToList(response.data);
       }
     });
   }, [id, history]);
@@ -442,6 +461,11 @@ function TaskDetailsPage({ match }) {
                     );
                   })}
                 </List>
+              )}
+
+              {usersToList.length > 0 && IsAuthor(task.authorName) && (
+                
+                <UsersWithTask taskId={id} usersToList={usersToList} handleUnshare={handleUnshare} />
               )}
             </Grid>
 

@@ -1,5 +1,6 @@
 ﻿using api.DTOs.Steps;
 using api.DTOs.Tasks;
+using api.DTOs.Users;
 using api.Models;
 using AutoMapper;
 using System;
@@ -43,6 +44,8 @@ namespace api.Profiles
                 .ForMember(src => src.TaskTags, opt => opt.Ignore());
 
             CreateMap<Step, GetStepDTO>();
+
+            CreateMap<ApplicationUser, GetUserDTO>();
         }
     }
 }
