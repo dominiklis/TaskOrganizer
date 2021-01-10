@@ -55,7 +55,7 @@ const validationSchema = yup.object({
   title: yup.string("enter title").required("title is required"),
   startDate: yup.date(),
   startTime: yup.date().nullable(),
-  hours: yup.number().min(0).max(12),
+  hours: yup.number().min(0).max(24),
   minutes: yup.number().min(0).max(59),
 });
 
@@ -185,6 +185,7 @@ function TaskForm({ task }) {
                 label="start time"
                 ampm={false}
                 value={formik.values.startTime}
+                minutesStep={5}
                 onChange={(time) =>
                   formik.setFieldValue("startTime", time, false)
                 }
@@ -213,7 +214,7 @@ function TaskForm({ task }) {
             id="minutes"
             name="minutes"
             label="minutes"
-            type="minutes"
+            type="number"
             value={formik.values.minutes}
             onChange={formik.handleChange}
             error={formik.touched.minutes && Boolean(formik.errors.minutes)}

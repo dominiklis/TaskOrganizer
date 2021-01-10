@@ -53,7 +53,7 @@ const theme = createMuiTheme({
 const validationSchema = yup.object({
   startDate: yup.date(),
   startTime: yup.date().nullable(),
-  hours: yup.number().nullable().min(0).max(12),
+  hours: yup.number().nullable().min(0).max(24),
   minutes: yup.number().nullable().min(0).max(59),
 });
 
@@ -168,6 +168,7 @@ function EditTaskDates({ task, afterSubmit, handleCancel }) {
                 label="start time"
                 ampm={false}
                 value={formik.values.startTime}
+                minutesStep={5}
                 onChange={(time) =>
                   formik.setFieldValue("startTime", time, false)
                 }
@@ -196,7 +197,7 @@ function EditTaskDates({ task, afterSubmit, handleCancel }) {
             id="minutes"
             name="minutes"
             label="minutes"
-            type="minutes"
+            type="number"
             value={formik.values.minutes}
             onChange={formik.handleChange}
             error={formik.touched.minutes && Boolean(formik.errors.minutes)}

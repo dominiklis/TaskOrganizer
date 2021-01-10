@@ -108,7 +108,7 @@ namespace api.Controllers
 
             var groupedTasks = tasksDTOs
                 .GroupBy(tasksDTOs => tasksDTOs.StartDate.Date, tasksDTOs => tasksDTOs)
-                .Select(t => new { t.Key, Count = t.Count(), Tasks = t.ToList() });
+                .Select(t => new { t.Key, Count = t.Count(), Tasks = t.ToList().OrderBy(x => x.StartDate) });
 
             if (filters.SortOrder == "asc")
             {

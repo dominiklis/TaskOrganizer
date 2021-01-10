@@ -3,7 +3,7 @@ import {
   Card,
   CardActionArea,
   CardActions,
-  CardHeader,
+  Grid,
   IconButton,
   makeStyles,
   Tooltip,
@@ -18,6 +18,7 @@ import { Tasks } from "../apicalls/requests";
 import TagChip from "./TagChip";
 import { IsAuthor } from "../apicalls/auth";
 import ShareIcon from "@material-ui/icons/Share";
+import { checkForDates } from "../utils/utils";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -25,9 +26,6 @@ const useStyles = makeStyles((theme) => ({
   },
   card: {
     padding: theme.spacing(2),
-  },
-  cardHeader: {
-    background: "#037c81",
   },
   cardHeaderDone: {
     background: "#21d8ba",
@@ -63,6 +61,7 @@ function TaskCard({ task }) {
   const classes = useStyles();
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
+  const [nextDay, setNextDay] = useState(false);
   const [taskCompleted, setTaskCompleted] = useState(task.completed);
 
   useEffect(() => {
@@ -70,7 +69,9 @@ function TaskCard({ task }) {
     if (task.endDate) {
       setEndDate(new Date(task.endDate));
     }
-  }, [task.startDate, task.endDate]);
+
+    setNextDay(checkForDates(task.hasStartTime ? task.startDate : null, task.endDate));
+  }, [task.startDate, task.endDate, task.hasStartTime]);
 
   const handleCompletedFormSubmit = (e) => {
     e.preventDefault();
@@ -89,60 +90,83 @@ function TaskCard({ task }) {
   return (
     <Card className={classes.root}>
       <Box display="flex">
-        <CardHeader
-          className={`${
-            taskCompleted ? classes.cardHeaderDone : classes.cardHeader
-          }`}
-        ></CardHeader>
         <CardActionArea disableRipple className={classes.card}>
-          <Box display="flex">
-            <Box flexGrow={25}>
-              <Link className={classes.link} to={`/task/${task.id}`}>
-                <Typography
-                  variant="body1"
-                  component="div"
-                  color={`${taskCompleted ? "textSecondary" : "initial"}`}
-                >
-                  <Box display="flex">
-                    <Box textAlign="left" flexGrow={1}>
-                      {task.title.length > 60
-                        ? `${task.title.substring(0, 60)}...`
-                        : task.title}
-                    </Box>
-                  </Box>
-                </Typography>
-
-                {!IsAuthor(task.authorName) && (
-                  <Typography variant="caption">{`task shared by ${task.authorName}`}</Typography>
-                )}
-                <Box display="flex">
+          <Link className={classes.link} to={`/task/${task.id}`}>
+            <Grid container spacing={1}>
+              <Grid item xs={2}>
+                {task.hasStartTime && (
                   <Typography
-                    variant="body2"
+                    variant="h6"
                     color={`${taskCompleted ? "textSecondary" : "initial"}`}
                   >
-                    {task.hasStartTime && " " + format(startDate, "HH:mm")}
-                    {task.endDate && " - " + format(endDate, "HH:mm")}{" "}
+                    {format(startDate, "HH:mm")}
                   </Typography>
-                  <Box textAlign="right" flexGrow={1}>
+                )}
+                {task.endDate && (
+                  <Typography
+                    variant="h6"
+                    color={`${taskCompleted ? "textSecondary" : "initial"}`}
+                  >
+                    {format(endDate, "HH:mm")}
+                  </Typography>
+                )}
+                {nextDay && (
+                  <Typography
+                    variant="caption"
+                    color={`${taskCompleted ? "textSecondary" : "initial"}`}
+                  >
+                    {" (next day)"}
+                  </Typography>
+                )}
+              </Grid>
+              <Grid item xs={10}>
+                <Box display="flex">
+                  <Box flexGrow={25}>
+                    {/* <Link className={classes.link} to={`/task/${task.id}`}> */}
                     <Typography
-                      variant="body2"
-                      color={`${taskCompleted ? "initial" : "textSecondary"}`}
-                    >{`${
-                      taskCompleted ? "completed" : "not completed"
-                    }`}</Typography>
+                      variant="h6"
+                      component="div"
+                      color={`${taskCompleted ? "textSecondary" : "initial"}`}
+                    >
+                      <Box display="flex">
+                        <Box textAlign="left" flexGrow={1}>
+                          {task.title.length > 60
+                            ? `${task.title.substring(0, 60)}...`
+                            : task.title}
+                        </Box>
+                      </Box>
+                    </Typography>
+
+                    {!IsAuthor(task.authorName) && (
+                      <Typography variant="caption">{`task shared by ${task.authorName}`}</Typography>
+                    )}
+                    <Box display="flex">
+                      <Box textAlign="right" flexGrow={1}>
+                        <Typography
+                          variant="body2"
+                          color={`${
+                            taskCompleted ? "initial" : "textSecondary"
+                          }`}
+                        >{`${
+                          taskCompleted ? "completed" : "not completed"
+                        }`}</Typography>
+                      </Box>
+                    </Box>
+                    {task.tags.length > 0 && (
+                      <Box display="flex">
+                        {task.tags.slice(0, 3).map((tag) => (
+                          <TagChip key={tag} tag={tag} />
+                        ))}
+                        {task.tags.length > 3 && (
+                          <Typography>{"..."}</Typography>
+                        )}
+                      </Box>
+                    )}
                   </Box>
                 </Box>
-              </Link>
-              {task.tags.length > 0 && (
-                <Box display="flex">
-                  {task.tags.slice(0, 3).map((tag) => (
-                    <TagChip key={tag} tag={tag} />
-                  ))}
-                  {task.tags.length > 3 && <Typography>{"..."}</Typography>}
-                </Box>
-              )}
-            </Box>
-          </Box>
+              </Grid>
+            </Grid>
+          </Link>
         </CardActionArea>
         <CardActions>
           {IsAuthor(task.authorName) ? (

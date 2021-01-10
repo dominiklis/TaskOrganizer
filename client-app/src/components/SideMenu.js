@@ -10,11 +10,8 @@ import {
 } from "@material-ui/core";
 import React from "react";
 import { Link } from "react-router-dom";
-
-import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
 import AddIcon from "@material-ui/icons/Add";
 import ImportContactsIcon from "@material-ui/icons/ImportContacts";
-// import FolderOpenIcon from "@material-ui/icons/FolderOpen";
 import PeopleIcon from "@material-ui/icons/People";
 import WarningIcon from "@material-ui/icons/Warning";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
@@ -69,35 +66,17 @@ const menuItems = [
     icon: <ImportContactsIcon />,
     linkTo: "/",
   },
-  // {
-  //   name: "todayButton",
-  //   label: "Today",
-  //   icon: <TodayIcon />,
-  //   linkTo: "/today",
-  // },
   {
     name: "overdueButton",
     label: "Overdue",
     icon: <WarningIcon />,
     linkTo: "/overdue",
   },
-  // {
-  //   name: "groupsButton",
-  //   label: "Groups",
-  //   icon: <FolderOpenIcon />,
-  //   linkTo: "/groups",
-  // },
   {
     name: "sharedButton",
     label: "Shared",
     icon: <PeopleIcon />,
     linkTo: "/shared",
-  },
-  {
-    name: "calendarButton",
-    label: "Calendar",
-    icon: <CalendarTodayIcon />,
-    linkTo: "/calendar",
   },
   {
     name: "doneButton",
