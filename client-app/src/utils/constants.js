@@ -3,5 +3,6 @@ export const constStrings = {
   overdueTasks: "overdue tasks",
   addNewTask: "add new task",
   completedTasks: "completed tasks",
-  searchResults: "search results"
+  searchResults: "search results",
+  sharedTasks: "shared tasks"
 };

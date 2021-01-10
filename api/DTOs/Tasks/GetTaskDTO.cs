@@ -18,5 +18,6 @@ namespace api.DTOs.Tasks
         public DateTime? EndDate { get; set; }
         public List<GetStepDTO> Steps { get; set; }
         public List<string> Tags { get; set; }
+        public string AuthorName { get; set; }
     }
 }

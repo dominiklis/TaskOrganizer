@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import SideMenu from "./SideMenu";
 import AppNavbar from "./AppNavbar";
-import { Grid, makeStyles, Toolbar } from "@material-ui/core";
+import { Grid, Hidden, makeStyles, Toolbar } from "@material-ui/core";
 import { CheckUser } from "../apicalls/auth";
 import { useHistory } from "react-router-dom";
 import { Fragment } from "react";
@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
   },
   content: {
     flexGrow: "5000",
-    padding: theme.spacing(3),
+    padding: theme.spacing(1),
   },
 }));
 
@@ -39,11 +39,16 @@ function Page({ children }) {
           <SideMenu />
           <main className={classes.content}>
             <Toolbar />
-            <Grid container spacing={1}>
-              <Grid item xs={12} sm={11}>
+            <Grid container spacing={2}>
+              <Hidden smDown>
+                <Grid item xs={2}></Grid>
+              </Hidden>
+              <Grid item sm={9} xs={12}>
                 {children}
               </Grid>
-              <Grid item xs={false} sm={1}></Grid>
+              <Hidden smDown>
+                <Grid item xs={1}></Grid>
+              </Hidden>
             </Grid>
           </main>
         </Fragment>

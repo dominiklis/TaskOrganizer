@@ -36,7 +36,7 @@ function DoneTasksPage() {
       startDate: 0,
       endDate: TaskRequestParams.today(),
       sortOrder: TaskRequestParams.sortOrderDesc,
-      inCompleted: false,
+      completed: true,
     };
 
     Tasks.list(params).then((response) => {

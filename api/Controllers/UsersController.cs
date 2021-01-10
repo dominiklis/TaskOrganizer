@@ -79,6 +79,7 @@ namespace api.Controllers
             return new UserToken()
             {
                 Token = new JwtSecurityTokenHandler().WriteToken(token),
+                UserName = signUpUser.Email,
                 Expiration = expirationTime
             };
         }

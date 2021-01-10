@@ -10,12 +10,12 @@ import {
   TextField,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core";
-import { Box, Button, Typography } from "@material-ui/core";
+import { Box, Button, Typography, List } from "@material-ui/core";
 import React, { useEffect, useState, Fragment } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import Page from "./Page";
 import AddStepForm from "./AddStepForm";
-import ListOfSteps from "./ListOfSteps";
+import ListOfStepsItem from "./ListOfStepsItem";
 import { format } from "date-fns";
 import { Tasks, UserTasks } from "../apicalls/requests";
 import EditTaskTitleForm from "./EditTaskTitleForm";
@@ -23,7 +23,7 @@ import EditTaskDescriptionForm from "./EditTaskDescriptionForm";
 import EditTaskDates from "./EditTaskDates";
 import EditTagsForm from "./EditTagsForm";
 import TagChip from "./TagChip";
-import { CheckUser } from "../apicalls/auth";
+import { CheckUser, IsAuthor } from "../apicalls/auth";
 import EditIcon from "@material-ui/icons/Edit";
 import TodayIcon from "@material-ui/icons/Today";
 import CheckIcon from "@material-ui/icons/Check";
@@ -62,6 +62,15 @@ const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
   },
+  completedText: {
+    color: "#c0c0c0",
+  },
+  notCompletedText: {
+    color: "#808080",
+  },
+  sharedText: {
+    color: "#6e0110",
+  },
 }));
 
 function TaskDetailsPage({ match }) {
@@ -82,8 +91,10 @@ function TaskDetailsPage({ match }) {
   const [editTitle, setEditTitle] = useState(false);
 
   const changeTitleEditState = () => {
-    const e = !editTitle;
-    setEditTitle(e);
+    if (IsAuthor(task.authorName)) {
+      const e = !editTitle;
+      setEditTitle(e);
+    }
   };
 
   const handleSaveEditTitleButton = (newTitle) => {
@@ -113,6 +124,13 @@ function TaskDetailsPage({ match }) {
   //    edit dates
   const [editDates, setEditDates] = useState(false);
 
+  const changeEditDatesState = () => {
+    if (IsAuthor(task.title)) {
+      const e = !editDates;
+      setEditDates(e);
+    }
+  };
+
   const handleSaveEditDatesButton = (startDate, hasStartTime, endDate) => {
     const editedTask = { ...task, startDate, hasStartTime, endDate };
 
@@ -125,14 +143,6 @@ function TaskDetailsPage({ match }) {
     setTask(editedTask);
     changeEditDatesState();
   };
-
-  const changeEditDatesState = () => {
-    const e = !editDates;
-    setEditDates(e);
-  };
-
-  //    edit tags
-  const [editTags, setEditTags] = useState(false);
 
   // adding and deleting steps
   const handleAddStep = (step) => {
@@ -167,10 +177,14 @@ function TaskDetailsPage({ match }) {
     ]);
   };
 
-  // editing tags
+  //    edit tags
+  const [editTags, setEditTags] = useState(false);
+
   const changeEditTagsState = () => {
-    const edit = !editTags;
-    setEditTags(edit);
+    if (IsAuthor(task.title)) {
+      const edit = !editTags;
+      setEditTags(edit);
+    }
   };
 
   const handleSaveEditTagButton = (newTags) => {
@@ -248,30 +262,38 @@ function TaskDetailsPage({ match }) {
       {taskLoaded ? (
         <div className={classes.root}>
           <Grid container spacing={1}>
-            <Grid item xs={1} sm={2}>
-              <Box textAlign="center">
-                <form onSubmit={handleCompletedFormSubmit}>
-                  <IconButton color="primary" type="submit">
-                    {taskCompleted ? <ClearIcon /> : <CheckIcon />}
-                  </IconButton>
-                </form>
-                <div>
-                  <IconButton onClick={handlekOpenShareModal}>
-                    <ShareIcon />
-                  </IconButton>
-                </div>
-                <div>
-                  <IconButton
-                    color="secondary"
-                    onClick={handleDeleteButtonClick}
-                  >
-                    <DeleteForeverIcon />
-                  </IconButton>
-                </div>
-              </Box>
+            <Grid item xs={1}>
+              {IsAuthor(task.authorName) && (
+                <Box textAlign="center">
+                  <form onSubmit={handleCompletedFormSubmit}>
+                    <IconButton color="primary" type="submit">
+                      {taskCompleted ? <ClearIcon /> : <CheckIcon />}
+                    </IconButton>
+                  </form>
+                  <div>
+                    <IconButton onClick={handlekOpenShareModal}>
+                      <ShareIcon />
+                    </IconButton>
+                  </div>
+                  <div>
+                    <IconButton
+                      color="secondary"
+                      onClick={handleDeleteButtonClick}
+                    >
+                      <DeleteForeverIcon />
+                    </IconButton>
+                  </div>
+                </Box>
+              )}
             </Grid>
 
-            <Grid item xs={11} sm={9}>
+            <Grid item xs={11} sm={10}>
+              {!IsAuthor(task.authorName) && (
+                <Typography
+                  variant="caption"
+                  className={classes.sharedText}
+                >{`task shared by ${task.authorName}`}</Typography>
+              )}
               {editTitle ? (
                 <EditTaskTitleForm
                   title={task.title}
@@ -282,6 +304,19 @@ function TaskDetailsPage({ match }) {
               ) : (
                 <Typography variant="h5" onClick={changeTitleEditState}>
                   {task.title}
+                </Typography>
+              )}
+
+              {taskCompleted ? (
+                <Typography variant="caption" className={classes.completedText}>
+                  completed
+                </Typography>
+              ) : (
+                <Typography
+                  variant="caption"
+                  className={classes.notCompletedText}
+                >
+                  not completed
                 </Typography>
               )}
 
@@ -327,13 +362,15 @@ function TaskDetailsPage({ match }) {
 
               <Box display="flex">
                 <Typography variant="subtitle1">tags:</Typography>
-                <IconButton
-                  aria-label="edit tags"
-                  size="small"
-                  onClick={changeEditTagsState}
-                >
-                  {editTags ? <ClearIcon /> : <EditIcon />}
-                </IconButton>
+                {IsAuthor(task.authorName) && (
+                  <IconButton
+                    aria-label="edit tags"
+                    size="small"
+                    onClick={changeEditTagsState}
+                  >
+                    {editTags ? <ClearIcon /> : <EditIcon />}
+                  </IconButton>
+                )}
               </Box>
               {editTags ? (
                 <EditTagsForm
@@ -352,7 +389,8 @@ function TaskDetailsPage({ match }) {
               <Typography variant="subtitle2" className={classes.partName}>
                 description:
               </Typography>
-              {editDescription || task.description === "" ? (
+              {(editDescription || task.description === "") &&
+              IsAuthor(task.authorName) ? (
                 <EditTaskDescriptionForm
                   description={task.description}
                   id={task.id}
@@ -375,12 +413,22 @@ function TaskDetailsPage({ match }) {
               <Typography variant="subtitle2" className={classes.partName}>
                 steps:
               </Typography>
-              <AddStepForm taskId={task.id} onAddStep={handleAddStep} />
+              {IsAuthor(task.authorName) && (
+                <AddStepForm taskId={task.id} onAddStep={handleAddStep} />
+              )}
               {task.steps && task.steps.length > 0 && (
-                <ListOfSteps
-                  steps={task.steps}
-                  handleDeleteStep={handleDeleteStep}
-                />
+                <List>
+                  {task.steps.map((step) => {
+                    return (
+                      <ListOfStepsItem
+                        step={step}
+                        key={step.id}
+                        handleDeleteStep={handleDeleteStep}
+                        canEdit={IsAuthor(task.authorName)}
+                      />
+                    );
+                  })}
+                </List>
               )}
             </Grid>
 

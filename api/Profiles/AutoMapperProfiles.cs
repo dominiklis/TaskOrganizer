@@ -15,7 +15,8 @@ namespace api.Profiles
         public AutoMapperProfiles()
         {
             CreateMap<TaskModel, GetTaskDTO>()
-                .ForMember(x => x.Tags, opt => opt.MapFrom(src => src.TaskTags.Select(t => t.Tag).ToList()));
+                .ForMember(x => x.Tags, opt => opt.MapFrom(src => src.TaskTags.Select(t => t.Tag).ToList()))
+                .ForMember(x => x.AuthorName, opt => opt.MapFrom(src => src.User.UserName));
 
             CreateMap<Tag, string>().ConvertUsing(x => x.Name);
 

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using api.Data;
+using api.DTOs.Filter;
 using api.DTOs.Tasks;
 using api.Models;
 using AutoMapper;
@@ -27,70 +28,89 @@ namespace api.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
         private readonly Regex rgx = new Regex("[^a-zA-Z0-9 -]");
+        private enum SharedFilter { SharedBy = 0, SharedTo = 1 }
 
         public TasksController(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
         }
-
+        
         [HttpGet]
-        public async Task<ActionResult> Get(
-            [FromQuery] string startDate = null, 
-            [FromQuery] string endDate = null, 
-            [FromQuery] string sortOrder = "asc",
-            [FromQuery] string completed = "true",
-            [FromQuery] string inCompleted = "true",
-            [FromQuery] string search = "")
+        public async Task<ActionResult> Filter([FromQuery] TasksFilterDTO filters)
         {
             ApplicationUser user = await _context.Users.FirstAsync(x => x.UserName == HttpContext.User.Identity.Name);
 
-            DateTime start = DateTime.UtcNow.Date;
-            DateTime end = start.AddDays(3);
+            var tasksQueryable = _context.TaskModels
+                .Where(x => x.UserTasks.Any(y => y.UserId == user.Id))
+                .Include(x => x.User)
+                .AsQueryable();
 
-            if (startDate != null)
+            DateTime start = DateTime.UtcNow.Date;
+            DateTime end = start.AddDays(7);
+
+            if (!string.IsNullOrWhiteSpace(filters.StartDate))
             {
                 Int32 startDateTimestamp;
 
-                bool success = Int32.TryParse(startDate, out startDateTimestamp);
+                bool success = Int32.TryParse(filters.StartDate, out startDateTimestamp);
                 if (success && startDateTimestamp >= 0)
                 {
                     start = DateTimeOffset.FromUnixTimeSeconds(startDateTimestamp).LocalDateTime;
                 }
             }
 
-            if (endDate != null)
+            if (!string.IsNullOrWhiteSpace(filters.EndDate))
             {
                 Int32 endDateTimestamp;
 
-                bool success = Int32.TryParse(endDate, out endDateTimestamp);
+                bool success = Int32.TryParse(filters.EndDate, out endDateTimestamp);
                 if (success && endDateTimestamp >= 0)
                 {
                     end = DateTimeOffset.FromUnixTimeSeconds(endDateTimestamp).LocalDateTime;
                 }
             }
 
-            bool cmp = Boolean.Parse(completed);
-            bool inCmp = Boolean.Parse(inCompleted);
+            tasksQueryable = tasksQueryable.Where(x => x.StartDate >= start && x.StartDate < end);
 
-            List<TaskModel> tasks = await _context.TaskModels
-                .Include(x => x.UserTasks)
-                .Where(x => x.UserTasks.Any(y => y.UserId == user.Id))
-                .Where(x => x.StartDate >= start && x.StartDate < end)
-                .Where(x => x.Completed == cmp || x.Completed == !inCmp)
-                .Where(x => x.Title.Contains(search))
-                .Include(x => x.User)
-                .Include(x => x.Steps)
-                .Include(x => x.TaskTags).ThenInclude(t => t.Tag)
-                .ToListAsync();
+            if (!string.IsNullOrWhiteSpace(filters.Completed))
+            {
+                bool c;
+                if (Boolean.TryParse(filters.Completed, out c))
+                {
+                    tasksQueryable = tasksQueryable.Where(x => x.Completed == c);
+                }
+            }
 
-            List<GetTaskDTO> tasksDTOs = _mapper.Map<List<GetTaskDTO>>(tasks);
+            if (!string.IsNullOrWhiteSpace(filters.Search))
+            {
+                tasksQueryable = tasksQueryable.Where(x => x.Title.Contains(filters.Search));
+            }
+
+            if (!string.IsNullOrWhiteSpace(filters.Shared))
+            {
+                SharedFilter sf;
+                if (Enum.TryParse(filters.Shared, true, out sf))
+                {
+                    if (sf == SharedFilter.SharedBy)
+                    {
+                        tasksQueryable = tasksQueryable.Where(x => x.User.UserName == user.UserName && x.UserTasks.Count > 1);
+                    }
+                    else
+                    {
+                        tasksQueryable = tasksQueryable.Where(x => x.User.UserName != user.UserName);
+                    }
+                }
+            }
+
+            List<TaskModel> tasksList = await tasksQueryable.ToListAsync();
+            List<GetTaskDTO> tasksDTOs = _mapper.Map<List<GetTaskDTO>>(tasksList);
 
             var groupedTasks = tasksDTOs
                 .GroupBy(tasksDTOs => tasksDTOs.StartDate.Date, tasksDTOs => tasksDTOs)
                 .Select(t => new { t.Key, Count = t.Count(), Tasks = t.ToList() });
 
-            if (sortOrder == "asc")
+            if (filters.SortOrder == "asc")
             {
                 groupedTasks = groupedTasks.OrderBy(x => x.Key);
             }

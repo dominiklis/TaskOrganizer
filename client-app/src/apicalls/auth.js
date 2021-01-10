@@ -2,6 +2,7 @@ import axios from "axios";
 axios.defaults.baseURL = "https://localhost:44322/api";
 
 const tokenKey = "TaskOrganizerUserToken";
+const userNameKey = "TaskOrganizerUserName";
 const expirationDateKey = "TaskOrganizerUserTokenExpirationDate";
 
 const handleError = (err) => {
@@ -30,6 +31,7 @@ export const Auth = {
       .post("/users/signin", userInfo)
       .then((response) => {
         localStorage.setItem(tokenKey, response.data.token);
+        localStorage.setItem(userNameKey, response.data.userName);
         localStorage.setItem(expirationDateKey, response.data.expiration);
         return response;
       })
@@ -67,4 +69,12 @@ export const CheckUser = () => {
 
 export const GetToken = () => {
   return localStorage.getItem(tokenKey);
+};
+
+export const GetUserName = () => {
+  return localStorage.getItem(userNameKey);
+};
+
+export const IsAuthor = (authorName) => {
+  return authorName === localStorage.getItem(userNameKey);
 };

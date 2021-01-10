@@ -1,27 +1,26 @@
-import { CircularProgress, makeStyles, Typography } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
-import { Fragment } from "react";
-import { useHistory } from "react-router-dom";
-import { CheckUser } from "../apicalls/auth";
-import { Tasks } from "../apicalls/requests";
-import { TaskRequestParams } from "../utils/params";
-import EventBusyIcon from "@material-ui/icons/EventBusy";
-import CollapseTasksList from "./CollapseTasksList";
+import { CircularProgress, makeStyles, Typography } from '@material-ui/core';
+import React, { useEffect, useState } from 'react'
+import { Fragment } from 'react'
+import { useHistory } from 'react-router-dom';
+import { CheckUser } from '../apicalls/auth';
+import { TaskRequestParams } from '../utils/params';
+import CollapseTasksList from './CollapseTasksList';
+import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
+import { Tasks } from '../apicalls/requests';
 
 const useStyles = makeStyles((theme) => ({
   circularProgress: {
     color: "#0d7377",
   },
   title: {
-    color: "#b00000",
+    color: "black",
   },
   icon: {
     marginRight: theme.spacing(1),
-    color: "#b00000",
   },
-}));
+}))
 
-function OverdueTasks() {
+function SharedToMeTasks() {
   const history = useHistory();
   const classes = useStyles();
 
@@ -36,9 +35,9 @@ function OverdueTasks() {
 
     const params = {
       startDate: 0,
-      endDate: TaskRequestParams.today(),
+      endDate: TaskRequestParams.nextWeek(),
       sortOrder: TaskRequestParams.sortOrderAsc,
-      completed: false,
+      shared: "SharedTo",
     };
 
     Tasks.list(params).then((response) => {
@@ -58,24 +57,25 @@ function OverdueTasks() {
           {groupedTasks.length ? (
             <CollapseTasksList
               tasks={groupedTasks}
-              title={`OVERDUE TASKS (${
+              title={`TASKS SHARED TO ME (${
                 groupedTasks.reduce((a, b) => ({
                   count: a.count + b.count,
                 })).count
               })`}
               titleStyle={classes.title}
-              icon={<EventBusyIcon className={classes.icon} />}
-              showGroupNames={false}
+              icon={<ArrowForwardIcon className={classes.icon} />}
+              showGroupNames={true}
             />
           ) : (
-            <Typography variant="h5">{"no overdue tasks"}</Typography>
+            <Typography variant="h5">{"nobody shared tasks with you"}</Typography>
           )}
         </Fragment>
       ) : (
         <CircularProgress className={classes.circularProgress} />
       )}
     </Fragment>
-  );
+  )
 }
 
-export default OverdueTasks;
+export default SharedToMeTasks
+    

@@ -1,5 +1,6 @@
 import {
   Drawer,
+  Hidden,
   List,
   ListItem,
   ListItemIcon,
@@ -21,6 +22,9 @@ import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 const useStyles = makeStyles((theme) => ({
   drawer: {
     width: "240px",
+    [theme.breakpoints.down("lg")]: {
+      width: "80px",
+    },
   },
   styledButton: {
     background: "#21d8ba",
@@ -34,6 +38,9 @@ const useStyles = makeStyles((theme) => ({
   },
   drawerPaper: {
     width: "240px",
+    [theme.breakpoints.down("sm")]: {
+      width: "80px",
+    },
   },
   drawerContainer: {
     marginTop: theme.spacing(3),
@@ -122,12 +129,16 @@ function SideMenu() {
                     <ListItemIcon className={classes.styledIcon}>
                       {el.icon}
                     </ListItemIcon>
-                    <ListItemText>{el.label}</ListItemText>
+                    <Hidden smDown>
+                      <ListItemText>{el.label}</ListItemText>
+                    </Hidden>
                   </ListItem>
                 ) : (
                   <ListItem button>
                     <ListItemIcon>{el.icon}</ListItemIcon>
-                    <ListItemText>{el.label}</ListItemText>
+                    <Hidden smDown>
+                      <ListItemText>{el.label}</ListItemText>
+                    </Hidden>
                   </ListItem>
                 )}
               </Link>

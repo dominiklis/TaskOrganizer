@@ -1,20 +1,26 @@
-import { CircularProgress, makeStyles } from "@material-ui/core";
-import React, { useEffect } from "react";
+import { CircularProgress, makeStyles, Typography } from "@material-ui/core";
+import React, { useEffect, useState } from "react";
 import { Fragment } from "react";
-import { useState } from "react";
+import { useHistory } from "react-router-dom";
 import { CheckUser } from "../apicalls/auth";
 import { TaskRequestParams } from "../utils/params";
+import CollapseTasksList from "./CollapseTasksList";
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import { Tasks } from "../apicalls/requests";
-import { useHistory } from "react-router-dom";
-import TaskGroupsList from "./TaskGroupsList";
 
 const useStyles = makeStyles((theme) => ({
   circularProgress: {
     color: "#0d7377",
   },
+  title: {
+    color: "black",
+  },
+  icon: {
+    marginRight: theme.spacing(1),
+  },
 }));
 
-function ActiveTasks() {
+function SharedByMeTasks() {
   const history = useHistory();
   const classes = useStyles();
 
@@ -28,9 +34,10 @@ function ActiveTasks() {
     }
 
     const params = {
-      startDate: TaskRequestParams.today(),
+      startDate: 0,
       endDate: TaskRequestParams.nextWeek(),
       sortOrder: TaskRequestParams.sortOrderAsc,
+      shared: "SharedBy",
     };
 
     Tasks.list(params).then((response) => {
@@ -46,7 +53,23 @@ function ActiveTasks() {
   return (
     <Fragment>
       {tasksLoaded ? (
-        <TaskGroupsList tasks={groupedTasks} showGroupNames={true} />
+        <Fragment>
+          {groupedTasks.length ? (
+            <CollapseTasksList
+              tasks={groupedTasks}
+              title={`TASKS SHARED BY ME (${
+                groupedTasks.reduce((a, b) => ({
+                  count: a.count + b.count,
+                })).count
+              })`}
+              titleStyle={classes.title}
+              icon={<ArrowBackIcon className={classes.icon} />}
+              showGroupNames={false}
+            />
+          ) : (
+            <Typography variant="h5">{"you didn't share any tasks"}</Typography>
+          )}
+        </Fragment>
       ) : (
         <CircularProgress className={classes.circularProgress} />
       )}
@@ -54,4 +77,4 @@ function ActiveTasks() {
   );
 }
 
-export default ActiveTasks;
+export default SharedByMeTasks;

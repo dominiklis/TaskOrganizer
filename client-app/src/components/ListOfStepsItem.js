@@ -12,6 +12,7 @@ import { Steps } from "../apicalls/requests";
 import EditStepTextForm from "./EditStepTextForm";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
+import { Fragment } from "react";
 
 const useStyles = makeStyles((theme) => ({
   cancelCompleted: {
@@ -25,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function ListOfStepsItem({ step, handleDeleteStep }) {
+function ListOfStepsItem({ step, handleDeleteStep, canEdit }) {
   const classes = useStyles();
 
   const [stepText, setStepText] = useState(step.text);
@@ -33,8 +34,10 @@ function ListOfStepsItem({ step, handleDeleteStep }) {
   const [editText, setEditText] = useState(false);
 
   const changeTextEditState = () => {
-    const e = !editText;
-    setEditText(e);
+    if (canEdit) {
+      const e = !editText;
+      setEditText(e);
+    }
   };
 
   const handleDeleteFormSubmit = (e) => {
@@ -64,15 +67,25 @@ function ListOfStepsItem({ step, handleDeleteStep }) {
   return (
     <ListItem>
       <ListItemIcon>
-        <form onSubmit={handleCompletedFormSubmit}>
-          <IconButton edge="end" aria-label="delete" type="submit">
+        {canEdit ? (
+          <form onSubmit={handleCompletedFormSubmit}>
+            <IconButton edge="end" aria-label="delete" type="submit">
+              {stepCompleted ? (
+                <CheckBoxIcon className={classes.setCompleted} />
+              ) : (
+                <CheckBoxOutlineBlankIcon className={classes.cancelCompleted} />
+              )}
+            </IconButton>
+          </form>
+        ) : (
+          <Fragment>
             {stepCompleted ? (
               <CheckBoxIcon className={classes.setCompleted} />
             ) : (
               <CheckBoxOutlineBlankIcon className={classes.cancelCompleted} />
             )}
-          </IconButton>
-        </form>
+          </Fragment>
+        )}
       </ListItemIcon>
       {editText ? (
         <EditStepTextForm
@@ -90,11 +103,13 @@ function ListOfStepsItem({ step, handleDeleteStep }) {
         </ListItemText>
       )}
       <ListItemSecondaryAction>
-        <form onSubmit={handleDeleteFormSubmit}>
-          <IconButton edge="end" aria-label="delete" type="submit">
-            <DeleteIcon />
-          </IconButton>
-        </form>
+        {canEdit && (
+          <form onSubmit={handleDeleteFormSubmit}>
+            <IconButton edge="end" aria-label="delete" type="submit">
+              <DeleteIcon />
+            </IconButton>
+          </form>
+        )}
       </ListItemSecondaryAction>
     </ListItem>
   );

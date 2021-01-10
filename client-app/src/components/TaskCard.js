@@ -15,6 +15,7 @@ import { Link } from "react-router-dom";
 import { format } from "date-fns";
 import { Tasks } from "../apicalls/requests";
 import TagChip from "./TagChip";
+import { IsAuthor } from "../apicalls/auth";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -58,18 +59,16 @@ const useStyles = makeStyles((theme) => ({
 
 function TaskCard({ task }) {
   const classes = useStyles();
-  // const [added, setAdded] = useState(new Date());
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [taskCompleted, setTaskCompleted] = useState(task.completed);
 
   useEffect(() => {
-    // setAdded(new Date(task.added));
     setStartDate(new Date(task.startDate));
     if (task.endDate) {
       setEndDate(new Date(task.endDate));
     }
-  }, [/*task.added, */ task.startDate, task.endDate]);
+  }, [task.startDate, task.endDate]);
 
   const handleCompletedFormSubmit = (e) => {
     e.preventDefault();
@@ -110,6 +109,10 @@ function TaskCard({ task }) {
                     </Box>
                   </Box>
                 </Typography>
+
+                {!IsAuthor(task.authorName) && (
+                  <Typography variant="caption">{`task shared by ${task.authorName}`}</Typography>
+                )}
                 <Box display="flex">
                   <Typography
                     variant="body2"
