@@ -8,6 +8,7 @@ import {
   Grid,
   IconButton,
   TextField,
+  Tooltip,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core";
 import { Box, Button, Typography, List } from "@material-ui/core";
@@ -265,24 +266,34 @@ function TaskDetailsPage({ match }) {
             <Grid item xs={1}>
               {IsAuthor(task.authorName) && (
                 <Box textAlign="center">
-                  <form onSubmit={handleCompletedFormSubmit}>
-                    <IconButton color="primary" type="submit">
-                      {taskCompleted ? <ClearIcon /> : <CheckIcon />}
-                    </IconButton>
-                  </form>
-                  <div>
-                    <IconButton onClick={handlekOpenShareModal}>
-                      <ShareIcon />
-                    </IconButton>
-                  </div>
-                  <div>
-                    <IconButton
-                      color="secondary"
-                      onClick={handleDeleteButtonClick}
-                    >
-                      <DeleteForeverIcon />
-                    </IconButton>
-                  </div>
+                  <Tooltip
+                    title={
+                      taskCompleted ? "mark as incomplete" : "mark as completed"
+                    }
+                  >
+                    <form onSubmit={handleCompletedFormSubmit}>
+                      <IconButton color="primary" type="submit">
+                        {taskCompleted ? <ClearIcon /> : <CheckIcon />}
+                      </IconButton>
+                    </form>
+                  </Tooltip>
+                  <Tooltip title="share">
+                    <div>
+                      <IconButton onClick={handlekOpenShareModal}>
+                        <ShareIcon />
+                      </IconButton>
+                    </div>
+                  </Tooltip>
+                  <Tooltip title="delete">
+                    <div>
+                      <IconButton
+                        color="secondary"
+                        onClick={handleDeleteButtonClick}
+                      >
+                        <DeleteForeverIcon />
+                      </IconButton>
+                    </div>
+                  </Tooltip>
                 </Box>
               )}
             </Grid>
@@ -363,13 +374,15 @@ function TaskDetailsPage({ match }) {
               <Box display="flex">
                 <Typography variant="subtitle1">tags:</Typography>
                 {IsAuthor(task.authorName) && (
-                  <IconButton
-                    aria-label="edit tags"
-                    size="small"
-                    onClick={changeEditTagsState}
-                  >
-                    {editTags ? <ClearIcon /> : <EditIcon />}
-                  </IconButton>
+                  <Tooltip title="edit tags">
+                    <IconButton
+                      aria-label="edit tags"
+                      size="small"
+                      onClick={changeEditTagsState}
+                    >
+                      {editTags ? <ClearIcon /> : <EditIcon />}
+                    </IconButton>
+                  </Tooltip>
                 )}
               </Box>
               {editTags ? (

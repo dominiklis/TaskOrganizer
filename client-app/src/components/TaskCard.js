@@ -6,6 +6,7 @@ import {
   CardHeader,
   IconButton,
   makeStyles,
+  Tooltip,
   Typography,
 } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
@@ -16,6 +17,7 @@ import { format } from "date-fns";
 import { Tasks } from "../apicalls/requests";
 import TagChip from "./TagChip";
 import { IsAuthor } from "../apicalls/auth";
+import ShareIcon from "@material-ui/icons/Share";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -126,7 +128,7 @@ function TaskCard({ task }) {
                       variant="body2"
                       color={`${taskCompleted ? "initial" : "textSecondary"}`}
                     >{`${
-                      taskCompleted ? "completed" : "uncompleted"
+                      taskCompleted ? "completed" : "not completed"
                     }`}</Typography>
                   </Box>
                 </Box>
@@ -143,15 +145,25 @@ function TaskCard({ task }) {
           </Box>
         </CardActionArea>
         <CardActions>
-          <form onSubmit={handleCompletedFormSubmit}>
-            <IconButton
-              aria-label="edit"
-              className={classes.darkGreen}
-              type="submit"
+          {IsAuthor(task.authorName) ? (
+            <Tooltip
+              title={taskCompleted ? "mark as incomplete" : "mark as completed"}
             >
-              {taskCompleted ? <ClearIcon /> : <CheckIcon />}
+              <form onSubmit={handleCompletedFormSubmit}>
+                <IconButton
+                  aria-label="edit"
+                  className={classes.darkGreen}
+                  type="submit"
+                >
+                  {taskCompleted ? <ClearIcon /> : <CheckIcon />}
+                </IconButton>
+              </form>
+            </Tooltip>
+          ) : (
+            <IconButton className={classes.darkGreen} disabled>
+              <ShareIcon />
             </IconButton>
-          </form>
+          )}
         </CardActions>
       </Box>
     </Card>

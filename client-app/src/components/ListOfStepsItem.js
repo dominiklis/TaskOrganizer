@@ -5,6 +5,7 @@ import {
   ListItemSecondaryAction,
   ListItemText,
   makeStyles,
+  Tooltip,
 } from "@material-ui/core";
 import React, { useState } from "react";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -68,15 +69,21 @@ function ListOfStepsItem({ step, handleDeleteStep, canEdit }) {
     <ListItem>
       <ListItemIcon>
         {canEdit ? (
-          <form onSubmit={handleCompletedFormSubmit}>
-            <IconButton edge="end" aria-label="delete" type="submit">
-              {stepCompleted ? (
-                <CheckBoxIcon className={classes.setCompleted} />
-              ) : (
-                <CheckBoxOutlineBlankIcon className={classes.cancelCompleted} />
-              )}
-            </IconButton>
-          </form>
+          <Tooltip
+            title={stepCompleted ? "mark as incomplete" : "mark as completed"}
+          >
+            <form onSubmit={handleCompletedFormSubmit}>
+              <IconButton edge="end" aria-label="delete" type="submit">
+                {stepCompleted ? (
+                  <CheckBoxIcon className={classes.setCompleted} />
+                ) : (
+                  <CheckBoxOutlineBlankIcon
+                    className={classes.cancelCompleted}
+                  />
+                )}
+              </IconButton>
+            </form>
+          </Tooltip>
         ) : (
           <Fragment>
             {stepCompleted ? (
@@ -104,11 +111,13 @@ function ListOfStepsItem({ step, handleDeleteStep, canEdit }) {
       )}
       <ListItemSecondaryAction>
         {canEdit && (
-          <form onSubmit={handleDeleteFormSubmit}>
-            <IconButton edge="end" aria-label="delete" type="submit">
-              <DeleteIcon />
-            </IconButton>
-          </form>
+          <Tooltip title="delete step">
+            <form onSubmit={handleDeleteFormSubmit}>
+              <IconButton edge="end" aria-label="delete" type="submit">
+                <DeleteIcon />
+              </IconButton>
+            </form>
+          </Tooltip>
         )}
       </ListItemSecondaryAction>
     </ListItem>
