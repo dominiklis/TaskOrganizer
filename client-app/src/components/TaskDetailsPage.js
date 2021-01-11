@@ -24,7 +24,7 @@ import EditTaskDescriptionForm from "./EditTaskDescriptionForm";
 import EditTaskDates from "./EditTaskDates";
 import EditTagsForm from "./EditTagsForm";
 import TagChip from "./TagChip";
-import { CheckUser, IsAuthor } from "../apicalls/auth";
+import { CheckUser, IsAuthor, GetUserName } from "../apicalls/auth";
 import EditIcon from "@material-ui/icons/Edit";
 import TodayIcon from "@material-ui/icons/Today";
 import CheckIcon from "@material-ui/icons/Check";
@@ -194,6 +194,17 @@ function TaskDetailsPage({ match }) {
     changeEditTagsState();
   };
 
+  // cancel sharing
+  const submitCancelSharing = (e) => {
+    e.preventDefault();
+    UserTasks.unshare({ email: GetUserName(), taskId: id }).then((response) => {
+      if (response.status === 204) {
+        history.push('/');
+        history.go();
+      }
+    });
+  };
+
   // share task modal
   const [open, setOpen] = useState(false);
   const [shareInput, SetShareInput] = useState("");
@@ -242,8 +253,9 @@ function TaskDetailsPage({ match }) {
   const [usersToList, setUsersToList] = useState([]);
 
   const handleUnshare = (users) => {
+    console.log(users);
     setUsersToList(users);
-  }
+  };
 
   useEffect(() => {
     const user = CheckUser();
@@ -314,6 +326,15 @@ function TaskDetailsPage({ match }) {
                     </div>
                   </Tooltip>
                 </Box>
+              )}
+              {!IsAuthor(task.authorName) && (
+                <form onSubmit={submitCancelSharing}>
+                  <Tooltip title="cancel sharing">
+                    <IconButton edge="end" aria-label="delete" type="submit">
+                      <ClearIcon />
+                    </IconButton>
+                  </Tooltip>
+                </form>
               )}
             </Grid>
 
@@ -464,8 +485,11 @@ function TaskDetailsPage({ match }) {
               )}
 
               {usersToList.length > 0 && IsAuthor(task.authorName) && (
-                
-                <UsersWithTask taskId={id} usersToList={usersToList} handleUnshare={handleUnshare} />
+                <UsersWithTask
+                  taskId={id}
+                  usersToList={usersToList}
+                  handleUnshare={handleUnshare}
+                />
               )}
             </Grid>
 

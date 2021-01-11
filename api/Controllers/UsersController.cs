@@ -135,13 +135,12 @@ namespace api.Controllers
                 return NotFound();
             }
 
-            var users = await _context.Users
-                .Include(x => x.UserTasks)
+            List<ApplicationUser> users = await _context.Users
+               .Include(x => x.UserTasks)
                 .Where(x => x.UserTasks.Any(t => t.TaskId == taskId) && x.UserName != task.User.UserName)
                 .ToListAsync();
 
             var usersDto = _mapper.Map<List<GetUserDTO>>(users);
-
             return Ok(usersDto);
         }
     }

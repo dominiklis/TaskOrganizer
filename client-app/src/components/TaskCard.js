@@ -55,6 +55,15 @@ const useStyles = makeStyles((theme) => ({
   taskCompleted: {
     color: "red",
   },
+  linkHeader: {
+    marginRight: theme.spacing(4),
+    color: "#0d5537",
+    textDecoration: "none",
+    "&:hover": {
+      color: "#037c81",
+      textDecoration: "none",
+    },
+  },
 }));
 
 function TaskCard({ task }) {
@@ -70,7 +79,9 @@ function TaskCard({ task }) {
       setEndDate(new Date(task.endDate));
     }
 
-    setNextDay(checkForDates(task.hasStartTime ? task.startDate : null, task.endDate));
+    setNextDay(
+      checkForDates(task.hasStartTime ? task.startDate : null, task.endDate)
+    );
   }, [task.startDate, task.endDate, task.hasStartTime]);
 
   const handleCompletedFormSubmit = (e) => {
@@ -91,9 +102,10 @@ function TaskCard({ task }) {
     <Card className={classes.root}>
       <Box display="flex">
         <CardActionArea disableRipple className={classes.card}>
-          <Link className={classes.link} to={`/task/${task.id}`}>
-            <Grid container spacing={1}>
-              <Grid item xs={2}>
+          {/* <Link className={classes.link} to={`/task/${task.id}`}> */}
+          <Grid container spacing={1}>
+            <Grid item xs={2}>
+              <Link className={classes.link} to={`/task/${task.id}`}>
                 {task.hasStartTime && (
                   <Typography
                     variant="h6"
@@ -118,11 +130,12 @@ function TaskCard({ task }) {
                     {" (next day)"}
                   </Typography>
                 )}
-              </Grid>
-              <Grid item xs={10}>
-                <Box display="flex">
-                  <Box flexGrow={25}>
-                    {/* <Link className={classes.link} to={`/task/${task.id}`}> */}
+              </Link>
+            </Grid>
+            <Grid item xs={10}>
+              <Box display="flex">
+                <Box flexGrow={25}>
+                  <Link className={classes.link} to={`/task/${task.id}`}>
                     <Typography
                       variant="h6"
                       component="div"
@@ -152,42 +165,45 @@ function TaskCard({ task }) {
                         }`}</Typography>
                       </Box>
                     </Box>
-                    {task.tags.length > 0 && (
-                      <Box display="flex">
-                        {task.tags.slice(0, 3).map((tag) => (
-                          <TagChip key={tag} tag={tag} />
-                        ))}
-                        {task.tags.length > 3 && (
-                          <Typography>{"..."}</Typography>
-                        )}
-                      </Box>
-                    )}
-                  </Box>
+                  </Link>
+                  {task.tags.length > 0 && (
+                    <Box display="flex">
+                      {task.tags.slice(0, 3).map((tag) => (
+                        <TagChip key={tag} tag={tag} />
+                      ))}
+                      {task.tags.length > 3 && <Typography>{"..."}</Typography>}
+                    </Box>
+                  )}
                 </Box>
-              </Grid>
+              </Box>
             </Grid>
-          </Link>
+          </Grid>
+          {/* </Link> */}
         </CardActionArea>
         <CardActions>
-          {IsAuthor(task.authorName) ? (
-            <Tooltip
-              title={taskCompleted ? "mark as incomplete" : "mark as completed"}
-            >
-              <form onSubmit={handleCompletedFormSubmit}>
-                <IconButton
-                  aria-label="edit"
-                  className={classes.darkGreen}
-                  type="submit"
-                >
-                  {taskCompleted ? <ClearIcon /> : <CheckIcon />}
-                </IconButton>
-              </form>
-            </Tooltip>
-          ) : (
-            <IconButton className={classes.darkGreen} disabled>
-              <ShareIcon />
-            </IconButton>
-          )}
+          <Link className={classes.link} to={`/task/${task.id}`}>
+            {IsAuthor(task.authorName) ? (
+              <Tooltip
+                title={
+                  taskCompleted ? "mark as incomplete" : "mark as completed"
+                }
+              >
+                <form onSubmit={handleCompletedFormSubmit}>
+                  <IconButton
+                    aria-label="edit"
+                    className={classes.darkGreen}
+                    type="submit"
+                  >
+                    {taskCompleted ? <ClearIcon /> : <CheckIcon />}
+                  </IconButton>
+                </form>
+              </Tooltip>
+            ) : (
+              <IconButton className={classes.darkGreen} disabled>
+                <ShareIcon />
+              </IconButton>
+            )}
+          </Link>
         </CardActions>
       </Box>
     </Card>

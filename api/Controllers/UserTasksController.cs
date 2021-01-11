@@ -67,6 +67,9 @@ namespace api.Controllers
         [HttpDelete]
         public async Task<ActionResult> Delete([FromBody] UserTaskDTO userTask)
         {
+            System.Diagnostics.Debug.WriteLine("E " + userTask.Email);
+            System.Diagnostics.Debug.WriteLine("I " + userTask.TaskId);
+
             if (string.IsNullOrWhiteSpace(userTask.Email))
             {
                 return NotFound("user not found");
@@ -78,7 +81,7 @@ namespace api.Controllers
                 return NotFound("task not found");
             }
 
-            if (task.User.UserName != HttpContext.User.Identity.Name)
+            if (task.User.UserName != HttpContext.User.Identity.Name && userTask.Email != HttpContext.User.Identity.Name)
             {
                 return Unauthorized("you are not the author");
             }
@@ -90,7 +93,6 @@ namespace api.Controllers
             }
             
             UserTask utToDelete = await _context.UserTasks.FirstOrDefaultAsync(x => x.UserId == userWithAccess.Id && x.TaskId == task.Id);
-            
             _context.Remove(utToDelete);
             await _context.SaveChangesAsync();
 
