@@ -28,7 +28,6 @@ namespace api.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
         private readonly Regex rgx = new Regex("[^a-zA-Z0-9 -]");
-        private enum SharedFilter { SharedBy = 0, SharedTo = 1 }
 
         public TasksController(ApplicationDbContext context, IMapper mapper)
         {
@@ -37,7 +36,7 @@ namespace api.Controllers
         }
         
         [HttpGet]
-        public async Task<ActionResult> Filter([FromQuery] TasksFilterDTO filters)
+        public async Task<ActionResult> Get([FromQuery] TasksFilterDTO filters)
         {
             ApplicationUser user = await _context.Users.FirstAsync(x => x.UserName == HttpContext.User.Identity.Name);
 
@@ -89,10 +88,10 @@ namespace api.Controllers
 
             if (!string.IsNullOrWhiteSpace(filters.Shared))
             {
-                SharedFilter sf;
+                TasksFilterDTO.SharedFilter sf;
                 if (Enum.TryParse(filters.Shared, true, out sf))
                 {
-                    if (sf == SharedFilter.SharedBy)
+                    if (sf == TasksFilterDTO.SharedFilter.SharedBy)
                     {
                         tasksQueryable = tasksQueryable.Where(x => x.User.UserName == user.UserName && x.UserTasks.Count > 1);
                     }
@@ -166,7 +165,7 @@ namespace api.Controllers
             UserTask userTask = new UserTask() { User = user, UserId = user.Id, Task = newTask, TaskId = newTask.Id };
             _context.Add(userTask);
 
-            await _context.SaveChangesAsync();
+            // await _context.SaveChangesAsync();
 
             if (task.Tags != null)
             {
@@ -200,7 +199,6 @@ namespace api.Controllers
         public async Task<ActionResult> Put(int id, [FromBody] UpdateTaskDTO taskToUpdate)
         {
             ApplicationUser user = await _context.Users.FirstAsync(x => x.UserName == HttpContext.User.Identity.Name);
-
             if (user == null)
             {
                 return Unauthorized();
@@ -316,6 +314,7 @@ namespace api.Controllers
             {
                 return BadRequest(ModelState);
             }
+
             await _context.SaveChangesAsync();
 
             return NoContent();

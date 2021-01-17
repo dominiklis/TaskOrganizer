@@ -1,4 +1,5 @@
-﻿using api.DTOs.Steps;
+﻿using api.DTOs.Notes;
+using api.DTOs.Steps;
 using api.DTOs.Tasks;
 using api.DTOs.Users;
 using api.Models;
@@ -46,6 +47,9 @@ namespace api.Profiles
             CreateMap<Step, GetStepDTO>();
 
             CreateMap<ApplicationUser, GetUserDTO>();
+
+            CreateMap<Note, GetNoteDTO>()
+                .ForMember(x => x.AuthorName, opt => opt.MapFrom(src => src.User.UserName));
         }
     }
 }

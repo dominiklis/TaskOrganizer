@@ -4,5 +4,7 @@ export const constStrings = {
   addNewTask: "add new task",
   completedTasks: "completed tasks",
   searchResults: "search results",
-  sharedTasks: "shared tasks"
+  sharedTasks: "shared tasks",
+  noOverdueTasks: "no overdue tasks",
+  noActiveTasks: "no active tasks",
 };

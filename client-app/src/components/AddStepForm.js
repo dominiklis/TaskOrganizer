@@ -9,7 +9,8 @@ const useStyles = makeStyles((theme) => ({
     background: "#f0f0f0",
     marginTop: theme.spacing(1),
   },
-  input: {},
+  input: {
+  },
   button: {
     marginBottom: theme.spacing(1),
     marginTop: theme.spacing(1),

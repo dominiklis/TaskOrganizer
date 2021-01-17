@@ -19,6 +19,7 @@ namespace api.Data
         public DbSet<Tag> Tags { get; set; }
         public DbSet<TaskTag> TaskTags { get; set; }
         public DbSet<UserTask> UserTasks { get; set; }
+        public DbSet<Note> Notes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -55,8 +56,13 @@ namespace api.Data
             modelBuilder.Entity<TaskTag>().HasOne(tt => tt.Tag).WithMany(t => t.TaskTags).HasForeignKey(tt => tt.TagId);
 
             modelBuilder.Entity<UserTask>().HasKey(x => new { x.UserId, x.TaskId });
-            modelBuilder.Entity<UserTask>().HasOne(tt => tt.User).WithMany(t => t.UserTasks).HasForeignKey(tt => tt.UserId).OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<UserTask>().HasOne(tt => tt.User)
+                .WithMany(t => t.UserTasks)
+                .HasForeignKey(tt => tt.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<UserTask>().HasOne(tt => tt.Task).WithMany(t => t.UserTasks).HasForeignKey(tt => tt.TaskId);
+
+            modelBuilder.Entity<Note>().Property(x => x.Text).IsRequired();
 
             base.OnModelCreating(modelBuilder);
         }

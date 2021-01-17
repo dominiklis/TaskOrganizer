@@ -13,5 +13,7 @@ namespace api.DTOs.Filter
         public string Completed { get; set; }
         public string Search { get; set; }
         public string Shared { get; set; }
+
+        public enum SharedFilter { SharedBy = 0, SharedTo = 1 }
     }
 }

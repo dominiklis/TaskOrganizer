@@ -7,6 +7,7 @@ import { Tasks } from "../apicalls/requests";
 import { TaskRequestParams } from "../utils/params";
 import EventBusyIcon from "@material-ui/icons/EventBusy";
 import CollapseTasksList from "./CollapseTasksList";
+import { constStrings } from "../utils/constants";
 
 const useStyles = makeStyles((theme) => ({
   circularProgress: {
@@ -68,7 +69,7 @@ function OverdueTasks() {
               showGroupNames={false}
             />
           ) : (
-            <Typography variant="h5">{"no overdue tasks"}</Typography>
+            <Typography variant="h5">{constStrings.noOverdueTasks}</Typography>
           )}
         </Fragment>
       ) : (

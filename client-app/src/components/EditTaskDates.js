@@ -1,7 +1,9 @@
 import {
+  Box,
   Button,
   createMuiTheme,
   Grid,
+  IconButton,
   makeStyles,
   TextField,
   ThemeProvider,
@@ -16,6 +18,7 @@ import {
   TimePicker,
 } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
+import ClearIcon from "@material-ui/icons/Clear";
 
 const useStyles = makeStyles((theme) => ({
   submitButton: {
@@ -137,6 +140,10 @@ function EditTaskDates({ task, afterSubmit, handleCancel }) {
     },
   });
 
+  const clearStartTimeInput = () => {
+    formik.setFieldValue("startTime", null, false);
+  };
+
   return (
     <form onSubmit={formik.handleSubmit}>
       <Grid container spacing={3}>
@@ -160,23 +167,33 @@ function EditTaskDates({ task, afterSubmit, handleCancel }) {
           </Grid>
 
           <Grid item xs={12} sm={4} className={classes.dateTimePickerGridItem}>
-            <ThemeProvider theme={theme}>
-              <TimePicker
-                fullWidth
-                id="startTime"
-                name="startTime"
-                label="start time"
-                ampm={false}
-                value={formik.values.startTime}
-                minutesStep={5}
-                onChange={(time) =>
-                  formik.setFieldValue("startTime", time, false)
-                }
-                error={
-                  formik.touched.startTime && Boolean(formik.errors.startTime)
-                }
-              />
-            </ThemeProvider>
+            <Box display="flex">
+              <ThemeProvider theme={theme}>
+                <Box flexGrow={1}>
+                  <TimePicker
+                    fullWidth
+                    id="startTime"
+                    name="startTime"
+                    label="start time"
+                    ampm={false}
+                    value={formik.values.startTime}
+                    minutesStep={5}
+                    onChange={(time) =>
+                      formik.setFieldValue("startTime", time, false)
+                    }
+                    error={
+                      formik.touched.startTime &&
+                      Boolean(formik.errors.startTime)
+                    }
+                  />
+                </Box>
+              </ThemeProvider>
+              <Box>
+                <IconButton onClick={clearStartTimeInput}>
+                  <ClearIcon />
+                </IconButton>
+              </Box>
+            </Box>
           </Grid>
         </MuiPickersUtilsProvider>
 

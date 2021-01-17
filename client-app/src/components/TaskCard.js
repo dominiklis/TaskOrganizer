@@ -3,6 +3,7 @@ import {
   Card,
   CardActionArea,
   CardActions,
+  CardHeader,
   Grid,
   IconButton,
   makeStyles,
@@ -26,6 +27,9 @@ const useStyles = makeStyles((theme) => ({
   },
   card: {
     padding: theme.spacing(2),
+  },
+  cardHeader: {
+    background: "#037c81",
   },
   cardHeaderDone: {
     background: "#21d8ba",
@@ -101,8 +105,12 @@ function TaskCard({ task }) {
   return (
     <Card className={classes.root}>
       <Box display="flex">
+        <CardHeader
+          className={`${
+            taskCompleted ? classes.cardHeaderDone : classes.cardHeader
+          }`}
+        ></CardHeader>
         <CardActionArea disableRipple className={classes.card}>
-          {/* <Link className={classes.link} to={`/task/${task.id}`}> */}
           <Grid container spacing={1}>
             <Grid item xs={2}>
               <Link className={classes.link} to={`/task/${task.id}`}>
@@ -181,29 +189,25 @@ function TaskCard({ task }) {
           {/* </Link> */}
         </CardActionArea>
         <CardActions>
-          <Link className={classes.link} to={`/task/${task.id}`}>
-            {IsAuthor(task.authorName) ? (
-              <Tooltip
-                title={
-                  taskCompleted ? "mark as incomplete" : "mark as completed"
-                }
-              >
-                <form onSubmit={handleCompletedFormSubmit}>
-                  <IconButton
-                    aria-label="edit"
-                    className={classes.darkGreen}
-                    type="submit"
-                  >
-                    {taskCompleted ? <ClearIcon /> : <CheckIcon />}
-                  </IconButton>
-                </form>
-              </Tooltip>
-            ) : (
-              <IconButton className={classes.darkGreen} disabled>
-                <ShareIcon />
-              </IconButton>
-            )}
-          </Link>
+          {IsAuthor(task.authorName) ? (
+            <Tooltip
+              title={taskCompleted ? "mark as incomplete" : "mark as completed"}
+            >
+              <form onSubmit={handleCompletedFormSubmit}>
+                <IconButton
+                  aria-label="edit"
+                  className={classes.darkGreen}
+                  type="submit"
+                >
+                  {taskCompleted ? <ClearIcon /> : <CheckIcon />}
+                </IconButton>
+              </form>
+            </Tooltip>
+          ) : (
+            <IconButton className={classes.darkGreen} disabled>
+              <ShareIcon />
+            </IconButton>
+          )}
         </CardActions>
       </Box>
     </Card>
