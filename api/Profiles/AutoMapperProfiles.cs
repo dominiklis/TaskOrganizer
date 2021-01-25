@@ -32,7 +32,8 @@ namespace api.Profiles
                     opt.MapFrom(src =>
                         src.EndDate == null ? 
                             (DateTime?)null : 
-                            DateTime.Parse(src.EndDate, CultureInfo.InvariantCulture, DateTimeStyles.None)));
+                            DateTime.Parse(src.EndDate, CultureInfo.InvariantCulture, DateTimeStyles.None)))
+                .ForMember(dest => dest.TaskTags, opt => opt.Ignore());
 
             CreateMap<UpdateTaskDTO, TaskModel>()
                  .ForMember(dest => dest.StartDate, opt =>
@@ -43,7 +44,7 @@ namespace api.Profiles
                          src.EndDate == null ?
                             (DateTime?)null :
                             DateTime.Parse(src.EndDate, CultureInfo.InvariantCulture, DateTimeStyles.None)))
-                .ForMember(src => src.TaskTags, opt => opt.Ignore());
+                .ForMember(dest => dest.TaskTags, opt => opt.Ignore());
 
             CreateMap<Step, GetStepDTO>();
 

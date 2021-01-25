@@ -53,6 +53,8 @@ const theme = createMuiTheme({
 
 const validationSchema = yup.object({
   title: yup.string("enter title").required("title is required"),
+  description: yup.string().nullable(),
+  tags: yup.string().nullable(),
   startDate: yup.date(),
   startTime: yup.date().nullable(),
   hours: yup.number().min(0).max(24),
@@ -67,6 +69,7 @@ function TaskForm({ task }) {
     initialValues: {
       title: task ? task.title : "",
       description: task ? task.description : "",
+      tags: task ? task.tags : "",
       startDate: task ? new Date(task.startDate) : new Date(),
       startTime: task && task.hasStartTime ? new Date(task.startDate) : null,
       hours:
@@ -89,11 +92,25 @@ function TaskForm({ task }) {
       const newTask = {
         title: values.title,
         description: values.description,
+        tags: [],
         completed: false,
         startDate: new Date(values.startDate.setHours(0, 0, 0, 0)),
         hasStartTime: false,
         endDate: null,
       };
+
+      if (values.tags) {
+        let newTags = values.tags.split(" ");
+        console.log("TAGI: ");
+        for (let i = 0; i < newTags.length; i++) {
+          console.log(newTags[i]);
+        }
+        newTags.forEach(t => {
+          if (t.match(/^[0-9a-z]+$/)) {
+            newTask.tags.push(t)
+          }
+        });
+      }
 
       if (values.startTime) {
         newTask.startDate.setHours(
@@ -147,13 +164,25 @@ function TaskForm({ task }) {
       <TextField
         fullWidth
         multiline
-        row={4}
+        rows={4}
         id="description"
         name="description"
         label="description"
         className={classes.textField}
         value={formik.values.description}
         onChange={formik.handleChange}
+      />
+
+      <TextField
+        fullWidth
+        id="tags"
+        name="tags"
+        label="tags (separate with spaces)"
+        className={classes.textField}
+        value={formik.values.tags}
+        onChange={formik.handleChange}
+        error={formik.touched.tags && Boolean(formik.errors.tags)}
+        helperText={formik.touched.tags && formik.errors.tags}
       />
 
       <Grid container spacing={3}>

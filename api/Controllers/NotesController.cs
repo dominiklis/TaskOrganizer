@@ -61,22 +61,6 @@ namespace api.Controllers
             return new CreatedAtRouteResult("GetNoteById", new { id = newNote.Id }, _mapper.Map<GetNoteDTO>(newNote));
         }
 
-        /*[HttpGet("task/{taskId}")]
-        public async Task<ActionResult<IEnumerable<GetNoteDTO>>> GetTaskComments(int taskId)
-        {
-            // check if user has access to task
-            ApplicationUser user = await _context.Users.FirstAsync(x => x.UserName == HttpContext.User.Identity.Name);
-            TaskModel task = await _context.TaskModels.Include(x => x.UserTasks).FirstOrDefaultAsync(x => x.Id == taskId);
-            if (!task.UserTasks.Any(x => x.UserId == user.Id))
-            {
-                return Unauthorized();
-            }
-
-            List<Note> notes = await _context.Notes.Where(x => x.Task.Id == taskId).ToListAsync();
-
-            return _mapper.Map<List<GetNoteDTO>>(notes);
-        }*/
-
         [HttpGet("{id}", Name = "GetNoteById")]
         public async Task<ActionResult<GetNoteDTO>> Get(int id)
         {
