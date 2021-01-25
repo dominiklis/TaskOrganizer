@@ -133,6 +133,7 @@ namespace api.Controllers
                 .AsNoTracking()
                 .Include(x => x.Steps)
                 .Include(x => x.TaskTags).ThenInclude(t => t.Tag)
+                .Include(x => x.Notes).ThenInclude(n => n.User)
                 .FirstOrDefaultAsync(x =>  x.Id == id);
 
             if (task == null)
@@ -220,64 +221,62 @@ namespace api.Controllers
                 return Unauthorized();
             }
 
-            task = _mapper.Map(taskToUpdate, task);
-            await _context.SaveChangesAsync();
-
-            taskToUpdate.Tags = taskToUpdate.Tags.Select(x => x.ToLower()).ToList();
-            List<string> currentTags = task.TaskTags.Select(t => t.Tag.Name).ToList();
-            
-            foreach (string currentTag in currentTags) 
+            //task = _mapper.Map(taskToUpdate, task);
+            if (taskToUpdate.EditDates)
             {
-                if (!taskToUpdate.Tags.Contains(currentTag))
+                task.StartDate = DateTime.Parse(taskToUpdate.StartDate, CultureInfo.InvariantCulture, DateTimeStyles.None);
+                task.HasStartTime = taskToUpdate.HasStartTime;
+                if (taskToUpdate.EndDate == null)
                 {
-                    Tag tag = await _context.Tags.FirstOrDefaultAsync(x => x.Name == currentTag);
-                    TaskTag taskTagToDelete = await _context.TaskTags.FirstOrDefaultAsync(x => x.Task == task && x.Tag == tag);
-                    _context.Remove(taskTagToDelete);
+                    task.EndDate = null;
                 }
                 else
                 {
-                    taskToUpdate.Tags.Remove(currentTag);
+                    task.EndDate = DateTime.Parse(taskToUpdate.EndDate, CultureInfo.InvariantCulture, DateTimeStyles.None);
                 }
             }
 
-            foreach (string newTag in taskToUpdate.Tags)
+            if (taskToUpdate.EditTags)
             {
-                string newTagToAdd = rgx.Replace(newTag, "");
-                if (newTagToAdd.Length == 0)
+                taskToUpdate.Tags = taskToUpdate.Tags.Select(x => x.ToLower()).ToList();
+                List<string> currentTags = task.TaskTags.Select(t => t.Tag.Name).ToList();
+
+                foreach (string currentTag in currentTags)
                 {
-                    continue;
+                    if (!taskToUpdate.Tags.Contains(currentTag))
+                    {
+                        Tag tag = await _context.Tags.FirstOrDefaultAsync(x => x.Name == currentTag);
+                        TaskTag taskTagToDelete = await _context.TaskTags.FirstOrDefaultAsync(x => x.Task == task && x.Tag == tag);
+                        _context.Remove(taskTagToDelete);
+                    }
+                    else
+                    {
+                        taskToUpdate.Tags.Remove(currentTag);
+                    }
                 }
 
-                Tag tag = await _context.Tags.FirstOrDefaultAsync(X => X.Name == newTagToAdd);
-                if (tag == null)
+                foreach (string newTag in taskToUpdate.Tags)
                 {
-                    tag = new Tag() { Name = newTagToAdd };
-                    _context.Add(tag);
-                    await _context.SaveChangesAsync();
-                }
+                    string newTagToAdd = rgx.Replace(newTag, "");
+                    if (newTagToAdd.Length == 0)
+                    {
+                        continue;
+                    }
 
-                TaskTag taskTag = new TaskTag() { Task = task, TaskId = task.Id, Tag = tag, TagId = tag.Id };
-                _context.Add(taskTag);
+                    Tag tag = await _context.Tags.FirstOrDefaultAsync(X => X.Name == newTagToAdd);
+                    if (tag == null)
+                    {
+                        tag = new Tag() { Name = newTagToAdd };
+                        _context.Add(tag);
+                        await _context.SaveChangesAsync();
+                    }
+
+                    TaskTag taskTag = new TaskTag() { Task = task, TaskId = task.Id, Tag = tag, TagId = tag.Id };
+                    _context.Add(taskTag);
+                }
             }
 
             await _context.SaveChangesAsync();
-            /*_context.Entry(taskToUpdate).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!_context.TaskModels.Any(e => e.Id == id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }*/
 
             return NoContent();
         }

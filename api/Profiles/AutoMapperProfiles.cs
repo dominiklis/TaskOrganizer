@@ -2,6 +2,7 @@
 using api.DTOs.Steps;
 using api.DTOs.Tasks;
 using api.DTOs.Users;
+using api.DTOs.UserTasks;
 using api.Models;
 using AutoMapper;
 using System;
@@ -50,6 +51,10 @@ namespace api.Profiles
 
             CreateMap<Note, GetNoteDTO>()
                 .ForMember(x => x.AuthorName, opt => opt.MapFrom(src => src.User.UserName));
+
+            CreateMap<UserTask, GetUserTaskDTO>()
+                .ForMember(x => x.UserName, opt => opt.MapFrom(src => src.User.UserName))
+                .ForMember(x => x.Id, opt => opt.MapFrom(src => src.User.Id));
         }
     }
 }

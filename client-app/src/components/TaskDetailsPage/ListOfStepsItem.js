@@ -9,7 +9,7 @@ import {
 } from "@material-ui/core";
 import React, { useState } from "react";
 import DeleteIcon from "@material-ui/icons/Delete";
-import { Steps } from "../apicalls/requests";
+import { Steps } from "../../apicalls/requests";
 import EditStepTextForm from "./EditStepTextForm";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
@@ -113,7 +113,7 @@ function ListOfStepsItem({ step, handleDeleteStep, canEdit }) {
         {canEdit && (
           <Tooltip title="delete step">
             <form onSubmit={handleDeleteFormSubmit}>
-              <IconButton edge="end" aria-label="delete" type="submit">
+              <IconButton edge="end" aria-label="delete step" type="submit">
                 <DeleteIcon />
               </IconButton>
             </form>

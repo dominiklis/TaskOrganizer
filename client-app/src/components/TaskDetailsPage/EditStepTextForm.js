@@ -1,7 +1,7 @@
 import React from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import { Steps } from "../apicalls/requests";
+import { Steps } from "../../apicalls/requests";
 import { Button, TextField } from "@material-ui/core";
 
 const validationSchema = yup.object({

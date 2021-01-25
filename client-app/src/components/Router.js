@@ -10,7 +10,7 @@ import SharedTasksPage from "./SharedTasksPage";
 import SignInPage from "./SignInPage";
 import SignUpPage from "./SignUpPage";
 import TagPage from "./TagPage";
-import TaskDetailsPage from "./TaskDetailsPage";
+import TaskDetailsPage from "./TaskDetailsPage/TaskDetailsPage";
 
 function Router() {
   return (

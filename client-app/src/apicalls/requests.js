@@ -141,3 +141,26 @@ export const UserTasks = {
       },
     }),
 };
+
+export const Notes = {
+  add: (note) =>
+    requests.post("/notes", note, {
+      headers: {
+        Authorization: `Bearer ${GetToken()}`,
+      },
+    }),
+
+  delete: (id) =>
+    requests.delete(`/notes/${id}`, {
+      headers: {
+        Authorization: `Bearer ${GetToken()}`,
+      },
+    }),
+
+  patch: (id, patchDoc) =>
+    requests.patch(`/notes/${id}`, patchDoc, {
+      headers: {
+        Authorization: `Bearer ${GetToken()}`,
+      },
+    }),
+};

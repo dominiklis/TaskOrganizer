@@ -30,6 +30,22 @@ namespace api.Controllers
             _mapper = mapper;
         }
 
+        [HttpGet("{userId}/{taskId}", Name = "GetUserTasks")]
+        public async Task<ActionResult<GetUserTaskDTO>> Get(string userId, int taskId)
+        {
+            UserTask userTask = await _context.UserTasks
+                .Include(x => x.User)
+                .FirstOrDefaultAsync(x => x.UserId == userId && x.TaskId == taskId);
+
+            if (userTask == null)
+            {
+                return NotFound();
+            }
+
+
+            return _mapper.Map<GetUserTaskDTO>(userTask);
+        }
+
         [HttpPost]
         public async Task<ActionResult> Post([FromBody] UserTaskDTO userTask)
         {
@@ -61,7 +77,10 @@ namespace api.Controllers
             _context.Add(newUserTask);
             await _context.SaveChangesAsync();
 
-            return Ok();
+            return new CreatedAtRouteResult("GetUserTasks", 
+                new { userId = newUserTask.UserId, taskId = newUserTask.TaskId }, 
+                _mapper.Map<GetUserTaskDTO>(newUserTask));
+            //return Ok();
         }
 
         [HttpDelete]

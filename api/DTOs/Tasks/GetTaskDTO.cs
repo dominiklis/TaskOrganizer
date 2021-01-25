@@ -1,4 +1,5 @@
-﻿using api.DTOs.Steps;
+﻿using api.DTOs.Notes;
+using api.DTOs.Steps;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,5 +20,6 @@ namespace api.DTOs.Tasks
         public List<GetStepDTO> Steps { get; set; }
         public List<string> Tags { get; set; }
         public string AuthorName { get; set; }
+        public List<GetNoteDTO> Notes { get; set; }
     }
 }

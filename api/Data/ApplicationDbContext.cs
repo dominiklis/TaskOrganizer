@@ -62,7 +62,7 @@ namespace api.Data
                 .OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<UserTask>().HasOne(tt => tt.Task).WithMany(t => t.UserTasks).HasForeignKey(tt => tt.TaskId);
 
-            modelBuilder.Entity<Note>().Property(x => x.Text).IsRequired();
+            modelBuilder.Entity<Note>().Property(x => x.Text).IsRequired().HasMaxLength(180);
 
             base.OnModelCreating(modelBuilder);
         }
