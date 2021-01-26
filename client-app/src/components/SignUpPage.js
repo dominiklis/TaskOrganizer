@@ -21,9 +21,6 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     alignItems: "center",
   },
-  backgroundContainer: {
-    background: "#0d7377",
-  },
   form: {
     width: "100%",
     marginTop: theme.spacing(1),
@@ -36,6 +33,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(2),
   },
   submitButton: {
+    marginBottom: theme.spacing(1),
     background: "#0d7377",
     color: "#fff",
     marginTop: theme.spacing(2),
@@ -108,7 +106,7 @@ function SignUpPage() {
         Create account and start using Task Orginer!
       </Typography>
       {isError && (
-        <Typography className={classes.errorMsg} variant="h6">
+        <Typography className={classes.errorMsg} size="small">
           {errorMsg}
         </Typography>
       )}

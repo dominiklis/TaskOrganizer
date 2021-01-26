@@ -36,6 +36,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(2),
   },
   submitButton: {
+    marginBottom: theme.spacing(1),
     background: "#0d7377",
     color: "#fff",
     marginTop: theme.spacing(2),
@@ -99,7 +100,7 @@ function SignInPage() {
         Sign in to Task Organizer
       </Typography>
       {isError && (
-        <Typography className={classes.errorMsg} variant="h6">
+        <Typography className={classes.errorMsg} size="small">
           {errorMsg}
         </Typography>
       )}
