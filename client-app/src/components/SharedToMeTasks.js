@@ -9,9 +9,6 @@ import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import { Tasks } from '../apicalls/requests';
 
 const useStyles = makeStyles((theme) => ({
-  circularProgress: {
-    color: "#0d7377",
-  },
   title: {
     color: "black",
   },
@@ -71,7 +68,7 @@ function SharedToMeTasks() {
           )}
         </Fragment>
       ) : (
-        <CircularProgress className={classes.circularProgress} />
+        <CircularProgress color="primary" />
       )}
     </Fragment>
   )

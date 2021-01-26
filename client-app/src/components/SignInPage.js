@@ -21,15 +21,9 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     alignItems: "center",
   },
-  backgroundContainer: {
-    background: "#0d7377",
-  },
   form: {
     width: "100%",
     marginTop: theme.spacing(1),
-  },
-  signInHeader: {
-    color: "#0d7377",
   },
   inputField: {
     background: "#f0f0f0",
@@ -37,23 +31,19 @@ const useStyles = makeStyles((theme) => ({
   },
   submitButton: {
     marginBottom: theme.spacing(1),
-    background: "#0d7377",
-    color: "#fff",
     marginTop: theme.spacing(2),
-    "&:hover": {
-      background: "#32e0c4",
-    },
+    "&:hover": {},
   },
   link: {
     marginLeft: theme.spacing(1),
-    color: "#0d7377",
+    color: theme.palette.primary.main,
     textDecoration: "none",
     "&:hover": {
       textDecoration: "none",
     },
   },
   errorMsg: {
-    color: "red",
+    color: theme.palette.error.main,
   },
 }));
 
@@ -96,7 +86,7 @@ function SignInPage() {
 
   return (
     <Container maxWidth="sm" className={classes.container}>
-      <Typography variant="h5" className={classes.signInHeader}>
+      <Typography variant="h5" color="primary">
         Sign in to Task Organizer
       </Typography>
       {isError && (
@@ -137,6 +127,7 @@ function SignInPage() {
           fullWidth
           variant="contained"
           className={classes.submitButton}
+          color="secondary"
         >
           Sign In
         </Button>

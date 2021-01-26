@@ -121,7 +121,6 @@ function TaskNotes({ isAuthor, taskId, notes }) {
       </Collapse>
 
       <Grid container spacing={1}>
-        {/* OGARNĄĆ EDYCJĘ NOTATEK */}
         {taskNotes.map((note) => (
           <NoteCard
             key={note.id}

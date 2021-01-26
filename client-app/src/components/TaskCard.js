@@ -5,6 +5,7 @@ import {
   CardActions,
   CardHeader,
   Grid,
+  Hidden,
   IconButton,
   makeStyles,
   Tooltip,
@@ -29,10 +30,10 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2),
   },
   cardHeader: {
-    background: "#037c81",
+    background: theme.palette.warning.main,
   },
   cardHeaderDone: {
-    background: "#21d8ba",
+    background: theme.palette.primary.main,
   },
   calendarIcon: {
     marginRight: theme.spacing(1),
@@ -66,6 +67,13 @@ const useStyles = makeStyles((theme) => ({
     "&:hover": {
       color: "#037c81",
       textDecoration: "none",
+    },
+  },
+  cardTime: {
+    fontWeight: 400,
+    fontSize: 20,
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 16,
     },
   },
 }));
@@ -118,6 +126,7 @@ function TaskCard({ task }) {
                   <Typography
                     variant="h6"
                     color={`${taskCompleted ? "textSecondary" : "initial"}`}
+                    className={classes.cardTime}
                   >
                     {format(startDate, "HH:mm")}
                   </Typography>
@@ -126,6 +135,7 @@ function TaskCard({ task }) {
                   <Typography
                     variant="h6"
                     color={`${taskCompleted ? "textSecondary" : "initial"}`}
+                    className={classes.cardTime}
                   >
                     {format(endDate, "HH:mm")}
                   </Typography>
@@ -134,6 +144,7 @@ function TaskCard({ task }) {
                   <Typography
                     variant="caption"
                     color={`${taskCompleted ? "textSecondary" : "initial"}`}
+                    className={classes.cardTime}
                   >
                     {" (next day)"}
                   </Typography>
@@ -163,14 +174,16 @@ function TaskCard({ task }) {
                     )}
                     <Box display="flex">
                       <Box textAlign="right" flexGrow={1}>
-                        <Typography
-                          variant="body2"
-                          color={`${
-                            taskCompleted ? "initial" : "textSecondary"
-                          }`}
-                        >{`${
-                          taskCompleted ? "completed" : "not completed"
-                        }`}</Typography>
+                        <Hidden smDown>
+                          <Typography
+                            variant="body2"
+                            color={`${
+                              taskCompleted ? "initial" : "textSecondary"
+                            }`}
+                          >{`${
+                            taskCompleted ? "completed" : "not completed"
+                          }`}</Typography>
+                        </Hidden>
                       </Box>
                     </Box>
                   </Link>

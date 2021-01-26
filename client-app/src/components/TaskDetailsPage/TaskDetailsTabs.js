@@ -1,7 +1,7 @@
 import { Tab, Tabs } from "@material-ui/core";
 import React from "react";
 import { Fragment } from "react";
-import TaskNotes from "./TaskNotes";
+import Notes from "./TaskNotes";
 import TaskShare from "./TaskShare";
 import TaskSteps from "./TaskSteps";
 
@@ -25,7 +25,7 @@ function TaskDetailsTabs({ isAuthor, taskId, steps, notes, usersToList }) {
       )}
       {tabIndex === 1 && (
         <Fragment>
-          <TaskNotes isAuthor={isAuthor} taskId={taskId} notes={notes} />
+          <Notes isAuthor={isAuthor} taskId={taskId} notes={notes} />
         </Fragment>
       )}
       {tabIndex === 2 && (

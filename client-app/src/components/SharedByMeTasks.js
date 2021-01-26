@@ -9,9 +9,6 @@ import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import { Tasks } from "../apicalls/requests";
 
 const useStyles = makeStyles((theme) => ({
-  circularProgress: {
-    color: "#0d7377",
-  },
   title: {
     color: "black",
   },
@@ -71,7 +68,7 @@ function SharedByMeTasks() {
           )}
         </Fragment>
       ) : (
-        <CircularProgress className={classes.circularProgress} />
+        <CircularProgress color="primary" />
       )}
     </Fragment>
   );

@@ -24,9 +24,9 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   styledButton: {
-    background: "#21d8ba",
+    background: theme.palette.secondary.main,
     "&:hover": {
-      background: "#43e3c9",
+      background: theme.palette.secondary.light,
     },
     color: "white",
   },

@@ -1,6 +1,7 @@
 import {
   AppBar,
   Button,
+  Hidden,
   IconButton,
   InputBase,
   makeStyles,
@@ -12,6 +13,7 @@ import AlarmOnIcon from "@material-ui/icons/AlarmOn";
 import SearchIcon from "@material-ui/icons/Search";
 import { Link, useHistory } from "react-router-dom";
 import { Auth } from "../apicalls/auth";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -19,7 +21,8 @@ const useStyles = makeStyles((theme) => ({
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
-    background: "linear-gradient(45deg, #0d7377 30%, #32e0c4 90%)",
+    // background: "linear-gradient(45deg, #0d7377 30%, #32e0c4 90%)",
+    background: theme.palette.primary.main,
   },
   alarmIcon: {
     marginRight: theme.spacing(1),
@@ -29,6 +32,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
   },
   searchBar: {
+    padding: theme.spacing(1),
     color: "white",
     flexGrow: 1,
   },
@@ -46,6 +50,9 @@ const useStyles = makeStyles((theme) => ({
     "&:hover": {
       textDecoration: "none",
     },
+  },
+  signOutText: {
+    marginLeft: theme.spacing(1),
   },
 }));
 
@@ -84,7 +91,9 @@ function AppNavbar() {
           <Link to="/" className={classes.link}>
             <Button className={classes.titleButton} disableRipple>
               <AlarmOnIcon className={classes.alarmIcon} />
-              <Typography variant="h6">Task Organizer</Typography>
+              <Hidden smDown>
+                <Typography variant="h6">Task Organizer</Typography>
+              </Hidden>
             </Button>
           </Link>
           <InputBase
@@ -101,12 +110,17 @@ function AppNavbar() {
             <SearchIcon />
           </IconButton>
           <Button variant="contained" onClick={handleSignOutButton}>
-            Sign Out
+            <ExitToAppIcon />
+            <Hidden smDown>
+              <Typography variant="caption" className={classes.signOutText}>
+                Sign Out
+              </Typography>
+            </Hidden>
           </Button>
         </Toolbar>
       </AppBar>
     </div>
   );
-}
+} 
 
 export default AppNavbar;

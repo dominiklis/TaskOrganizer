@@ -17,10 +17,10 @@ import { Fragment } from "react";
 
 const useStyles = makeStyles((theme) => ({
   cancelCompleted: {
-    color: "red",
+    color: theme.palette.secondary.main,
   },
   setCompleted: {
-    color: "green",
+    color: theme.palette.primary.main,
   },
   completedStepText: {
     color: "gray",

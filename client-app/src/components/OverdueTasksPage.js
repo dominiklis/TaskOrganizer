@@ -1,4 +1,4 @@
-import { CircularProgress, makeStyles } from "@material-ui/core";
+import { CircularProgress, Grid } from "@material-ui/core";
 import React, { useState, useEffect, Fragment } from "react";
 import Page from "../components/Page";
 import { TaskRequestParams } from "../utils/params";
@@ -9,15 +9,8 @@ import { CheckUser } from "../apicalls/auth";
 import TaskGroupsList from "./TaskGroupsList";
 import PageTitle from "./PageTitle";
 
-const useStyles = makeStyles((theme) => ({
-  circularProgress: {
-    color: "#0d7377",
-  },
-}));
-
 function OverdueTasksPage() {
   const history = useHistory();
-  const classes = useStyles();
   const [groupedTasks, setGroupedTasks] = useState({});
   const [tasksLoaded, setTasksLoaded] = useState(false);
 
@@ -47,12 +40,15 @@ function OverdueTasksPage() {
   return (
     <Page>
       {tasksLoaded ? (
-        <Fragment>
-          <PageTitle title={constStrings.overdueTasks} />
-          <TaskGroupsList tasks={groupedTasks} showGroupNames={true} />
-        </Fragment>
+        <Grid container>
+          <Grid item xs={12} sm={11}>
+            <PageTitle title={constStrings.overdueTasks} />
+            <TaskGroupsList tasks={groupedTasks} showGroupNames={true} />
+          </Grid>
+          <Grid item sm={1} display={{ xs: "none" }}></Grid>
+        </Grid>
       ) : (
-        <CircularProgress className={classes.circularProgress} />
+        <CircularProgress color="primary" />
       )}
     </Page>
   );

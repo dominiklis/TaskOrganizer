@@ -10,15 +10,12 @@ import CollapseTasksList from "./CollapseTasksList";
 import { constStrings } from "../utils/constants";
 
 const useStyles = makeStyles((theme) => ({
-  circularProgress: {
-    color: "#0d7377",
-  },
   title: {
-    color: "#b00000",
+    color: theme.palette.warning.main,
   },
   icon: {
     marginRight: theme.spacing(1),
-    color: "#b00000",
+    color: theme.palette.warning.main,
   },
 }));
 
@@ -73,7 +70,7 @@ function OverdueTasks() {
           )}
         </Fragment>
       ) : (
-        <CircularProgress className={classes.circularProgress} />
+        <CircularProgress color="primary" />
       )}
     </Fragment>
   );

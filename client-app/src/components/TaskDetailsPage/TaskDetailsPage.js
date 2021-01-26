@@ -16,9 +16,6 @@ import TaskDescription from "./TaskDescription";
 import TaskDetailsTabs from "./TaskDetailsTabs";
 
 const useStyles = makeStyles((theme) => ({
-  circularProgress: {
-    color: "#0d7377",
-  },
   root: {
     flexGrow: 1,
   },
@@ -116,102 +113,97 @@ function TaskDetailsPage({ match }) {
   return (
     <Page>
       {taskLoaded ? (
-        <div className={classes.root}>
-          <Grid container spacing={1}>
-            <Grid item xs={1}>
-              {IsAuthor(task.authorName) ? (
-                <Box textAlign="center">
-                  <Tooltip
-                    title={
-                      taskCompleted ? "mark as incomplete" : "mark as completed"
-                    }
-                  >
-                    <form onSubmit={handleCompletedFormSubmit}>
-                      <IconButton color="primary" type="submit">
-                        {taskCompleted ? <ClearIcon /> : <CheckIcon />}
-                      </IconButton>
-                    </form>
-                  </Tooltip>
-                  <Tooltip title="delete">
-                    <div>
-                      <IconButton
-                        color="secondary"
-                        onClick={handleDeleteButtonClick}
-                      >
-                        <DeleteForeverIcon />
-                      </IconButton>
-                    </div>
-                  </Tooltip>
-                </Box>
-              ) : (
-                <form onSubmit={submitCancelSharing}>
-                  <Tooltip title="cancel sharing">
-                    <IconButton edge="end" aria-label="delete" type="submit">
-                      <ClearIcon />
-                    </IconButton>
-                  </Tooltip>
-                </form>
-              )}
-            </Grid>
-
-            <Grid item xs={11} sm={10}>
-              {!IsAuthor(task.authorName) && (
-                <Typography
-                  variant="caption"
-                  className={classes.sharedText}
-                >{`task shared by ${task.authorName}`}</Typography>
-              )}
-
-              <TaskTitle
-                isAuthor={author}
-                taskId={task.id}
-                taskTitle={task.title}
-              />
-
-              {taskCompleted ? (
-                <Typography variant="body1" className={classes.completedText}>
-                  completed
-                </Typography>
-              ) : (
-                <Typography
-                  variant="body1"
-                  className={classes.notCompletedText}
+        <Grid container spacing={1} className={classes.root}>
+          <Grid item xs={1}>
+            {IsAuthor(task.authorName) ? (
+              <Box textAlign="center">
+                <Tooltip
+                  title={
+                    taskCompleted ? "mark as incomplete" : "mark as completed"
+                  }
                 >
-                  not completed
-                </Typography>
-              )}
-
-              <TaskDates
-                isAuthor={author}
-                taskId={task.id}
-                added={added}
-                sDate={startDate}
-                eDate={endDate}
-                startTime={task.hasStartTime}
-              />
-
-              <TaskTags isAuthor={author} taskId={task.id} taskTags={tags} />
-
-              <TaskDescription
-                isAuthor={author}
-                taskId={task.id}
-                taskDescription={task.description}
-              />
-
-              <TaskDetailsTabs
-                isAuthor={author}
-                taskId={task.id}
-                steps={task.steps}
-                notes={task.notes}
-                usersToList={usersToList}
-              />
-            </Grid>
-
-            <Grid item sm={1} display={{ xs: "none" }}></Grid>
+                  <form onSubmit={handleCompletedFormSubmit}>
+                    <IconButton color="primary" type="submit">
+                      {taskCompleted ? <ClearIcon /> : <CheckIcon />}
+                    </IconButton>
+                  </form>
+                </Tooltip>
+                <Tooltip title="delete">
+                  <div>
+                    <IconButton
+                      color="secondary"
+                      onClick={handleDeleteButtonClick}
+                    >
+                      <DeleteForeverIcon />
+                    </IconButton>
+                  </div>
+                </Tooltip>
+              </Box>
+            ) : (
+              <form onSubmit={submitCancelSharing}>
+                <Tooltip title="cancel sharing">
+                  <IconButton edge="end" aria-label="delete" type="submit">
+                    <ClearIcon />
+                  </IconButton>
+                </Tooltip>
+              </form>
+            )}
           </Grid>
-        </div>
+
+          <Grid item xs={11} sm={10}>
+            {!IsAuthor(task.authorName) && (
+              <Typography
+                variant="caption"
+                className={classes.sharedText}
+              >{`task shared by ${task.authorName}`}</Typography>
+            )}
+
+            <TaskTitle
+              isAuthor={author}
+              taskId={task.id}
+              taskTitle={task.title}
+            />
+
+            {taskCompleted ? (
+              <Typography variant="body1" className={classes.completedText}>
+                completed
+              </Typography>
+            ) : (
+              <Typography variant="body1" className={classes.notCompletedText}>
+                not completed
+              </Typography>
+            )}
+
+            <TaskDates
+              isAuthor={author}
+              taskId={task.id}
+              added={added}
+              sDate={startDate}
+              eDate={endDate}
+              startTime={task.hasStartTime}
+            />
+
+            <TaskTags isAuthor={author} taskId={task.id} taskTags={tags} />
+
+            <TaskDescription
+              isAuthor={author}
+              taskId={task.id}
+              taskDescription={task.description}
+            />
+
+            <TaskDetailsTabs
+              isAuthor={author}
+              taskId={task.id}
+              steps={task.steps}
+              notes={task.notes}
+              usersToList={usersToList}
+            />
+          </Grid>
+
+          <Grid item sm={1} display={{ xs: "none" }}></Grid>
+        </Grid>
       ) : (
-        <CircularProgress className={classes.circularProgress} />
+        <CircularProgress color="primary" />
       )}
     </Page>
   );

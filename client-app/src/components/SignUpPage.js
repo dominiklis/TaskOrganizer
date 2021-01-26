@@ -25,17 +25,12 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     marginTop: theme.spacing(1),
   },
-  signInHeader: {
-    color: "#0d7377",
-  },
   inputField: {
     background: "#f0f0f0",
     marginTop: theme.spacing(2),
   },
   submitButton: {
     marginBottom: theme.spacing(1),
-    background: "#0d7377",
-    color: "#fff",
     marginTop: theme.spacing(2),
     "&:hover": {
       background: "#32e0c4",
@@ -43,14 +38,14 @@ const useStyles = makeStyles((theme) => ({
   },
   link: {
     marginLeft: theme.spacing(1),
-    color: "#0d7377",
+    color: theme.palette.primary.main,
     textDecoration: "none",
     "&:hover": {
       textDecoration: "none",
     },
   },
   errorMsg: {
-    color: "red",
+    color: theme.palette.error.main,
   },
 }));
 
@@ -102,7 +97,7 @@ function SignUpPage() {
 
   return (
     <Container maxWidth="sm" className={classes.container}>
-      <Typography variant="h5" className={classes.signInHeader}>
+      <Typography variant="h5" color="primary">
         Create account and start using Task Orginer!
       </Typography>
       {isError && (
@@ -162,6 +157,7 @@ function SignUpPage() {
           fullWidth
           variant="contained"
           className={classes.submitButton}
+          color="secondary"
         >
           Sign Up
         </Button>

@@ -4,13 +4,19 @@ import { constStrings } from "../utils/constants";
 import OverdueTasks from "./OverdueTasks";
 import ActiveTasks from "./ActiveTasks";
 import PageTitle from "./PageTitle";
+import { Grid } from "@material-ui/core";
 
 function MainPage() {
   return (
     <Page>
-      <PageTitle title={constStrings.activeTasks} />
-      <OverdueTasks />
-      <ActiveTasks />
+      <Grid container>
+        <Grid item xs={12} sm={11}>
+          <PageTitle title={constStrings.activeTasks} />
+          <OverdueTasks />
+          <ActiveTasks />
+        </Grid>
+        <Grid item sm={1} display={{ xs: "none" }}></Grid>
+      </Grid>
     </Page>
   );
 }

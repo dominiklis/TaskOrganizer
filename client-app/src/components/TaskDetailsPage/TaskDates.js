@@ -1,12 +1,10 @@
 import {
   Box,
   Button,
-  createMuiTheme,
   Grid,
   IconButton,
   makeStyles,
   TextField,
-  ThemeProvider,
   Typography,
 } from "@material-ui/core";
 import React, { useState } from "react";
@@ -40,28 +38,12 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     "flex-wrap": "wrap",
-    color: "#0d7377",
+    color: theme.palette.primary.main,
   },
   dateTimePickerGridItem: {
     textAlign: "center",
   },
 }));
-
-const theme = createMuiTheme({
-  palette: {
-    primary: {
-      main: "#0d7377",
-      contrastText: "#fff",
-    },
-    secondary: {
-      main: "#32e0c4",
-      contrastText: "#fff",
-    },
-    dateError: {
-      color: "#32e0c4",
-    },
-  },
-});
 
 const validationSchema = yup.object({
   newStartDate: yup.date(),
@@ -178,22 +160,20 @@ function TaskDates({ isAuthor, taskId, added, sDate, eDate, startTime }) {
                   sm={4}
                   className={classes.dateTimePickerGridItem}
                 >
-                  <ThemeProvider theme={theme}>
-                    <DatePicker
-                      fullWidth
-                      id="newStartDate"
-                      name="newStartDate"
-                      label="start date"
-                      value={formik.values.newStartDate}
-                      onChange={(date) =>
-                        formik.setFieldValue("newStartDate", date, false)
-                      }
-                      error={
-                        formik.touched.newStartDate &&
-                        Boolean(formik.errors.newStartDate)
-                      }
-                    />
-                  </ThemeProvider>
+                  <DatePicker
+                    fullWidth
+                    id="newStartDate"
+                    name="newStartDate"
+                    label="start date"
+                    value={formik.values.newStartDate}
+                    onChange={(date) =>
+                      formik.setFieldValue("newStartDate", date, false)
+                    }
+                    error={
+                      formik.touched.newStartDate &&
+                      Boolean(formik.errors.newStartDate)
+                    }
+                  />
                 </Grid>
 
                 <Grid
@@ -203,26 +183,24 @@ function TaskDates({ isAuthor, taskId, added, sDate, eDate, startTime }) {
                   className={classes.dateTimePickerGridItem}
                 >
                   <Box display="flex">
-                    <ThemeProvider theme={theme}>
-                      <Box flexGrow={1}>
-                        <TimePicker
-                          fullWidth
-                          id="startTime"
-                          name="startTime"
-                          label="start time"
-                          ampm={false}
-                          value={formik.values.startTime}
-                          minutesStep={5}
-                          onChange={(time) =>
-                            formik.setFieldValue("startTime", time, false)
-                          }
-                          error={
-                            formik.touched.startTime &&
-                            Boolean(formik.errors.startTime)
-                          }
-                        />
-                      </Box>
-                    </ThemeProvider>
+                    <Box flexGrow={1}>
+                      <TimePicker
+                        fullWidth
+                        id="startTime"
+                        name="startTime"
+                        label="start time"
+                        ampm={false}
+                        value={formik.values.startTime}
+                        minutesStep={5}
+                        onChange={(time) =>
+                          formik.setFieldValue("startTime", time, false)
+                        }
+                        error={
+                          formik.touched.startTime &&
+                          Boolean(formik.errors.startTime)
+                        }
+                      />
+                    </Box>
                     <Box>
                       <IconButton onClick={clearStartTimeInput}>
                         <ClearIcon />
@@ -292,7 +270,7 @@ function TaskDates({ isAuthor, taskId, added, sDate, eDate, startTime }) {
           </Fragment>
         )}
 
-        <Typography variant="subtitle1" className={classes.coloredText}>
+        <Typography variant="subtitle1">
           {`added: ${format(added, "dd.MM.yyyy HH:mm")}`}
         </Typography>
       </Box>

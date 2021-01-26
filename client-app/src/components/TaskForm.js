@@ -105,9 +105,9 @@ function TaskForm({ task }) {
         for (let i = 0; i < newTags.length; i++) {
           console.log(newTags[i]);
         }
-        newTags.forEach(t => {
+        newTags.forEach((t) => {
           if (t.match(/^[0-9a-z]+$/)) {
-            newTask.tags.push(t)
+            newTask.tags.push(t);
           }
         });
       }
