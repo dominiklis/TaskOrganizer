@@ -63,7 +63,7 @@ function OverdueTasks() {
               })`}
               titleStyle={classes.title}
               icon={<EventBusyIcon className={classes.icon} />}
-              showGroupNames={false}
+              showGroupNames={true}
             />
           ) : (
             <Typography variant="h5">{constStrings.noOverdueTasks}</Typography>

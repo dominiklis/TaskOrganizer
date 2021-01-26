@@ -1,11 +1,4 @@
-import {
-  Button,
-  createMuiTheme,
-  Grid,
-  makeStyles,
-  TextField,
-  ThemeProvider,
-} from "@material-ui/core";
+import { Button, Grid, makeStyles, TextField } from "@material-ui/core";
 import {
   DatePicker,
   MuiPickersUtilsProvider,
@@ -33,23 +26,10 @@ const useStyles = makeStyles((theme) => ({
   dateTimePickerGridItem: {
     textAlign: "center",
   },
-}));
-
-const theme = createMuiTheme({
-  palette: {
-    primary: {
-      main: "#0d7377",
-      contrastText: "#fff",
-    },
-    secondary: {
-      main: "#32e0c4",
-      contrastText: "#fff",
-    },
-    dateError: {
-      color: "#32e0c4",
-    },
+  dates: {
+    marginTop: theme.spacing(1),
   },
-});
+}));
 
 const validationSchema = yup.object({
   title: yup.string("enter title").required("title is required"),
@@ -185,44 +165,40 @@ function TaskForm({ task }) {
         helperText={formik.touched.tags && formik.errors.tags}
       />
 
-      <Grid container spacing={3}>
+      <Grid container spacing={3} className={classes.dates}>
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
           <Grid item xs={12} sm={4} className={classes.dateTimePickerGridItem}>
-            <ThemeProvider theme={theme}>
-              <DatePicker
-                fullWidth
-                id="startDate"
-                name="startDate"
-                label="start date"
-                value={formik.values.startDate}
-                onChange={(date) =>
-                  formik.setFieldValue("startDate", date, false)
-                }
-                error={
-                  formik.touched.startDate && Boolean(formik.errors.startDate)
-                }
-              />
-            </ThemeProvider>
+            <DatePicker
+              fullWidth
+              id="startDate"
+              name="startDate"
+              label="start date"
+              value={formik.values.startDate}
+              onChange={(date) =>
+                formik.setFieldValue("startDate", date, false)
+              }
+              error={
+                formik.touched.startDate && Boolean(formik.errors.startDate)
+              }
+            />
           </Grid>
 
           <Grid item xs={12} sm={4} className={classes.dateTimePickerGridItem}>
-            <ThemeProvider theme={theme}>
-              <TimePicker
-                fullWidth
-                id="startTime"
-                name="startTime"
-                label="start time"
-                ampm={false}
-                value={formik.values.startTime}
-                minutesStep={5}
-                onChange={(time) =>
-                  formik.setFieldValue("startTime", time, false)
-                }
-                error={
-                  formik.touched.startTime && Boolean(formik.errors.startTime)
-                }
-              />
-            </ThemeProvider>
+            <TimePicker
+              fullWidth
+              id="startTime"
+              name="startTime"
+              label="start time"
+              ampm={false}
+              value={formik.values.startTime}
+              minutesStep={5}
+              onChange={(time) =>
+                formik.setFieldValue("startTime", time, false)
+              }
+              error={
+                formik.touched.startTime && Boolean(formik.errors.startTime)
+              }
+            />
           </Grid>
         </MuiPickersUtilsProvider>
 
