@@ -47,31 +47,29 @@ function SharedByMeTasks() {
     });
   }, [history]);
 
-  return (
-    <Fragment>
-      {tasksLoaded ? (
-        <Fragment>
-          {groupedTasks.length ? (
-            <CollapseTasksList
-              tasks={groupedTasks}
-              title={`TASKS SHARED BY ME (${
-                groupedTasks.reduce((a, b) => ({
-                  count: a.count + b.count,
-                })).count
-              })`}
-              titleStyle={classes.title}
-              icon={<ArrowBackIcon className={classes.icon} />}
-              showGroupNames={false}
-            />
-          ) : (
-            <Typography variant="h5">{"you didn't share any tasks"}</Typography>
-          )}
-        </Fragment>
-      ) : (
-        <CircularProgress color="primary" />
-      )}
-    </Fragment>
-  );
+  if (tasksLoaded) {
+    return (
+      <Fragment>
+        {groupedTasks.length ? (
+          <CollapseTasksList
+            tasks={groupedTasks}
+            title={`TASKS SHARED BY ME (${
+              groupedTasks.reduce((a, b) => ({
+                count: a.count + b.count,
+              })).count
+            })`}
+            titleStyle={classes.title}
+            icon={<ArrowBackIcon className={classes.icon} />}
+            showGroupNames={false}
+          />
+        ) : (
+          <Typography variant="h5">{"you didn't share any tasks"}</Typography>
+        )}
+      </Fragment>
+    );
+  }
+
+  return <CircularProgress color="primary" />;
 }
 
 export default SharedByMeTasks;

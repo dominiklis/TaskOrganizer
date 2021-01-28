@@ -1,12 +1,12 @@
-import { CircularProgress, makeStyles, Typography } from '@material-ui/core';
-import React, { useEffect, useState } from 'react'
-import { Fragment } from 'react'
-import { useHistory } from 'react-router-dom';
-import { CheckUser } from '../apicalls/auth';
-import { TaskRequestParams } from '../utils/params';
-import CollapseTasksList from './CollapseTasksList';
-import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
-import { Tasks } from '../apicalls/requests';
+import { CircularProgress, makeStyles, Typography } from "@material-ui/core";
+import React, { useEffect, useState } from "react";
+import { Fragment } from "react";
+import { useHistory } from "react-router-dom";
+import { CheckUser } from "../apicalls/auth";
+import { TaskRequestParams } from "../utils/params";
+import CollapseTasksList from "./CollapseTasksList";
+import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
+import { Tasks } from "../apicalls/requests";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
   icon: {
     marginRight: theme.spacing(1),
   },
-}))
+}));
 
 function SharedToMeTasks() {
   const history = useHistory();
@@ -47,32 +47,29 @@ function SharedToMeTasks() {
     });
   }, [history]);
 
-  return (
-    <Fragment>
-      {tasksLoaded ? (
-        <Fragment>
-          {groupedTasks.length ? (
-            <CollapseTasksList
-              tasks={groupedTasks}
-              title={`TASKS SHARED TO ME (${
-                groupedTasks.reduce((a, b) => ({
-                  count: a.count + b.count,
-                })).count
-              })`}
-              titleStyle={classes.title}
-              icon={<ArrowForwardIcon className={classes.icon} />}
-              showGroupNames={true}
-            />
-          ) : (
-            <Typography variant="h5">{"nobody shared tasks with you"}</Typography>
-          )}
-        </Fragment>
-      ) : (
-        <CircularProgress color="primary" />
-      )}
-    </Fragment>
-  )
+  if (tasksLoaded) {
+    return (
+      <Fragment>
+        {groupedTasks.length ? (
+          <CollapseTasksList
+            tasks={groupedTasks}
+            title={`TASKS SHARED TO ME (${
+              groupedTasks.reduce((a, b) => ({
+                count: a.count + b.count,
+              })).count
+            })`}
+            titleStyle={classes.title}
+            icon={<ArrowForwardIcon className={classes.icon} />}
+            showGroupNames={true}
+          />
+        ) : (
+          <Typography variant="h5">{"nobody shared tasks with you"}</Typography>
+        )}
+      </Fragment>
+    );
+  }
+
+  return <CircularProgress color="primary" />;
 }
 
-export default SharedToMeTasks
-    
+export default SharedToMeTasks;

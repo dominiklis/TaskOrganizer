@@ -11,3 +11,23 @@ export const checkForDates = (today, tomorrow) => {
 
   return false;
 };
+
+export const filterTasksByPriority = (priority, allTasks) => {
+  if (priority !== null) {
+    let newTasks = [];
+    allTasks.forEach((group) => {
+      const grp = {
+        ...group,
+        tasks: group.tasks.filter((task) => task.priority === priority),
+      };
+      grp.count = grp.tasks.length;
+      if (grp.count > 0) {
+        newTasks.push(grp);
+      }
+    });
+
+    return newTasks;
+  } else {
+    return allTasks;
+  }
+};

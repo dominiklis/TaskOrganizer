@@ -4,7 +4,6 @@ import { Fragment } from "react";
 import TaskCard from "./TaskCard";
 import TodayIcon from "@material-ui/icons/Today";
 import { format } from "date-fns";
-import { constStrings } from "../utils/constants";
 
 const useStyles = makeStyles((theme) => ({
   dayDate: {
@@ -15,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function TaskGroupsList({ tasks, showGroupNames }) {
+function TaskGroupsList({ tasks, showGroupNames, info }) {
   const classes = useStyles();
 
   return (
@@ -46,7 +45,7 @@ function TaskGroupsList({ tasks, showGroupNames }) {
           })}
         </Fragment>
       ) : (
-        <Typography variant="h5">{constStrings.noActiveTasks}</Typography>
+        <Typography variant="h5">{info}</Typography>
       )}
     </Fragment>
   );

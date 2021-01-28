@@ -114,9 +114,9 @@ function TaskDetailsPage({ match }) {
     });
   }, [id, history]);
 
-  return (
-    <Page>
-      {taskLoaded ? (
+  if (taskLoaded) {
+    return (
+      <Page>
         <Grid container spacing={1} className={classes.root}>
           <Grid item xs={1}>
             {IsAuthor(task.authorName) ? (
@@ -127,7 +127,10 @@ function TaskDetailsPage({ match }) {
                   }
                 >
                   <form onSubmit={handleCompletedFormSubmit}>
-                    <IconButton color={`${taskCompleted ? "secondary" : "primary"}`} type="submit">
+                    <IconButton
+                      color={`${taskCompleted ? "secondary" : "primary"}`}
+                      type="submit"
+                    >
                       {taskCompleted ? <ClearIcon /> : <CheckIcon />}
                     </IconButton>
                   </form>
@@ -212,9 +215,13 @@ function TaskDetailsPage({ match }) {
 
           <Grid item sm={1} display={{ xs: "none" }}></Grid>
         </Grid>
-      ) : (
-        <CircularProgress color="primary" />
-      )}
+      </Page>
+    );
+  }
+
+  return (
+    <Page>
+      <CircularProgress color="primary" />
     </Page>
   );
 }

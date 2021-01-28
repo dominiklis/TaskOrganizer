@@ -103,23 +103,15 @@ function SideMenu() {
           {menuItems.map((el) => {
             return (
               <Link to={el.linkTo} className={classes.link} key={el.name}>
-                {el.styled ? (
-                  <ListItem button className={classes.styledButton}>
-                    <ListItemIcon className={classes.styledIcon}>
-                      {el.icon}
-                    </ListItemIcon>
-                    <Hidden smDown>
-                      <ListItemText>{el.label}</ListItemText>
-                    </Hidden>
-                  </ListItem>
-                ) : (
-                  <ListItem button>
-                    <ListItemIcon>{el.icon}</ListItemIcon>
-                    <Hidden smDown>
-                      <ListItemText>{el.label}</ListItemText>
-                    </Hidden>
-                  </ListItem>
-                )}
+
+                <ListItem button className={`${el.styled && classes.styledButton}`}>
+                  <ListItemIcon className={`${el.styled && classes.styledIcon}`}>
+                    {el.icon}
+                  </ListItemIcon>
+                  <Hidden smDown>
+                    <ListItemText>{el.label}</ListItemText>
+                  </Hidden>
+                </ListItem>
               </Link>
             );
           })}

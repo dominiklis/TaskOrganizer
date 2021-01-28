@@ -4,7 +4,7 @@ import {
   makeStyles,
   Typography,
 } from "@material-ui/core";
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useState, useEffect } from "react";
 import Page from "../components/Page";
 import { TaskRequestParams } from "../utils/params";
 import Clock from "../components/Clock";
@@ -13,6 +13,8 @@ import { useHistory } from "react-router-dom";
 import { Tasks } from "../apicalls/requests";
 import { CheckUser } from "../apicalls/auth";
 import TaskGroupsList from "./TaskGroupsList";
+import PriorityFilteringMenu from "./PriorityFilteringMenu";
+import { filterTasksByPriority } from "../utils/utils";
 
 const useStyles = makeStyles((theme) => ({
   circularProgress: {
@@ -21,10 +23,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function DoneTasksPage() {
-  const history = useHistory();
   const classes = useStyles();
+  const history = useHistory();
+
   const [groupedTasks, setGroupedTasks] = useState({});
   const [tasksLoaded, setTasksLoaded] = useState(false);
+  const [priority, setPriority] = useState(null);
 
   useEffect(() => {
     const user = CheckUser();
@@ -49,26 +53,33 @@ function DoneTasksPage() {
     });
   }, [history]);
 
+  if (tasksLoaded) {
+    return (
+      <Page>
+        <Box display="flex" textAlign="right">
+          <Box>
+            <Typography variant="h6">{constStrings.completedTasks}</Typography>
+          </Box>
+          <Box flexGrow={1}>
+            <Clock />
+          </Box>
+        </Box>
+
+        <Typography>priority:</Typography>
+        <PriorityFilteringMenu setPriority={setPriority} />
+
+        <TaskGroupsList
+          tasks={filterTasksByPriority(priority, groupedTasks)}
+          showGroupNames={true}
+          info={constStrings.noTasksToShow}
+        />
+      </Page>
+    );
+  }
+
   return (
     <Page>
-      {tasksLoaded ? (
-        <Fragment>
-          <Box display="flex" textAlign="right">
-            <Box>
-              <Typography variant="h6">
-                {constStrings.completedTasks}
-              </Typography>
-            </Box>
-            <Box flexGrow={1}>
-              <Clock />
-            </Box>
-          </Box>
-
-          <TaskGroupsList tasks={groupedTasks} showGroupNames={true} />
-        </Fragment>
-      ) : (
-        <CircularProgress className={classes.circularProgress} />
-      )}
+      <CircularProgress className={classes.circularProgress} />
     </Page>
   );
 }

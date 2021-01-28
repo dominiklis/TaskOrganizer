@@ -177,19 +177,19 @@ function TaskForm({ task }) {
             <FormControlLabel
               value="0"
               control={<Radio color="primary" />}
-              label="normal"
+              label="low"
               labelPlacement="bottom"
             />
             <FormControlLabel
               value="1"
               control={<Radio color="primary" />}
-              label="high"
+              label="medium"
               labelPlacement="bottom"
             />
             <FormControlLabel
               value="2"
               control={<Radio color="primary" />}
-              label="very high"
+              label="high"
               labelPlacement="bottom"
             />
           </RadioGroup>

@@ -1,4 +1,4 @@
-import { CircularProgress, Grid } from "@material-ui/core";
+import { CircularProgress, Grid, Typography } from "@material-ui/core";
 import React, { useState, useEffect } from "react";
 import Page from "../components/Page";
 import { TaskRequestParams } from "../utils/params";
@@ -8,11 +8,15 @@ import { Tasks } from "../apicalls/requests";
 import { CheckUser } from "../apicalls/auth";
 import TaskGroupsList from "./TaskGroupsList";
 import PageTitle from "./PageTitle";
+import PriorityFilteringMenu from "./PriorityFilteringMenu";
+import { filterTasksByPriority } from "../utils/utils";
 
 function OverdueTasksPage() {
   const history = useHistory();
+
   const [groupedTasks, setGroupedTasks] = useState({});
   const [tasksLoaded, setTasksLoaded] = useState(false);
+  const [priority, setPriority] = useState(null);
 
   useEffect(() => {
     const user = CheckUser();
@@ -37,19 +41,29 @@ function OverdueTasksPage() {
     });
   }, [history]);
 
-  return (
-    <Page>
-      {tasksLoaded ? (
+  if (tasksLoaded) {
+    return (
+      <Page>
+        <Typography>priority:</Typography>
+        <PriorityFilteringMenu setPriority={setPriority} />
         <Grid container>
           <Grid item xs={12} sm={11}>
             <PageTitle title={constStrings.overdueTasks} />
-            <TaskGroupsList tasks={groupedTasks} showGroupNames={true} />
+            <TaskGroupsList
+              tasks={filterTasksByPriority(priority, groupedTasks)}
+              showGroupNames={true}
+              info={constStrings.noTasksToShow}
+            />
           </Grid>
           <Grid item sm={1} display={{ xs: "none" }}></Grid>
         </Grid>
-      ) : (
-        <CircularProgress color="primary" />
-      )}
+      </Page>
+    );
+  }
+
+  return (
+    <Page>
+      <CircularProgress color="primary" />
     </Page>
   );
 }
