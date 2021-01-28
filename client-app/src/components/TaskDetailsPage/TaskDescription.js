@@ -64,11 +64,11 @@ function TaskDescription({ isAuthor, taskId, taskDescription }) {
             onChange={formik.handleChange}
           />
 
-          <Button type="submit" color="primary">
+          <Button type="submit" color="secondary">
             save
           </Button>
           {description !== "" && (
-            <Button color="secondary" onClick={setDescriptionEditStateFalse}>
+            <Button onClick={setDescriptionEditStateFalse}>
               cancel
             </Button>
           )}

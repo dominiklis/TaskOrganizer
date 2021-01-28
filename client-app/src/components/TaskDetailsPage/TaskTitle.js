@@ -51,12 +51,10 @@ function TaskTitle({ isAuthor, taskId, taskTitle }) {
             onChange={formik.handleChange}
             error={formik.touched.newTitle && Boolean(formik.errors.newTitle)}
           />
-          <Button type="submit" color="primary">
+          <Button type="submit" color="secondary">
             save
           </Button>
-          <Button color="secondary" onClick={changeTitleEditState}>
-            cancel
-          </Button>
+          <Button onClick={changeTitleEditState}>cancel</Button>
         </form>
       ) : (
         <Typography variant="h5" onClick={changeTitleEditState}>

@@ -14,6 +14,7 @@ import TaskDates from "./TaskDates";
 import TaskTags from "./TaskTags";
 import TaskDescription from "./TaskDescription";
 import TaskDetailsTabs from "./TaskDetailsTabs";
+import Priority from "./Priority";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -27,6 +28,9 @@ const useStyles = makeStyles((theme) => ({
   },
   sharedText: {
     color: "#6e0110",
+  },
+  deleteIconButton: {
+    color: theme.palette.warning.main,
   },
 }));
 
@@ -123,7 +127,7 @@ function TaskDetailsPage({ match }) {
                   }
                 >
                   <form onSubmit={handleCompletedFormSubmit}>
-                    <IconButton color="primary" type="submit">
+                    <IconButton color={`${taskCompleted ? "secondary" : "primary"}`} type="submit">
                       {taskCompleted ? <ClearIcon /> : <CheckIcon />}
                     </IconButton>
                   </form>
@@ -131,7 +135,7 @@ function TaskDetailsPage({ match }) {
                 <Tooltip title="delete">
                   <div>
                     <IconButton
-                      color="secondary"
+                      className={classes.deleteIconButton}
                       onClick={handleDeleteButtonClick}
                     >
                       <DeleteForeverIcon />
@@ -162,6 +166,12 @@ function TaskDetailsPage({ match }) {
               isAuthor={author}
               taskId={task.id}
               taskTitle={task.title}
+            />
+
+            <Priority
+              isAuthor={author}
+              taskId={task.id}
+              taskPriority={task.priority}
             />
 
             {taskCompleted ? (

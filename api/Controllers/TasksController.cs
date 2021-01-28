@@ -102,6 +102,29 @@ namespace api.Controllers
                 }
             }
 
+            if (!string.IsNullOrWhiteSpace(filters.Priority))
+            {
+
+                System.Diagnostics.Debug.WriteLine(filters.Priority);
+
+                TasksFilterDTO.PriorityFilter pf;
+                if (Enum.TryParse(filters.Priority, true, out pf))
+                {
+                    if (pf == TasksFilterDTO.PriorityFilter.Normal)
+                    {
+                        tasksQueryable = tasksQueryable.Where(x => x.Priority == 0);
+                    }
+                    else if (pf == TasksFilterDTO.PriorityFilter.High)
+                    {
+                        tasksQueryable = tasksQueryable.Where(x => x.Priority == 1);
+                    }
+                    else
+                    {
+                        tasksQueryable = tasksQueryable.Where(x => x.Priority == 2);
+                    }
+                }
+            }
+
             List<TaskModel> tasksList = await tasksQueryable.Include(x => x.TaskTags).ThenInclude(t => t.Tag).ToListAsync();
             List<GetTaskDTO> tasksDTOs = _mapper.Map<List<GetTaskDTO>>(tasksList);
 

@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
   addNoteButton: {
     marginBottom: theme.spacing(1),
   },
-}));
+}));  
 
 const validationSchema = yup.object({
   newNoteText: yup.string().required(),
@@ -96,6 +96,7 @@ function TaskNotes({ isAuthor, taskId, notes }) {
             fullWidth
             multiline
             rows={4}
+            color="secondary"
             variant="outlined"
             id="newNoteText"
             name="newNoteText"

@@ -1,4 +1,9 @@
-import { CircularProgress } from "@material-ui/core";
+import {
+  Button,
+  ButtonGroup,
+  CircularProgress,
+  Typography,
+} from "@material-ui/core";
 import React, { useEffect } from "react";
 import { Fragment } from "react";
 import { useState } from "react";
@@ -11,8 +16,33 @@ import TaskGroupsList from "./TaskGroupsList";
 function ActiveTasks() {
   const history = useHistory();
 
+  const [allTasks, setAllTasks] = useState({});
   const [groupedTasks, setGroupedTasks] = useState({});
   const [tasksLoaded, setTasksLoaded] = useState(false);
+  const [chosenButton, setChosenButton] = useState(0);
+
+  const filter = (button) => {
+    if (button !== 0) {
+      let newTasks = [];
+      const priority = button - 1;
+      allTasks.forEach((group) => {
+        const grp = {
+          ...group,
+          tasks: group.tasks.filter((task) => task.priority === priority),
+        };
+        grp.count = grp.tasks.length;
+        if (grp.count > 0) {
+          newTasks.push(grp);
+        }
+      });
+
+      setGroupedTasks(newTasks);
+    } else {
+      setGroupedTasks(allTasks);
+    }
+
+    setChosenButton(button);
+  };
 
   useEffect(() => {
     const user = CheckUser();
@@ -28,6 +58,7 @@ function ActiveTasks() {
 
     Tasks.list(params).then((response) => {
       if (response.status === 200) {
+        setAllTasks(response.data);
         setGroupedTasks(response.data);
         setTasksLoaded(true);
       } else {
@@ -39,7 +70,29 @@ function ActiveTasks() {
   return (
     <Fragment>
       {tasksLoaded ? (
-        <TaskGroupsList tasks={groupedTasks} showGroupNames={true} />
+        <Fragment>
+          <Typography>priority:</Typography>
+          <ButtonGroup
+            color="primary"
+            size="small"
+            aria-label="small outlined button group"
+          >
+            <Button disabled={chosenButton === 0} onClick={() => filter(0)}>
+              All
+            </Button>
+            <Button disabled={chosenButton === 1} onClick={() => filter(1)}>
+              Normal
+            </Button>
+            <Button disabled={chosenButton === 2} onClick={() => filter(2)}>
+              High
+            </Button>
+            <Button disabled={chosenButton === 3} onClick={() => filter(3)}>
+              Very High
+            </Button>
+          </ButtonGroup>
+
+          <TaskGroupsList tasks={groupedTasks} showGroupNames={true} />
+        </Fragment>
       ) : (
         <CircularProgress color="primary" />
       )}

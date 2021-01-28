@@ -4,17 +4,30 @@ export const mainTheme = {
       main: "#41b3a3",
       contrastText: "#fff",
     },
+
     secondary: {
-      main: "#e27d60",
+      main: "#418ab3",
       contrastText: "#fff",
     },
-    warning: {
-      main: "#b34151",
-      contrastText: "#fff",
-    },
+
     error: {
-      main: "#660033",
+      main: "#c38d9e",
       contrastText: "#fff",
     },
+
+    warning: {
+      main: "#e8a87c",
+      contrastText: "#fff",
+    },
+
+    info: {
+      main: "#c3bb8d",
+      contrastText: "#fff",
+    },
+
+    success: {
+      main: "#85dcba",
+      contrastText: "#fff",
+    }
   },
 };

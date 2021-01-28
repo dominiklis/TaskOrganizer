@@ -247,12 +247,10 @@ function TaskDates({ isAuthor, taskId, added, sDate, eDate, startTime }) {
               </Grid>
             </Grid>
 
-            <Button type="submit" color="primary">
+            <Button type="submit" color="secondary">
               save
             </Button>
-            <Button color="secondary" onClick={changeEditDatesState}>
-              cancel
-            </Button>
+            <Button onClick={changeEditDatesState}>cancel</Button>
           </form>
         ) : (
           <Fragment>

@@ -87,11 +87,11 @@ function TaskTags({ isAuthor, taskId, taskTags }) {
             onChange={formik.handleChange}
           />
 
-          <Button type="submit" color="primary">
+          <Button type="submit" color="secondary">
             save
           </Button>
 
-          <Button color="secondary" onClick={changeEditTagsState}>
+          <Button onClick={changeEditTagsState}>
             cancel
           </Button>
         </form>

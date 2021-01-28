@@ -1,4 +1,14 @@
-import { Button, Grid, makeStyles, TextField } from "@material-ui/core";
+import {
+  Box,
+  Button,
+  FormControlLabel,
+  Grid,
+  makeStyles,
+  Radio,
+  RadioGroup,
+  TextField,
+  Typography,
+} from "@material-ui/core";
 import {
   DatePicker,
   MuiPickersUtilsProvider,
@@ -14,13 +24,8 @@ import DateFnsUtils from "@date-io/date-fns";
 const useStyles = makeStyles((theme) => ({
   submitButton: {
     marginTop: theme.spacing(2),
-    background: "#0d7377",
-    color: "white",
-    "&:hover": {
-      background: "#32e0c4",
-    },
   },
-  textField: {
+  inputField: {
     marginTop: theme.spacing(1),
   },
   dateTimePickerGridItem: {
@@ -49,6 +54,7 @@ function TaskForm({ task }) {
     initialValues: {
       title: task ? task.title : "",
       description: task ? task.description : "",
+      priority: "0",
       tags: task ? task.tags : "",
       startDate: task ? new Date(task.startDate) : new Date(),
       startTime: task && task.hasStartTime ? new Date(task.startDate) : null,
@@ -72,6 +78,7 @@ function TaskForm({ task }) {
       const newTask = {
         title: values.title,
         description: values.description,
+        priority: parseInt(values.priority),
         tags: [],
         completed: false,
         startDate: new Date(values.startDate.setHours(0, 0, 0, 0)),
@@ -134,31 +141,67 @@ function TaskForm({ task }) {
         id="title"
         name="title"
         label="title"
-        className={classes.textField}
+        className={classes.inputField}
         value={formik.values.title}
         onChange={formik.handleChange}
         error={formik.touched.title && Boolean(formik.errors.title)}
         helperText={formik.touched.title && formik.errors.title}
       />
 
-      <TextField
-        fullWidth
-        multiline
-        rows={4}
-        id="description"
-        name="description"
-        label="description"
-        className={classes.textField}
-        value={formik.values.description}
-        onChange={formik.handleChange}
-      />
+      <Box display="flex">
+        <Box flexGrow={1}>
+          <TextField
+            fullWidth
+            multiline
+            rows={4}
+            id="description"
+            name="description"
+            label="description"
+            className={classes.inputField}
+            value={formik.values.description}
+            onChange={formik.handleChange}
+          />
+        </Box>
+
+        <Box>
+          <Typography component="legend" className={classes.inputField}>
+            task priority
+          </Typography>
+          <RadioGroup
+            row
+            aria-label="priority"
+            name="priority"
+            defaultValue="0"
+            onChange={formik.handleChange}
+          >
+            <FormControlLabel
+              value="0"
+              control={<Radio color="primary" />}
+              label="normal"
+              labelPlacement="bottom"
+            />
+            <FormControlLabel
+              value="1"
+              control={<Radio color="primary" />}
+              label="high"
+              labelPlacement="bottom"
+            />
+            <FormControlLabel
+              value="2"
+              control={<Radio color="primary" />}
+              label="very high"
+              labelPlacement="bottom"
+            />
+          </RadioGroup>
+        </Box>
+      </Box>
 
       <TextField
         fullWidth
         id="tags"
         name="tags"
         label="tags (separate with spaces)"
-        className={classes.textField}
+        className={classes.inputField}
         value={formik.values.tags}
         onChange={formik.handleChange}
         error={formik.touched.tags && Boolean(formik.errors.tags)}
@@ -227,7 +270,7 @@ function TaskForm({ task }) {
         </Grid>
       </Grid>
 
-      <Button type="submit" fullWidth className={classes.submitButton}>
+      <Button variant="contained" type="submit" fullWidth className={classes.submitButton} color="secondary">
         submit
       </Button>
     </form>

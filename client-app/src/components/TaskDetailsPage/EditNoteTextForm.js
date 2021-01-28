@@ -37,13 +37,14 @@ function EditNoteTextForm({ id, text, afterSubmit }) {
         id="text"
         name="text"
         label="set new text"
+        color="secondary"
         variant="outlined"
         value={formik.values.text}
         onChange={formik.handleChange}
         error={formik.touched.text && Boolean(formik.errors.text)}
         inputProps={{ maxLength: 180 }}
       />
-      <Button type="submit" color="primary">
+      <Button type="submit" color="secondary">
         save
       </Button>
     </form>

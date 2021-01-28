@@ -8,3 +8,17 @@ export const constStrings = {
   noOverdueTasks: "no overdue tasks",
   noActiveTasks: "no active tasks",
 };
+
+export const priorityTexts = [
+  "normal priority",
+  "high priority",
+  "very high priority"
+]
+
+export const getPriorityText = (priority) => {
+  if (priority > 2) {
+    priority = 2;
+  }
+
+  return priorityTexts[priority];
+};

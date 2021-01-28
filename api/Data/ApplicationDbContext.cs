@@ -45,6 +45,7 @@ namespace api.Data
                 .WithOne(y => y.Task)
                 .OnDelete(DeleteBehavior.Cascade)
                 .IsRequired();
+            modelBuilder.Entity<TaskModel>().Property(x => x.Priority).IsRequired();
 
             modelBuilder.Entity<Step>().Property(x => x.Text).IsRequired();
             modelBuilder.Entity<Step>().Property(x => x.Completed).IsRequired();

@@ -86,6 +86,7 @@ function TaskSteps({ isAuthor, taskId, steps }) {
                 value={formik.values.newStepText}
                 onChange={formik.handleChange}
                 placeholder="add step"
+                color="secondary"
                 error={
                   formik.touched.newStepText &&
                   Boolean(formik.errors.newStepText)

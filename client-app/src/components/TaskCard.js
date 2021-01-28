@@ -21,6 +21,7 @@ import TagChip from "./TagChip";
 import { IsAuthor } from "../apicalls/auth";
 import ShareIcon from "@material-ui/icons/Share";
 import { checkForDates } from "../utils/utils";
+import { getPriorityText } from "../utils/constants";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -168,9 +169,12 @@ function TaskCard({ task }) {
                         </Box>
                       </Box>
                     </Typography>
+                    <Typography variant="caption">
+                      {getPriorityText(task.priority)}
+                    </Typography>
 
                     {!IsAuthor(task.authorName) && (
-                      <Typography variant="caption">{`task shared by ${task.authorName}`}</Typography>
+                      <Typography variant="subtitle2" color="secondary">{`task shared by ${task.authorName}`}</Typography>
                     )}
                     <Box display="flex">
                       <Box textAlign="right" flexGrow={1}>

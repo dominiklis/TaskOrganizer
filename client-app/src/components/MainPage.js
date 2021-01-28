@@ -11,8 +11,8 @@ function MainPage() {
     <Page>
       <Grid container>
         <Grid item xs={12} sm={11}>
-          <PageTitle title={constStrings.activeTasks} />
           <OverdueTasks />
+          <PageTitle title={constStrings.activeTasks} />
           <ActiveTasks />
         </Grid>
         <Grid item sm={1} display={{ xs: "none" }}></Grid>

@@ -119,6 +119,7 @@ function TaskShare({ isAuthor, taskId, usersToList }) {
                   name="shareText"
                   label="share this task"
                   type="email"
+                  color="secondary"
                   value={formik.values.shareText}
                   onChange={formik.handleChange}
                   placeholder="add step"

@@ -11,11 +11,11 @@ import { constStrings } from "../utils/constants";
 
 const useStyles = makeStyles((theme) => ({
   title: {
-    color: theme.palette.warning.main,
+    color: theme.palette.secondary.main,
   },
   icon: {
     marginRight: theme.spacing(1),
-    color: theme.palette.warning.main,
+    color: theme.palette.secondary.main,
   },
 }));
 
