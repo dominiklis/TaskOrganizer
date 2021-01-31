@@ -6,11 +6,10 @@ import {
   Typography,
 } from "@material-ui/core";
 import React, { useState } from "react";
-import { Fragment } from "react";
 import { Tasks } from "../../apicalls/requests";
-import { getPriorityText } from "../../utils/constants";
+import { constStrings, getPriorityText } from "../../utils/constants";
 
-function Priority({ isAuthor, taskId, taskPriority }) {
+function Priority({ isAuthor, taskId, taskPriority, openSnackbar }) {
   const [editPriority, setEditPriority] = useState(false);
   const [priority, setPriority] = useState(taskPriority);
 
@@ -43,56 +42,62 @@ function Priority({ isAuthor, taskId, taskPriority }) {
         path: "/Priority",
         value: priority.toString(),
       },
-    ]);
+    ]).then((response) => {
+      if (response.status === 204) {
+        openSnackbar(constStrings.changesSaved);
+      } else {
+        openSnackbar(constStrings.somethingWentWrongTryAganin);
+      }
+    });
 
     changePriorityEditState();
   };
 
-  return (
-    <Fragment>
-      {editPriority ? (
-        <form onSubmit={handleSubmit}>
-          <RadioGroup
-            row
-            aria-label="priority"
-            name="priority"
-            defaultValue={priority.toString()}
-            onChange={handleChange}
-          >
-            <FormControlLabel
-              value="0"
-              control={<Radio color="primary" />}
-              label="low"
-              labelPlacement="bottom"
-            />
-            <FormControlLabel
-              value="1"
-              control={<Radio color="primary" />}
-              label="medium"
-              labelPlacement="bottom"
-            />
-            <FormControlLabel
-              value="2"
-              control={<Radio color="primary" />}
-              label="high"
-              labelPlacement="bottom"
-            />
-          </RadioGroup>
-          <Button color="secondary" type="submit">
-            save
-          </Button>
-          <Button onClick={changePriorityEditState}>cancel</Button>
-        </form>
-      ) : (
-        <Typography
-          variant="h6"
-          onClick={changePriorityEditState}
-          color={getPriorityTextColor(priority)}
+  if (editPriority) {
+    return (
+      <form onSubmit={handleSubmit}>
+        <RadioGroup
+          row
+          aria-label="priority"
+          name="priority"
+          defaultValue={priority.toString()}
+          onChange={handleChange}
         >
-          {getPriorityText(priority)}
-        </Typography>
-      )}
-    </Fragment>
+          <FormControlLabel
+            value="0"
+            control={<Radio color="primary" />}
+            label="low"
+            labelPlacement="bottom"
+          />
+          <FormControlLabel
+            value="1"
+            control={<Radio color="primary" />}
+            label="medium"
+            labelPlacement="bottom"
+          />
+          <FormControlLabel
+            value="2"
+            control={<Radio color="primary" />}
+            label="high"
+            labelPlacement="bottom"
+          />
+        </RadioGroup>
+        <Button color="secondary" type="submit">
+          save
+        </Button>
+        <Button onClick={changePriorityEditState}>cancel</Button>
+      </form>
+    );
+  }
+
+  return (
+    <Typography
+      variant="h6"
+      onClick={changePriorityEditState}
+      color={getPriorityTextColor(priority)}
+    >
+      {getPriorityText(priority)}
+    </Typography>
   );
 }
 

@@ -21,6 +21,7 @@ import {
 } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
 import ClearIcon from "@material-ui/icons/Clear";
+import { constStrings } from "../../utils/constants";
 
 const useStyles = makeStyles((theme) => ({
   timeBox: {
@@ -52,7 +53,15 @@ const validationSchema = yup.object({
   minutes: yup.number().nullable().min(0).max(59),
 });
 
-function TaskDates({ isAuthor, taskId, added, sDate, eDate, startTime }) {
+function TaskDates({
+  isAuthor,
+  taskId,
+  added,
+  sDate,
+  eDate,
+  startTime,
+  openSnackbar,
+}) {
   const classes = useStyles();
 
   const [editDates, setEditDates] = useState(false);
@@ -137,11 +146,16 @@ function TaskDates({ isAuthor, taskId, added, sDate, eDate, startTime }) {
         updatedTask.endDate = null;
       }
 
-      Tasks.put(taskId, updatedTask);
-
-      setStartDate(updatedTask.startDate);
-      setHasStartTime(updatedTask.hasStartTime);
-      setEndDate(updatedTask.endDate);
+      Tasks.put(taskId, updatedTask).then((response) => {
+        if (response.status === 204) {
+          openSnackbar(constStrings.changesSaved);
+          setStartDate(updatedTask.startDate);
+          setHasStartTime(updatedTask.hasStartTime);
+          setEndDate(updatedTask.endDate);
+        } else {
+          openSnackbar(constStrings.somethingWentWrongTryAganin);
+        }
+      });
 
       changeEditDatesState();
     },

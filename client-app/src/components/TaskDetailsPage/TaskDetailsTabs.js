@@ -5,7 +5,14 @@ import Notes from "./TaskNotes";
 import TaskShare from "./TaskShare";
 import TaskSteps from "./TaskSteps";
 
-function TaskDetailsTabs({ isAuthor, taskId, steps, notes, usersToList }) {
+function TaskDetailsTabs({
+  isAuthor,
+  taskId,
+  steps,
+  notes,
+  usersToList,
+  openSnackbar,
+}) {
   const [tabIndex, setTabIndex] = React.useState(0);
 
   const handleChange = (event, tabInd) => {
@@ -21,18 +28,27 @@ function TaskDetailsTabs({ isAuthor, taskId, steps, notes, usersToList }) {
       </Tabs>
 
       {tabIndex === 0 && (
-        <TaskSteps isAuthor={isAuthor} taskId={taskId} steps={steps} />
+        <TaskSteps
+          isAuthor={isAuthor}
+          taskId={taskId}
+          steps={steps}
+          openSnackbar={openSnackbar}
+        />
       )}
       {tabIndex === 1 && (
-        <Fragment>
-          <Notes isAuthor={isAuthor} taskId={taskId} notes={notes} />
-        </Fragment>
+        <Notes
+          isAuthor={isAuthor}
+          taskId={taskId}
+          notes={notes}
+          openSnackbar={openSnackbar}
+        />
       )}
       {tabIndex === 2 && (
         <TaskShare
           isAuthor={isAuthor}
           taskId={taskId}
           usersToList={usersToList}
+          openSnackbar={openSnackbar}
         />
       )}
     </Fragment>

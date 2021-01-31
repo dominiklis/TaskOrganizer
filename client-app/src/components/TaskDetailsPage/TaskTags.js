@@ -14,12 +14,13 @@ import TagChip from "../TagChip";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { Tasks } from "../../apicalls/requests";
+import { constStrings } from "../../utils/constants";
 
 const validationSchema = yup.object({
   newTags: yup.string().nullable(),
 });
 
-function TaskTags({ isAuthor, taskId, taskTags }) {
+function TaskTags({ isAuthor, taskId, taskTags, openSnackbar }) {
   const [editTags, setEditTags] = useState(false);
   const [tags, setTags] = useState(taskTags);
 
@@ -49,9 +50,15 @@ function TaskTags({ isAuthor, taskId, taskTags }) {
         }
       });
 
-      Tasks.put(taskId, updatedTask);
+      Tasks.put(taskId, updatedTask).then((response) => {
+        if (response.status === 204) {
+          openSnackbar(constStrings.changesSaved);
+          setTags(updatedTask.tags);
+        } else {
+          openSnackbar(constStrings.somethingWentWrongTryAganin);
+        }
+      });
 
-      setTags(updatedTask.tags);
       changeEditTagsState();
     },
   });
@@ -83,6 +90,7 @@ function TaskTags({ isAuthor, taskId, taskTags }) {
             name="newTags"
             label="separate tags with space"
             variant="outlined"
+            color="secondary"
             value={formik.values.newTags}
             onChange={formik.handleChange}
           />
@@ -91,9 +99,7 @@ function TaskTags({ isAuthor, taskId, taskTags }) {
             save
           </Button>
 
-          <Button onClick={changeEditTagsState}>
-            cancel
-          </Button>
+          <Button onClick={changeEditTagsState}>cancel</Button>
         </form>
       ) : (
         <Box display="flex" flexWrap="wrap">

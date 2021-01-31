@@ -14,6 +14,7 @@ import EditStepTextForm from "./EditStepTextForm";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import { Fragment } from "react";
+import { constStrings } from "../../utils/constants";
 
 const useStyles = makeStyles((theme) => ({
   cancelCompleted: {
@@ -27,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function ListOfStepsItem({ step, handleDeleteStep, canEdit }) {
+function ListOfStepsItem({ step, handleDeleteStep, canEdit, openSnackbar }) {
   const classes = useStyles();
 
   const [stepText, setStepText] = useState(step.text);
@@ -44,7 +45,13 @@ function ListOfStepsItem({ step, handleDeleteStep, canEdit }) {
   const handleDeleteFormSubmit = (e) => {
     e.preventDefault();
     handleDeleteStep(step.id);
-    Steps.delete(step.id);
+    Steps.delete(step.id).then((response) => {
+      if (response.status === 204) {
+        openSnackbar(constStrings.stepRemoved);
+      } else {
+        openSnackbar(constStrings.somethingWentWrongTryAganin);
+      }
+    });
   };
 
   const handleSaveEditTextButton = (text) => {
@@ -62,7 +69,13 @@ function ListOfStepsItem({ step, handleDeleteStep, canEdit }) {
         path: "/Completed",
         value: !step.completed,
       },
-    ]);
+    ]).then((response) => {
+      if (response.status === 204) {
+        openSnackbar(constStrings.changesSaved);
+      } else {
+        openSnackbar(constStrings.somethingWentWrongTryAganin);
+      }
+    });
   };
 
   return (
@@ -97,9 +110,10 @@ function ListOfStepsItem({ step, handleDeleteStep, canEdit }) {
       {editText ? (
         <EditStepTextForm
           id={step.id}
-          text={step.text}
+          text={stepText}
           afterSubmit={handleSaveEditTextButton}
           handleCancel={changeTextEditState}
+          openSnackbar={openSnackbar}
         />
       ) : (
         <ListItemText

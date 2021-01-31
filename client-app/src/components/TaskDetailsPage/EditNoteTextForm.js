@@ -3,6 +3,7 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 import { Notes } from "../../apicalls/requests";
 import { Button, TextField } from "@material-ui/core";
+import { constStrings } from "../../utils/constants";
 
 const validationSchema = yup.object({
   text: yup
@@ -11,7 +12,7 @@ const validationSchema = yup.object({
     .max(180, "maximum note length is 180 characters"),
 });
 
-function EditNoteTextForm({ id, text, afterSubmit }) {
+function EditNoteTextForm({ id, text, afterSubmit, openSnackbar }) {
   const formik = useFormik({
     initialValues: {
       text: text,
@@ -24,9 +25,14 @@ function EditNoteTextForm({ id, text, afterSubmit }) {
           path: "/Text",
           value: values.text,
         },
-      ]);
-
-      afterSubmit(values.text);
+      ]).then((response) => {
+        if (response.status === 204) {
+          openSnackbar(constStrings.changesSaved);
+          afterSubmit(values.text);
+        } else {
+          openSnackbar(constStrings.somethingWentWrongTryAganin);
+        }
+      });
     },
   });
 

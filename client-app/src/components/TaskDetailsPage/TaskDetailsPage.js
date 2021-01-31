@@ -1,4 +1,10 @@
-import { CircularProgress, Grid, IconButton, Tooltip } from "@material-ui/core";
+import {
+  CircularProgress,
+  Grid,
+  IconButton,
+  Snackbar,
+  Tooltip,
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core";
 import { Box, Typography } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
@@ -15,6 +21,9 @@ import TaskTags from "./TaskTags";
 import TaskDescription from "./TaskDescription";
 import TaskDetailsTabs from "./TaskDetailsTabs";
 import Priority from "./Priority";
+import { Fragment } from "react";
+import CloseIcon from "@material-ui/icons/Close";
+import { constStrings } from "../../utils/constants";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -59,7 +68,13 @@ function TaskDetailsPage({ match }) {
         path: "/Completed",
         value: t,
       },
-    ]);
+    ]).then((response) => {
+      if (response.status === 204) {
+        taskCompleted
+          ? openSnackbar(constStrings.taskCompleted)
+          : openSnackbar(constStrings.taskIncomplete);
+      }
+    });
   };
 
   // cancel sharing
@@ -83,6 +98,23 @@ function TaskDetailsPage({ match }) {
 
   // author info
   const [author, setAuthor] = React.useState(false);
+
+  // snackbar
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [openSbar, setOpenSbar] = useState(false);
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpenSbar(false);
+  };
+
+  const openSnackbar = (message) => {
+    setSnackbarMessage(message);
+    setOpenSbar(true);
+  };
 
   useEffect(() => {
     const user = CheckUser();
@@ -169,12 +201,14 @@ function TaskDetailsPage({ match }) {
               isAuthor={author}
               taskId={task.id}
               taskTitle={task.title}
+              openSnackbar={openSnackbar}
             />
 
             <Priority
               isAuthor={author}
               taskId={task.id}
               taskPriority={task.priority}
+              openSnackbar={openSnackbar}
             />
 
             {taskCompleted ? (
@@ -194,14 +228,21 @@ function TaskDetailsPage({ match }) {
               sDate={startDate}
               eDate={endDate}
               startTime={task.hasStartTime}
+              openSnackbar={openSnackbar}
             />
 
-            <TaskTags isAuthor={author} taskId={task.id} taskTags={tags} />
+            <TaskTags
+              isAuthor={author}
+              taskId={task.id}
+              taskTags={tags}
+              openSnackbar={openSnackbar}
+            />
 
             <TaskDescription
               isAuthor={author}
               taskId={task.id}
               taskDescription={task.description}
+              openSnackbar={openSnackbar}
             />
 
             <TaskDetailsTabs
@@ -210,11 +251,35 @@ function TaskDetailsPage({ match }) {
               steps={task.steps}
               notes={task.notes}
               usersToList={usersToList}
+              openSnackbar={openSnackbar}
             />
           </Grid>
 
           <Grid item sm={1} display={{ xs: "none" }}></Grid>
         </Grid>
+
+        <Snackbar
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "left",
+          }}
+          open={openSbar}
+          autoHideDuration={4000}
+          onClose={handleClose}
+          message={snackbarMessage}
+          action={
+            <Fragment>
+              <IconButton
+                size="small"
+                aria-label="close"
+                color="inherit"
+                onClick={handleClose}
+              >
+                <CloseIcon fontSize="small" />
+              </IconButton>
+            </Fragment>
+          }
+        ></Snackbar>
       </Page>
     );
   }

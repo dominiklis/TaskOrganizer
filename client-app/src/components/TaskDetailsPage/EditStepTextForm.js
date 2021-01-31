@@ -3,12 +3,19 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 import { Steps } from "../../apicalls/requests";
 import { Button, TextField } from "@material-ui/core";
+import { constStrings } from "../../utils/constants";
 
 const validationSchema = yup.object({
   text: yup.string("enter step text").required("text is required"),
 });
 
-function EditStepTextForm({ text, id, afterSubmit, handleCancel }) {
+function EditStepTextForm({
+  text,
+  id,
+  afterSubmit,
+  handleCancel,
+  openSnackbar,
+}) {
   const formik = useFormik({
     initialValues: {
       text: text,
@@ -21,7 +28,13 @@ function EditStepTextForm({ text, id, afterSubmit, handleCancel }) {
           path: "/Text",
           value: values.text,
         },
-      ]);
+      ]).then((response) => {
+        if (response.status === 204) {
+          openSnackbar(constStrings.changesSaved);
+        } else {
+          openSnackbar(constStrings.somethingWentWrongTryAganin);
+        }
+      });
 
       afterSubmit(values.text);
     },
@@ -39,12 +52,10 @@ function EditStepTextForm({ text, id, afterSubmit, handleCancel }) {
         onChange={formik.handleChange}
         error={formik.touched.text && Boolean(formik.errors.text)}
       />
-      <Button type="submit" color="primary">
+      <Button type="submit" color="secondary">
         save
       </Button>
-      <Button color="secondary" onClick={handleCancel}>
-        cancel
-      </Button>
+      <Button onClick={handleCancel}>cancel</Button>
     </form>
   );
 }

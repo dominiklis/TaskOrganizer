@@ -15,6 +15,7 @@ import { Notes } from "../../apicalls/requests";
 import DetailsIcon from "@material-ui/icons/Details";
 import ChangeHistoryIcon from "@material-ui/icons/ChangeHistory";
 import NoteCard from "./NoteCard";
+import { constStrings } from "../../utils/constants";
 
 const useStyles = makeStyles((theme) => ({
   textWithIcon: {
@@ -30,13 +31,13 @@ const useStyles = makeStyles((theme) => ({
   addNoteButton: {
     marginBottom: theme.spacing(1),
   },
-}));  
+}));
 
 const validationSchema = yup.object({
   newNoteText: yup.string().required(),
 });
 
-function TaskNotes({ isAuthor, taskId, notes }) {
+function TaskNotes({ isAuthor, taskId, notes, openSnackbar }) {
   const classes = useStyles();
 
   const [show, setShow] = useState(false);
@@ -67,12 +68,15 @@ function TaskNotes({ isAuthor, taskId, notes }) {
           const nNotes = taskNotes;
           nNotes.push(response.data);
           setTaskNotes(nNotes);
+          openSnackbar(constStrings.noteAdded);
 
           actions.resetForm({
             values: {
               newNoteText: "",
             },
           });
+        } else {
+          openSnackbar(constStrings.somethingWentWrongTryAganin);
         }
       });
     },
@@ -128,6 +132,7 @@ function TaskNotes({ isAuthor, taskId, notes }) {
             isAuthor={isAuthor}
             note={note}
             handleDeleteStep={handleDeleteStep}
+            openSnackbar={openSnackbar}
           />
         ))}
       </Grid>

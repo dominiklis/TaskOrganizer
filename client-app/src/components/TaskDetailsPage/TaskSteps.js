@@ -12,6 +12,7 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 import { Steps } from "../../apicalls/requests";
 import ListOfStepsItem from "./ListOfStepsItem";
+import { constStrings } from "../../utils/constants";
 
 const useStyles = makeStyles((theme) => ({
   partName: {
@@ -31,7 +32,7 @@ const validationSchema = yup.object({
   newStepText: yup.string("enter step text").required("text is required"),
 });
 
-function TaskSteps({ isAuthor, taskId, steps }) {
+function TaskSteps({ isAuthor, taskId, steps, openSnackbar }) {
   const classes = useStyles();
 
   const [taskSteps, setTaskSteps] = useState(steps);
@@ -49,9 +50,10 @@ function TaskSteps({ isAuthor, taskId, steps }) {
 
       Steps.add(newStep).then((response) => {
         if (response.status === 201) {
-          const nSteps = steps;
+          const nSteps = taskSteps;
           nSteps.push(response.data);
           setTaskSteps(nSteps);
+          openSnackbar(constStrings.newStepAdded);
 
           actions.resetForm({
             values: {
@@ -118,6 +120,7 @@ function TaskSteps({ isAuthor, taskId, steps }) {
               key={step.id}
               handleDeleteStep={stepDelete}
               canEdit={isAuthor}
+              openSnackbar={openSnackbar}
             />
           ))}
         </List>

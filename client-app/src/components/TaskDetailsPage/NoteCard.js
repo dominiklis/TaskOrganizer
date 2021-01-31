@@ -12,6 +12,7 @@ import { GetUserName } from "../../apicalls/auth";
 import { format } from "date-fns";
 import { Notes } from "../../apicalls/requests";
 import EditNoteTextForm from "./EditNoteTextForm";
+import { constStrings } from "../../utils/constants";
 
 const useStyles = makeStyles((theme) => ({
   date: {
@@ -26,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function NoteCard({ isAuthor, note, handleDeleteStep }) {
+function NoteCard({ isAuthor, note, handleDeleteStep, openSnackbar }) {
   const classes = useStyles();
 
   const [edit, setEdit] = useState(false);
@@ -39,8 +40,14 @@ function NoteCard({ isAuthor, note, handleDeleteStep }) {
 
   const handleDeleteNote = (e) => {
     e.preventDefault();
-    handleDeleteStep(note.id);
-    Notes.delete(note.id);
+    Notes.delete(note.id).then((response) => {
+      if (response.status === 204) {
+        openSnackbar(constStrings.noteRemoved);
+        handleDeleteStep(note.id);
+      } else {
+        openSnackbar(constStrings.somethingWentWrongTryAganin);
+      }
+    });
   };
 
   const handleSaveEditTextButton = (text) => {
@@ -102,6 +109,7 @@ function NoteCard({ isAuthor, note, handleDeleteStep }) {
               text={noteText}
               afterSubmit={handleSaveEditTextButton}
               handleCancel={changeTextEditState}
+              openSnackbar={openSnackbar}
             />
           ) : (
             <Typography variant="body1" component="p">

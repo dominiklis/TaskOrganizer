@@ -4,6 +4,7 @@ import { Fragment } from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { Tasks } from "../../apicalls/requests";
+import { constStrings } from "../../utils/constants";
 
 const validationSchema = yup.object({
   newDescription: yup.string().nullable(),
@@ -16,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function TaskDescription({ isAuthor, taskId, taskDescription }) {
+function TaskDescription({ isAuthor, taskId, taskDescription, openSnackbar }) {
   const classes = useStyles();
 
   const [editDescription, setEditDescription] = useState(
@@ -39,9 +40,15 @@ function TaskDescription({ isAuthor, taskId, taskDescription }) {
           path: "/Description",
           value: values.newDescription,
         },
-      ]);
-      setDescription(values.newDescription);
-      setDescriptionEditStateFalse();
+      ]).then((response) => {
+        if (response.status === 204) {
+          openSnackbar(constStrings.changesSaved);
+          setDescription(values.newDescription);
+          setDescriptionEditStateFalse();
+        } else {
+          openSnackbar(constStrings.somethingWentWrongTryAganin);
+        }
+      });
     },
   });
 
@@ -60,6 +67,7 @@ function TaskDescription({ isAuthor, taskId, taskDescription }) {
             name="newDescription"
             label="set new description"
             variant="outlined"
+            color="secondary"
             value={formik.values.newDescription}
             onChange={formik.handleChange}
           />
@@ -68,9 +76,7 @@ function TaskDescription({ isAuthor, taskId, taskDescription }) {
             save
           </Button>
           {description !== "" && (
-            <Button onClick={setDescriptionEditStateFalse}>
-              cancel
-            </Button>
+            <Button onClick={setDescriptionEditStateFalse}>cancel</Button>
           )}
         </form>
       ) : (

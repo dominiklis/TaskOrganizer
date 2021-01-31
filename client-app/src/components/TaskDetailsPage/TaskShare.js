@@ -15,6 +15,7 @@ import { Fragment } from "react";
 import TaskShareListItem from "./TaskShareListItem";
 import DetailsIcon from "@material-ui/icons/Details";
 import ChangeHistoryIcon from "@material-ui/icons/ChangeHistory";
+import { constStrings } from "../../utils/constants";
 
 const useStyles = makeStyles((theme) => ({
   shareForm: {
@@ -44,7 +45,7 @@ const validationSchema = yup.object({
   shareText: yup.string("enter email").required("email is required"),
 });
 
-function TaskShare({ isAuthor, taskId, usersToList }) {
+function TaskShare({ isAuthor, taskId, usersToList, openSnackbar }) {
   const classes = useStyles();
 
   const [isError, setIsError] = useState(false);
@@ -58,6 +59,9 @@ function TaskShare({ isAuthor, taskId, usersToList }) {
         let u = users;
         u = u.filter((value) => value.userName !== uName);
         setUsers(u);
+        openSnackbar(constStrings.endOfSharing);
+      } else {
+        openSnackbar(constStrings.somethingWentWrongTryAganin);
       }
     });
   };
@@ -84,6 +88,7 @@ function TaskShare({ isAuthor, taskId, usersToList }) {
 
             setIsError(false);
             setErrorMsg("");
+            openSnackbar(constStrings.taskShared);
 
             actions.resetForm({
               values: {
@@ -92,10 +97,10 @@ function TaskShare({ isAuthor, taskId, usersToList }) {
             });
           } else if (response.status === 204) {
             setIsError(true);
-            setErrorMsg("user already has access to this task");
+            setErrorMsg(constStrings.userAlreadyHasAccess);
           } else {
             setIsError(true);
-            setErrorMsg("user not found or you are not the author of the task");
+            setErrorMsg(constStrings.userNotFound);
           }
         }
       );
