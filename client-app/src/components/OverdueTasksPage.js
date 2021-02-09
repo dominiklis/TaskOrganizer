@@ -1,4 +1,4 @@
-import { CircularProgress, Grid, Typography } from "@material-ui/core";
+import { CircularProgress, Grid } from "@material-ui/core";
 import React, { useState, useEffect } from "react";
 import Page from "../components/Page";
 import { TaskRequestParams } from "../utils/params";
