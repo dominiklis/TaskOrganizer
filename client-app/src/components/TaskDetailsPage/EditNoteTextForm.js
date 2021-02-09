@@ -33,6 +33,14 @@ function EditNoteTextForm({ id, text, afterSubmit, openSnackbar }) {
           openSnackbar(constStrings.somethingWentWrongTryAganin);
         }
       });
+
+      Notes.patch(id, [
+        {
+          op: "replace",
+          path: "/Edited",
+          value: true,
+        },
+      ])
     },
   });
 

@@ -31,6 +31,7 @@ function NoteCard({ isAuthor, note, handleDeleteStep, openSnackbar }) {
   const classes = useStyles();
 
   const [edit, setEdit] = useState(false);
+  const [edited, setEdited] = useState(note.edited);
   const [noteText, setNoteText] = useState(note.text);
 
   const changeTextEditState = () => {
@@ -52,6 +53,7 @@ function NoteCard({ isAuthor, note, handleDeleteStep, openSnackbar }) {
 
   const handleSaveEditTextButton = (text) => {
     setNoteText(text);
+    setEdited(true);
     changeTextEditState();
   };
 
@@ -94,7 +96,9 @@ function NoteCard({ isAuthor, note, handleDeleteStep, openSnackbar }) {
             color="textSecondary"
             gutterBottom
           >
-            {format(new Date(note.added), "dd.MM.yyyy")}
+            {`${format(new Date(note.added), "dd.MM.yyyy")} ${
+              edited ? " (edited)" : ""
+            }`}
           </Typography>
           <Typography
             className={classes.author}

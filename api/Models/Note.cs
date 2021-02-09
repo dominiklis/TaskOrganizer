@@ -12,5 +12,7 @@ namespace api.Models
         public DateTime Added { get; set; }
         public TaskModel Task { get; set; }
         public ApplicationUser User { get; set; }
+        public bool Edited { get; set; } = false;
+        public DateTime EditionDate { get; set; }
     }
 }

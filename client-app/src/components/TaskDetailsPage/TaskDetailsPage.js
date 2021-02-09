@@ -133,6 +133,7 @@ function TaskDetailsPage({ match }) {
         setTaskCompleted(response.data.completed);
         setTags(response.data.tags);
         setAuthor(IsAuthor(response.data.authorName));
+        console.log(response.data);
         setTaskLoaded(true);
       } else {
         history.push("/NotFound");

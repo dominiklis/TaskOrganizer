@@ -12,5 +12,7 @@ namespace api.DTOs.Notes
         public DateTime Added { get; set; }
         public int TaskId { get; set; }
         public string AuthorName { get; set; }
+        public bool Edited { get; set; }
+        public DateTime EditionDate { get; set; }
     }
 }
