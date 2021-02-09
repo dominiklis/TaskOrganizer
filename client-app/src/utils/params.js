@@ -56,6 +56,22 @@ export const TaskRequestParams = {
     return td;
   },
 
+  getNextDay(day) {
+    return day + 24 * 60 * 60;
+  },
+
+  getDayBefore(day) {
+    return day - 24 * 60 * 60;
+  },
+
+  getNextWeek(day) {
+    return day + 7 * 24 * 60 * 60;
+  },
+
+  getWeekBefore(day) {
+    return day - 7 * 24 * 60 * 60;
+  },
+
   sortOrderAsc: "asc",
   sortOrderDesc: "desc",
 };

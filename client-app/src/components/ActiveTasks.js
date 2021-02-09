@@ -13,13 +13,18 @@ import TaskGroupsList from "./TaskGroupsList";
 import PriorityFilteringMenu from "./PriorityFilteringMenu";
 import { filterTasksByPriority } from "../utils/utils";
 import { constStrings } from "../utils/constants";
+import CurrentDate from "./CurrentDate";
 
 function ActiveTasks() {
   const history = useHistory();
 
-  const [groupedTasks, setGroupedTasks] = useState({});
+  const [groupedTasks, setGroupedTasks] = useState([]);
   const [tasksLoaded, setTasksLoaded] = useState(false);
   const [priority, setPriority] = useState(null);
+  const [dateParams, setDateParams] = useState({
+    start: TaskRequestParams.today(),
+    end: TaskRequestParams.nextWeek(),
+  });
 
   useEffect(() => {
     const user = CheckUser();
@@ -28,8 +33,8 @@ function ActiveTasks() {
     }
 
     const params = {
-      startDate: TaskRequestParams.today(),
-      endDate: TaskRequestParams.nextWeek(),
+      startDate: dateParams.start,
+      endDate: dateParams.end,
       sortOrder: TaskRequestParams.sortOrderAsc,
     };
 
@@ -41,19 +46,22 @@ function ActiveTasks() {
         console.log("ERROR" + response);
       }
     });
-  }, [history]);
+  }, [history, dateParams]);
 
   if (tasksLoaded) {
     return (
       <Fragment>
+        <CurrentDate dateParams={dateParams} setDateParams={setDateParams} />
         <Typography>priority:</Typography>
         <PriorityFilteringMenu setPriority={setPriority} />
-
         <TaskGroupsList
           tasks={filterTasksByPriority(priority, groupedTasks)}
           showGroupNames={true}
           info={constStrings.noActiveTasks}
         />
+        {groupedTasks.length > 0 && (
+          <CurrentDate dateParams={dateParams} setDateParams={setDateParams} />
+        )}
       </Fragment>
     );
   }

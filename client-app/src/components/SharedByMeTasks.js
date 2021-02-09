@@ -10,9 +10,10 @@ import { Tasks } from "../apicalls/requests";
 
 const useStyles = makeStyles((theme) => ({
   title: {
-    color: "black",
+    color: theme.palette.secondary.main,
   },
   icon: {
+    color: theme.palette.secondary.main,
     marginRight: theme.spacing(1),
   },
 }));
@@ -60,7 +61,7 @@ function SharedByMeTasks() {
             })`}
             titleStyle={classes.title}
             icon={<ArrowBackIcon className={classes.icon} />}
-            showGroupNames={false}
+            showGroupNames={true}
           />
         ) : (
           <Typography variant="h5">{"you didn't share any tasks"}</Typography>

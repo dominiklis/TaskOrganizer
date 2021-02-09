@@ -10,9 +10,10 @@ import { Tasks } from "../apicalls/requests";
 
 const useStyles = makeStyles((theme) => ({
   title: {
-    color: "black",
+    color: theme.palette.warning.main,
   },
   icon: {
+    color: theme.palette.warning.main,
     marginRight: theme.spacing(1),
   },
 }));

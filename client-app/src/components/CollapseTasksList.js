@@ -23,7 +23,10 @@ function CollapseTasksList({ tasks, icon, title, titleStyle, showGroupNames }) {
   };
   return (
     <Fragment>
-      <Box display="flex" className={classes.textWithIcon} onClick={handleClick}>
+      <Box
+        className={classes.textWithIcon}
+        onClick={handleClick}
+      >
         <Box>{icon}</Box>
         <Box flexGrow={1}>
           <Typography variant="h5" className={titleStyle}>
