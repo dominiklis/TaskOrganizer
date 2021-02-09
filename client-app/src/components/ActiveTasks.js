@@ -51,7 +51,7 @@ function ActiveTasks() {
   if (tasksLoaded) {
     return (
       <Fragment>
-        <CurrentDate dateParams={dateParams} setDateParams={setDateParams} />
+        <CurrentDate dateParams={dateParams} setDateParams={setDateParams} prevDisabled={dateParams.start === TaskRequestParams.today()} />
         <Typography>priority:</Typography>
         <PriorityFilteringMenu setPriority={setPriority} />
         <TaskGroupsList

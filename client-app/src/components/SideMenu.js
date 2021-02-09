@@ -62,7 +62,7 @@ const menuItems = [
   },
   {
     name: "myTaskButton",
-    label: "My Tasks",
+    label: "Active",
     icon: <ImportContactsIcon />,
     linkTo: "/",
   },

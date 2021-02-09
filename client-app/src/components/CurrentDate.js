@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function CurrentDate({dateParams, setDateParams}) {
+function CurrentDate({dateParams, setDateParams, prevDisabled, nextDisabled}) {
   const classes = useStyles();
 
   const handlePrevWeek = () => {
@@ -42,7 +42,7 @@ function CurrentDate({dateParams, setDateParams}) {
         <Button
           color="secondary"
           variant="outlined"
-          disabled={dateParams.start === TaskRequestParams.today()}
+          disabled={prevDisabled}
           onClick={handlePrevWeek}
         >
           &lt;
@@ -58,7 +58,10 @@ function CurrentDate({dateParams, setDateParams}) {
         )}`}</Typography>
       </Box>
       <Box>
-        <Button color="secondary" variant="outlined" onClick={handleNextWeek}>
+        <Button color="secondary" variant="outlined" 
+        
+        disabled={nextDisabled}
+        onClick={handleNextWeek}>
           &gt;
         </Button>
       </Box>

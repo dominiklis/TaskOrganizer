@@ -32,6 +32,12 @@ export const TaskRequestParams = {
     return td;
   },
 
+  prevWeek() {
+    let td = this.today();
+    td -= 7 * 24 * 60 * 60;
+    return td;
+  },
+
   yesterday() {
     let td = this.today();
     td -= 24 * 60 * 60;

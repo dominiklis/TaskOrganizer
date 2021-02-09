@@ -10,6 +10,7 @@ import TaskGroupsList from "./TaskGroupsList";
 import PageTitle from "./PageTitle";
 import PriorityFilteringMenu from "./PriorityFilteringMenu";
 import { filterTasksByPriority } from "../utils/utils";
+import CurrentDate from "./CurrentDate";
 
 function OverdueTasksPage() {
   const history = useHistory();
@@ -17,6 +18,10 @@ function OverdueTasksPage() {
   const [groupedTasks, setGroupedTasks] = useState({});
   const [tasksLoaded, setTasksLoaded] = useState(false);
   const [priority, setPriority] = useState(null);
+  const [dateParams, setDateParams] = useState({
+    start: TaskRequestParams.prevWeek(),
+    end: TaskRequestParams.today(),
+  });
 
   useEffect(() => {
     const user = CheckUser();
@@ -25,8 +30,8 @@ function OverdueTasksPage() {
     }
 
     const params = {
-      startDate: 0,
-      endDate: TaskRequestParams.today(),
+      startDate: dateParams.start,
+      endDate: dateParams.end,
       sortOrder: TaskRequestParams.sortOrderDesc,
       completed: false,
     };
@@ -39,11 +44,16 @@ function OverdueTasksPage() {
         history.push("/NotFound");
       }
     });
-  }, [history]);
+  }, [history, dateParams]);
 
   if (tasksLoaded) {
     return (
       <Page>
+        <CurrentDate
+          dateParams={dateParams}
+          setDateParams={setDateParams}
+          nextDisabled={dateParams.end === TaskRequestParams.today()}
+        />
         <Typography>priority:</Typography>
         <PriorityFilteringMenu setPriority={setPriority} />
         <Grid container>
@@ -57,6 +67,9 @@ function OverdueTasksPage() {
           </Grid>
           <Grid item sm={1} display={{ xs: "none" }}></Grid>
         </Grid>
+        {groupedTasks.length > 0 && (
+          <CurrentDate dateParams={dateParams} setDateParams={setDateParams} />
+        )}
       </Page>
     );
   }
