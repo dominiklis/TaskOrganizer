@@ -125,6 +125,15 @@ namespace api.Controllers
                 }
             }
 
+            if (!string.IsNullOrEmpty(filters.Limit))
+            {
+                int limit;
+                if (Int32.TryParse(filters.Limit, out limit))
+                {
+                    tasksQueryable = tasksQueryable.Take(limit);
+                }
+            }
+
             List<TaskModel> tasksList = await tasksQueryable.Include(x => x.TaskTags).ThenInclude(t => t.Tag).ToListAsync();
             List<GetTaskDTO> tasksDTOs = _mapper.Map<List<GetTaskDTO>>(tasksList);
 

@@ -11,9 +11,19 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     "flex-wrap": "wrap",
   },
+  collapse: {
+    marginBottom: "1.5em",
+  },
 }));
 
-function CollapseTasksList({ tasks, icon, title, titleStyle, showGroupNames }) {
+function CollapseTasksList({
+  tasks,
+  icon,
+  title,
+  titleStyle,
+  showGroupNames,
+  linkButton,
+}) {
   const classes = useStyles();
   const [show, setShow] = useState(false);
 
@@ -23,10 +33,7 @@ function CollapseTasksList({ tasks, icon, title, titleStyle, showGroupNames }) {
   };
   return (
     <Fragment>
-      <Box
-        className={classes.textWithIcon}
-        onClick={handleClick}
-      >
+      <Box className={classes.textWithIcon} onClick={handleClick}>
         <Box>{icon}</Box>
         <Box flexGrow={1}>
           <Typography variant="h5" className={titleStyle}>
@@ -42,8 +49,13 @@ function CollapseTasksList({ tasks, icon, title, titleStyle, showGroupNames }) {
         </Box>
       </Box>
 
-      <Collapse in={show}>
+      <Collapse in={show} className={classes.collapse}>
         <TaskGroupsList tasks={tasks} showGroupNames={showGroupNames} />
+        {linkButton && (
+          <Box display="flex" justifyContent="center">
+            {linkButton}
+          </Box>
+        )}
       </Collapse>
     </Fragment>
   );

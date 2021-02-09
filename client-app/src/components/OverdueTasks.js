@@ -1,7 +1,12 @@
-import { CircularProgress, makeStyles, Typography } from "@material-ui/core";
+import {
+  Button,
+  CircularProgress,
+  makeStyles,
+  Typography,
+} from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import { Fragment } from "react";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { CheckUser } from "../apicalls/auth";
 import { Tasks } from "../apicalls/requests";
 import { TaskRequestParams } from "../utils/params";
@@ -16,6 +21,13 @@ const useStyles = makeStyles((theme) => ({
   icon: {
     marginRight: theme.spacing(1),
     color: theme.palette.secondary.main,
+  },
+  link: {
+    textDecoration: "none",
+    color: "#666666",
+    "&:hover": {
+      textDecoration: "none",
+    },
   },
 }));
 
@@ -37,6 +49,7 @@ function OverdueTasks() {
       endDate: TaskRequestParams.today(),
       sortOrder: TaskRequestParams.sortOrderAsc,
       completed: false,
+      limit: 5,
     };
 
     Tasks.list(params).then((response) => {
@@ -54,17 +67,24 @@ function OverdueTasks() {
       {tasksLoaded ? (
         <Fragment>
           {groupedTasks.length ? (
-            <CollapseTasksList
-              tasks={groupedTasks}
-              title={`OVERDUE TASKS (${
-                groupedTasks.reduce((a, b) => ({
-                  count: a.count + b.count,
-                })).count
-              })`}
-              titleStyle={classes.title}
-              icon={<EventBusyIcon className={classes.icon} />}
-              showGroupNames={true}
-            />
+            <Fragment>
+              <CollapseTasksList
+                tasks={groupedTasks}
+                title={`OVERDUE TASKS (${
+                  groupedTasks.reduce((a, b) => ({
+                    count: a.count + b.count,
+                  })).count
+                })`}
+                titleStyle={classes.title}
+                icon={<EventBusyIcon className={classes.icon} />}
+                showGroupNames={true}
+                linkButton={
+                  <Link to={"/overdue"} className={classes.link}>
+                    <Button>go to overdue</Button>
+                  </Link>
+                }
+              />
+            </Fragment>
           ) : (
             <Typography variant="h5">{constStrings.noOverdueTasks}</Typography>
           )}

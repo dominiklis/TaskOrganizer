@@ -1,13 +1,7 @@
-import {
-  Box,
-  CircularProgress,
-  makeStyles,
-  Typography,
-} from "@material-ui/core";
+import { CircularProgress, Grid } from "@material-ui/core";
 import React, { useState, useEffect } from "react";
 import Page from "../components/Page";
 import { TaskRequestParams } from "../utils/params";
-import Clock from "../components/Clock";
 import { constStrings } from "../utils/constants";
 import { useHistory } from "react-router-dom";
 import { Tasks } from "../apicalls/requests";
@@ -15,20 +9,19 @@ import { CheckUser } from "../apicalls/auth";
 import TaskGroupsList from "./TaskGroupsList";
 import PriorityFilteringMenu from "./PriorityFilteringMenu";
 import { filterTasksByPriority } from "../utils/utils";
-
-const useStyles = makeStyles((theme) => ({
-  circularProgress: {
-    color: "#0d7377",
-  },
-}));
+import CurrentDate from "./CurrentDate";
+import PageTitle from "./PageTitle";
 
 function DoneTasksPage() {
-  const classes = useStyles();
   const history = useHistory();
 
   const [groupedTasks, setGroupedTasks] = useState({});
   const [tasksLoaded, setTasksLoaded] = useState(false);
   const [priority, setPriority] = useState(null);
+  const [dateParams, setDateParams] = useState({
+    start: TaskRequestParams.prevWeek(),
+    end: TaskRequestParams.today(),
+  });
 
   useEffect(() => {
     const user = CheckUser();
@@ -37,8 +30,8 @@ function DoneTasksPage() {
     }
 
     const params = {
-      startDate: 0,
-      endDate: TaskRequestParams.today(),
+      startDate: dateParams.start,
+      endDate: dateParams.end,
       sortOrder: TaskRequestParams.sortOrderDesc,
       completed: true,
     };
@@ -51,35 +44,46 @@ function DoneTasksPage() {
         history.push("/NotFound");
       }
     });
-  }, [history]);
+  }, [history, dateParams]);
 
   if (tasksLoaded) {
     return (
       <Page>
-        <Box display="flex" textAlign="right">
-          <Box>
-            <Typography variant="h6">{constStrings.completedTasks}</Typography>
-          </Box>
-          <Box flexGrow={1}>
-            <Clock />
-          </Box>
-        </Box>
+        <Grid container>
+          <Grid item xs={12} sm={11}>
+            <PageTitle title={constStrings.completedTasks} />
 
-        <Typography>priority:</Typography>
-        <PriorityFilteringMenu setPriority={setPriority} />
+            <PriorityFilteringMenu setPriority={setPriority} />
 
-        <TaskGroupsList
-          tasks={filterTasksByPriority(priority, groupedTasks)}
-          showGroupNames={true}
-          info={constStrings.noTasksToShow}
-        />
+            <CurrentDate
+              dateParams={dateParams}
+              setDateParams={setDateParams}
+              nextDisabled={dateParams.end === TaskRequestParams.today()}
+            />
+
+            <TaskGroupsList
+              tasks={filterTasksByPriority(priority, groupedTasks)}
+              showGroupNames={true}
+              info={constStrings.noTasksToShow}
+            />
+
+            {groupedTasks.length > 0 && (
+              <CurrentDate
+                dateParams={dateParams}
+                setDateParams={setDateParams}
+                nextDisabled={dateParams.end === TaskRequestParams.today()}
+              />
+            )}
+          </Grid>
+          <Grid item sm={1} display={{ xs: "none" }}></Grid>
+        </Grid>
       </Page>
     );
   }
 
   return (
     <Page>
-      <CircularProgress className={classes.circularProgress} />
+      <CircularProgress color="primary" />
     </Page>
   );
 }

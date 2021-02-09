@@ -49,27 +49,34 @@ function OverdueTasksPage() {
   if (tasksLoaded) {
     return (
       <Page>
-        <CurrentDate
-          dateParams={dateParams}
-          setDateParams={setDateParams}
-          nextDisabled={dateParams.end === TaskRequestParams.today()}
-        />
-        <Typography>priority:</Typography>
-        <PriorityFilteringMenu setPriority={setPriority} />
         <Grid container>
           <Grid item xs={12} sm={11}>
-            <PageTitle title={constStrings.overdueTasks} />
+            <PageTitle title={constStrings.completedTasks} />
+
+            <PriorityFilteringMenu setPriority={setPriority} />
+
+            <CurrentDate
+              dateParams={dateParams}
+              setDateParams={setDateParams}
+              nextDisabled={dateParams.end === TaskRequestParams.today()}
+            />
+
             <TaskGroupsList
               tasks={filterTasksByPriority(priority, groupedTasks)}
               showGroupNames={true}
               info={constStrings.noTasksToShow}
             />
+
+            {groupedTasks.length > 0 && (
+              <CurrentDate
+                dateParams={dateParams}
+                setDateParams={setDateParams}
+                nextDisabled={dateParams.end === TaskRequestParams.today()}
+              />
+            )}
           </Grid>
           <Grid item sm={1} display={{ xs: "none" }}></Grid>
         </Grid>
-        {groupedTasks.length > 0 && (
-          <CurrentDate dateParams={dateParams} setDateParams={setDateParams} />
-        )}
       </Page>
     );
   }

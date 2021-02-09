@@ -16,5 +16,6 @@ namespace api.DTOs.Filter
         public string Search { get; set; }
         public string Shared { get; set; }
         public string Priority { get; set; }
+        public string Limit { get; set; }
     }
 }
