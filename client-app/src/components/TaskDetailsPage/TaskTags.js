@@ -45,7 +45,7 @@ function TaskTags({ isAuthor, taskId, taskTags, openSnackbar }) {
       let ts = values.newTags.split(" ");
       ts.forEach((tag) => {
         tag = tag.replace(/\W/g, "");
-        if (tag.length > 0 && !updatedTask.tags.includes(tag)) {
+        if (tag.length > 0) {
           updatedTask.tags.push(tag);
         }
       });
@@ -58,8 +58,6 @@ function TaskTags({ isAuthor, taskId, taskTags, openSnackbar }) {
           openSnackbar(constStrings.somethingWentWrongTryAganin);
         }
       });
-
-      values.newTags = updatedTask.tags.join([" "]);
 
       changeEditTagsState();
     },

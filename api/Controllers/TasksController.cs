@@ -202,7 +202,6 @@ namespace api.Controllers
 
             if (task.Tags != null)
             {
-                task.Tags = task.Tags.Distinct().ToList();
                 foreach (string newTag in task.Tags)
                 {
                     string newTagToAdd = rgx.Replace(newTag, "");
