@@ -88,13 +88,10 @@ function TaskForm({ task }) {
 
       if (values.tags) {
         let newTags = values.tags.split(" ");
-        console.log("TAGI: ");
-        for (let i = 0; i < newTags.length; i++) {
-          console.log(newTags[i]);
-        }
-        newTags.forEach((t) => {
-          if (t.match(/^[0-9a-z]+$/)) {
-            newTask.tags.push(t);
+        newTags.forEach((tag) => {
+          tag = tag.replace(/\W/g, "");
+          if (tag.length > 0 && tag.match(/^[0-9a-z]+$/)) {
+            newTask.tags.push(tag);
           }
         });
       }
@@ -270,7 +267,13 @@ function TaskForm({ task }) {
         </Grid>
       </Grid>
 
-      <Button variant="contained" type="submit" fullWidth className={classes.submitButton} color="secondary">
+      <Button
+        variant="contained"
+        type="submit"
+        fullWidth
+        className={classes.submitButton}
+        color="secondary"
+      >
         submit
       </Button>
     </form>

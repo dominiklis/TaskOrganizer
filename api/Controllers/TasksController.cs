@@ -202,6 +202,9 @@ namespace api.Controllers
 
             if (task.Tags != null)
             {
+                task.Tags = task.Tags.Distinct().ToList();
+                task.Tags = task.Tags.Select(x => x.ToLower()).ToList();
+
                 foreach (string newTag in task.Tags)
                 {
                     string newTagToAdd = rgx.Replace(newTag, "");
@@ -270,6 +273,7 @@ namespace api.Controllers
 
             if (taskToUpdate.EditTags)
             {
+                taskToUpdate.Tags = taskToUpdate.Tags.Distinct().ToList();
                 taskToUpdate.Tags = taskToUpdate.Tags.Select(x => x.ToLower()).ToList();
                 List<string> currentTags = task.TaskTags.Select(t => t.Tag.Name).ToList();
 
